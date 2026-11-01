@@ -1,0 +1,7 @@
+# Calculadoras de hormigón armado · Seguridad Estructural SL
+# Acceso permitido a todos los rastreadores, incluidos los de búsqueda e IA
+# (Googlebot, Bingbot, OAI-SearchBot, GPTBot, Claude-SearchBot, ClaudeBot, PerplexityBot, CCBot, Google-Extended).
+User-agent: *
+Allow: /
+
+Sitemap: https://calculadoras.seguridadestructural.com/sitemap.xml

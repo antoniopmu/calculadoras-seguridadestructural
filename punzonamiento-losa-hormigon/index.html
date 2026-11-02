@@ -239,7 +239,7 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 09:46) -->
+<!-- SEO generado por publish.py (2026-11-02 10:04) -->
 <meta name="description" content="Comprueba el punzonamiento de losas de hormigón armado en soportes interiores, de borde y de esquina según el Código Estructural 2021 y EC2 6.4, con armadura.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/punzonamiento-losa-hormigon/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -279,7 +279,7 @@ window.SE_SITE={slug:'punzonamiento-losa-hormigon',gtm:'GTM-KTK4N7T',ga4:'',cons
     </div>
   </div>
   <div class="hdr-right">
-    <span class="badge">Art. 23.6 &middot; EC2 &sect;6.4</span>
+    <span class="badge">Anejo 19 &middot; EC2 &sect;6.4</span>
     <a class="weblink" href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a>
   </div>
 </header>
@@ -331,8 +331,8 @@ window.SE_SITE={slug:'punzonamiento-losa-hormigon',gtm:'GTM-KTK4N7T',ga4:'',cons
         <option value="35">35</option><option value="40">40</option><option value="45">45</option>
         <option value="50">50</option>
       </select><span class="unit">MPa</span></div></div>
-    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Art. 15)."><label for="gc">&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
-    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Art. 22.6). EHE-08 antigua: 0.85."><label for="acc">&alpha;<sub>cc</sub></label><div class="field-row">
+    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Anejo 19 §2.4.2.4)."><label for="gc">&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Anejo 19 §3.1.6). EHE-08 antigua: 0.85."><label for="acc">&alpha;<sub>cc</sub></label><div class="field-row">
       <select id="acc">
         <option value="1.00" selected>1.00 (CE 21)</option>
         <option value="0.85">0.85 (EHE-08)</option>
@@ -340,7 +340,7 @@ window.SE_SITE={slug:'punzonamiento-losa-hormigon',gtm:'GTM-KTK4N7T',ga4:'',cons
   </div>
   <div class="grid2">
     <div class="field"><label for="fywk">f<sub>ywk</sub></label><div class="field-row"><input type="number" id="fywk" value="500" min="200" max="500"><span class="unit">MPa</span></div></div>
-    <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Art. 15)."><label for="gs">&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+    <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Anejo 19 §2.4.2.4)."><label for="gs">&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
   </div>
 
   <div class="sec-title">Cuant&iacute;a long. de la losa</div>
@@ -370,7 +370,7 @@ window.SE_SITE={slug:'punzonamiento-losa-hormigon',gtm:'GTM-KTK4N7T',ga4:'',cons
     <div class="field-row"><input type="number" id="sigma_cp" value="0" step="0.1" min="0" max="20"><span class="unit">MPa</span></div>
   </div>
   <div style="font-family:var(--mono);font-size:9.5px;color:var(--text3);margin-top:-2px;line-height:1.5">
-    Compresi&oacute;n axil media en la losa. Si &gt; 0, se suma 0.10&middot;&sigma;<sub>cp</sub> a v<sub>Rd,c</sub> (EC2 &sect;6.4.4(1) / CE 21 Art. 23.6.2).
+    Compresi&oacute;n axil media en la losa. Si &gt; 0, se suma 0.10&middot;&sigma;<sub>cp</sub> a v<sub>Rd,c</sub> (EC2 &sect;6.4.4(1) / CE 21 Anejo 19 §6.4.4).
   </div>
 
   <button class="btn-calc" onclick="calcular()">&#9654; Calcular</button>
@@ -420,7 +420,7 @@ window.SE_SITE={slug:'punzonamiento-losa-hormigon',gtm:'GTM-KTK4N7T',ga4:'',cons
   </div>
 </section>
 <footer>
-  <span>C&oacute;digo Estructural 2021 &middot; Art. 23.6 &middot; EC2:2004 &sect;6.4</span>
+  <span>C&oacute;digo Estructural 2021 &middot; Anejo 19 &middot; EC2:2004 &sect;6.4</span>
   <span>Seguridad Estructural SL &middot; seguridadestructural.com</span>
 </footer>
 </div>
@@ -547,7 +547,7 @@ function calcular(){
   // Tensión nominal
   const v_Ed = beta*Fsd*1000/(u_1*d); // MPa
 
-  // Resistencia sin armadura — Art. 23.6.2 / EC2 §6.4.4
+  // Resistencia sin armadura — Anejo 19 / EC2 §6.4.4
   const k = Math.min(1+Math.sqrt(200/d), 2.0);
   const CRdc = 0.18/gc;
   // FIX 2026-05-14 (C4): incluir término 0.10·σ_cp (EC2 §6.4.4(1)) si σ_cp > 0
@@ -836,14 +836,14 @@ function generarPDF(){
   let pasos='';
   pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Geometr&iacute;a</span><span class="pc-a">losa</span></div>'
     +'<div class="pc-f">d = h<sub>losa</sub> &minus; r = '+R.h+' &minus; '+R.r+' = '+f1(R.d)+' mm</div></div>';
-  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Per&iacute;metros</span><span class="pc-a">CE 21 Art. 23.6.2</span></div>'
+  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Per&iacute;metros</span><span class="pc-a">CE 21 Anejo 19 §6.4.2</span></div>'
     +'<div class="pc-f">u<sub>0</sub> = '+f1(R.u_0)+' mm (per&iacute;m. soporte)\nu<sub>1</sub> = u<sub>0</sub> + 2&pi;&middot;2d = '+f1(R.u_1)+' mm (cr&iacute;tico)</div></div>';
   pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Tensiones</span><span class="pc-a">EC2 &sect;6.4.3</span></div>'
     +'<div class="pc-f">v<sub>Ed</sub> = &beta;&middot;F<sub>sd</sub>/(u<sub>1</sub>&middot;d) = '+f3(R.beta)+'&middot;'+f0(R.Fsd*1000)+'/('+f1(R.u_1)+'&middot;'+f1(R.d)+') = '+f3(R.v_Ed)+' MPa\nv<sub>u0</sub> = '+f3(R.v_u0)+' MPa</div></div>';
-  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Resistencias</span><span class="pc-a">CE 21 Art. 23.6.2.2</span></div>'
+  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Resistencias</span><span class="pc-a">CE 21 Anejo 19 §6.4.4</span></div>'
     +'<div class="pc-f">k=1+&#8730;(200/'+f1(R.d)+')='+f3(R.k)+'\nv<sub>Rd,c</sub> = C<sub>Rd,c</sub>&middot;k&middot;(100&middot;&#961;<sub>l</sub>&middot;f<sub>ck</sub>)<sup>1/3</sup> = '+f3(R.v_Rdc)+' MPa\nv<sub>Rd,max</sub> = 0.5&middot;&nu;&middot;f<sub>cd</sub> = '+f3(R.v_Rdmax)+' MPa</div></div>';
   if(R.needsArm){
-    pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Armadura punzonamiento</span><span class="pc-a">CE 21 Art. 23.6.3</span></div>'
+    pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Armadura punzonamiento</span><span class="pc-a">CE 21 Anejo 19 §6.4.5</span></div>'
       +'<div class="pc-f">f<sub>ywd,ef</sub> = min(250+0.25&middot;d, f<sub>ywd</sub>) = '+f2(R.fywd_ef)+' MPa\ns<sub>r,max</sub> = 0.75&middot;d = '+f1(R.sr_max)+' mm\nA<sub>sw</sub>/anillo = '+f1(R.Asw_anillo)+' mm&sup2; (con s<sub>r</sub>=s<sub>r,max</sub>)\nu<sub>out</sub> = '+f1(R.u_out)+' mm; a<sub>out</sub> = '+f1(R.a_out)+' mm; N&deg; perim&eacute;tros = '+R.n_perimetros+'</div></div>';
   }
 
@@ -853,7 +853,7 @@ function generarPDF(){
     '<div class="ph"><img class="ph-logo" src="'+logo+'" alt="SE">'
     +'<div class="ph-t"><div class="ph-tag">Seguridad Estructural SL &middot; Ingenier&iacute;a de estructuras &mdash; Hormig&oacute;n Armado &middot; Punzonamiento</div>'
     +'<div class="ph-h1">Comprobaci&oacute;n a Punzonamiento &mdash; Soporte '+sopTipo+' ('+posTxt+')</div>'
-    +'<div class="ph-sub">C&oacute;digo Estructural 2021 &middot; Art. 23.6 &middot; EC2:2004 &sect;6.4</div></div>'
+    +'<div class="ph-sub">C&oacute;digo Estructural 2021 &middot; Anejo 19 &middot; EC2:2004 &sect;6.4</div></div>'
     +'<div class="ph-r"><div class="ph-bdg">CE 2021 &middot; EC2</div><br>Fecha: '+fecha+'<br><a href="https://seguridadestructural.com" target="_blank">Seguridad Estructural SL</a><br><a href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a></div></div>'
     +'<div class="ps"><div class="ps-t">Datos</div><table class="pt"><tbody>'
     +'<tr><td class="pk">Soporte</td><td>'+sopTipo+'</td><td class="pk">Posici&oacute;n</td><td>'+posTxt+'</td></tr>'
@@ -877,7 +877,7 @@ function generarPDF(){
     +(R.needsArm?'<div class="presult-det">Armadura: A<sub>sw</sub>/anillo='+f1(R.Asw_anillo)+' mm&sup2;, '+R.n_perimetros+' per&iacute;metros, s<sub>r,max</sub>='+f1(R.sr_max)+' mm</div>':'')
     +'</div>'
     +'<div class="ps"><div class="ps-t">Normativa aplicada</div>'
-    +'<div class="pnorm"><span class="pnorm-r">CE 2021</span><span class="pnorm-d">C&oacute;digo Estructural &middot; Art. 23.6 (Estado L&iacute;mite &Uacute;ltimo de punzonamiento)</span></div>'
+    +'<div class="pnorm"><span class="pnorm-r">CE 2021</span><span class="pnorm-d">C&oacute;digo Estructural &middot; Anejo 19 §6.4 (Estado L&iacute;mite &Uacute;ltimo de punzonamiento)</span></div>'
     +'<div class="pnorm"><span class="pnorm-r">EC2:2004</span><span class="pnorm-d">EN 1992-1-1 &sect;6.4 Punching</span></div></div>'
     +'<div class="paviso"><div class="paviso-t">Aviso legal &mdash; Validaci&oacute;n profesional obligatoria</div><p>Los resultados generados por esta herramienta tienen car&aacute;cter <b>orientativo</b> y deben ser revisados, validados e interpretados por un t&eacute;cnico cualificado y autorizado para el ejercicio de la actividad profesional correspondiente (ingeniero o arquitecto colegiado). El usuario asume toda la responsabilidad sobre la aplicaci&oacute;n de los resultados al proyecto real, debiendo verificar la idoneidad de los datos de entrada, la coherencia con la normativa vigente y la compatibilidad con las particularidades del caso concreto. Seguridad Estructural SL no garantiza la exactitud absoluta de los c&aacute;lculos ni se responsabiliza de los da&ntilde;os, perjuicios o p&eacute;rdidas derivadas de un uso indebido o de una interpretaci&oacute;n incorrecta de los resultados.</p></div>'+'<div class="ppie"><img src="'+logo+'" alt="SE"><span><a href="https://seguridadestructural.com" target="_blank">Seguridad Estructural SL</a> &middot; Ingenier&iacute;a de estructuras &middot; <a href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a></span><span>'+fecha+'</span></div>';
 

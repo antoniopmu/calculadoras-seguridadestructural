@@ -393,7 +393,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 09:46) -->
+<!-- SEO generado por publish.py (2026-11-02 10:04) -->
 <meta name="description" content="Calcula muros de contención en ménsula: vuelco, deslizamiento, hundimiento, armado de fuste y zapata y coste por metro según CE 2021 y CTE DB-SE-C. Con PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-mensula-contencion/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -461,7 +461,7 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
       <option value="1c">A 1 cara (contra terreno) — solo excéntrico</option>
     </select>
   </div>
-  <div class="field"><label for="inAmbCim">Clase ambiente CIMENTACIÓN <span class="tip" title="Determina el recubrimiento mínimo según CE 21 Anejo 9.&#10;&#10;• IIa: humedad alta sin agresividad química (cimentaciones enterradas en suelo no agresivo)&#10;• IIb: humedad alta + ciclos hielo-deshielo&#10;• IIIa: marina aérea&#10;• IV: ataque químico moderado">?</span></label>
+  <div class="field"><label for="inAmbCim">Clase ambiente CIMENTACIÓN <span class="tip" title="Determina el recubrimiento mínimo según la EHE-08 Art. 37.2.4.&#10;&#10;• IIa: humedad alta sin agresividad química (cimentaciones enterradas en suelo no agresivo)&#10;• IIb: humedad alta + ciclos hielo-deshielo&#10;• IIIa: marina aérea&#10;• IV: ataque químico moderado">?</span></label>
     <select id="inAmbCim" onchange="actualizarRecubrimientos()">
       <option value="IIa" selected>IIa (cimentación enterrada normal)</option>
       <option value="IIb">IIb (hielo-deshielo)</option>
@@ -655,7 +655,7 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
     </div>
     <div class="field"><label for="inR">r general (legacy)</label><div class="field-row"><input type="number" id="inR" step="5" value="50" min="25"><span class="unit">mm</span></div></div>
   </div>
-  <div class="info-line">Recubrimientos automáticos según clases de ambiente y tipo de encofrado (CE 21 Anejo 9). Editables:</div>
+  <div class="info-line">Recubrimientos automáticos según clases de ambiente y tipo de encofrado (EHE-08 Art. 37.2.4). Editables:</div>
   <div class="grid2">
     <div class="field"><label for="inRzapB">r_zap base <span class="tip" title="Recubrimiento INFERIOR de la zapata. Si se ejecuta sobre hormigón de limpieza: 35-40 mm. Si se vierte directamente sobre el terreno: 70 mm.">?</span></label><div class="field-row"><input type="number" id="inRzapB" step="5" value="35" min="25"><span class="unit">mm</span></div></div>
     <div class="field"><label for="inRzapL">r_zap lateral <span class="tip" title="Recubrimiento LATERAL de la zapata (contra el terreno). Típico 70 mm CE 21 ambiente IIa.">?</span></label><div class="field-row"><input type="number" id="inRzapL" step="5" value="70" min="25"><span class="unit">mm</span></div></div>
@@ -702,7 +702,7 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
     </div>
   </div>
   <div class="grid2">
-    <div class="field"><label for="inPatCoron">Patilla coronación muro <span class="tip" title="Longitud de la patilla de remate de las barras verticales del muro en su coronación. Mínimo recomendable: 10·Ø (CE 21 Art. 70). La patilla se dobla 90° hacia el intradós SIN salirse del espesor de la coronación (e_c − 2·rec).&#10;&#10;Valor por defecto: 100 mm. Editable. Si supera e_c − 2·rec, se trunca automáticamente al máximo permitido.">?</span></label><div class="field-row"><input type="number" id="inPatCoron" step="10" value="100" min="0"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="inPatCoron">Patilla coronación muro <span class="tip" title="Longitud de la patilla de remate de las barras verticales del muro en su coronación. Mínimo recomendable: 10·Ø (criterio constructivo). La patilla se dobla 90° hacia el intradós SIN salirse del espesor de la coronación (e_c − 2·rec).&#10;&#10;Valor por defecto: 100 mm. Editable. Si supera e_c − 2·rec, se trunca automáticamente al máximo permitido.">?</span></label><div class="field-row"><input type="number" id="inPatCoron" step="10" value="100" min="0"><span class="unit">mm</span></div></div>
     <div class="field"><label for="inPatZap">Patilla zapata <span class="tip" title="Longitud mínima en mm de la patilla vertical en los extremos de la armadura inferior/superior de la zapata. Mínimo: 10·Ø con tope inferior de 100 mm.&#10;&#10;Se precalcula como max(10·Ø, 100 mm); editable. Aplica a ambos extremos (puntera e intradós).">?</span></label><div class="field-row"><input type="number" id="inPatZap" step="10" value="160" min="0"><span class="unit">mm</span></div></div>
   </div>
   <div class="grid2">
@@ -846,7 +846,7 @@ function aplicarDeltaPreset(){
   document.getElementById('inDelta').value = deltaDeg.toFixed(0);
 }
 
-// Tabla recubrimientos CE 21 (Anejo 9, Tabla 9.2.b) por clase exposición y tipo de elemento
+// Tabla recubrimientos EHE-08 Art. 37.2.4 por clase exposición y tipo de elemento
 const REC_CE21 = {
   // [zapata_base_limpieza, zapata_base_terreno, zapata_lateral, muro_2c, muro_1c]
   'IIa': {zap_base_limp: 35, zap_base_terr: 70, zap_lateral: 70, muro_2c: 35, muro_1c: 70},
@@ -1143,7 +1143,7 @@ function dimensionaFlexionSimple(M_Ed_kNm, b_mm, d_util_mm, fcd_MPa, fyd_MPa){
   return omega * b_mm * d_util_mm * fcd_MPa / fyd_MPa;  // mm²
 }
 
-// Resistencia a cortante sin armadura (CE 21 Art. 23.3 / EC2 §6.2.2)
+// Resistencia a cortante sin armadura (CE 21 Anejo 19 / EC2 §6.2.2)
 function V_Rd_c(d_mm, ro_l, fck_MPa, gc, b_mm){
   // ρ_l = A_sl / (b·d) ≤ 0.02
   const k = Math.min(2.0, 1 + Math.sqrt(200/d_mm));
@@ -1348,7 +1348,7 @@ function comprobar(I, E, P){
   // ═══════════════════════════════════════════════════════════════
   const H_m = I.H - I.ez;  // altura efectiva fuste
   const fcd = I.fck/I.gc, fyd = I.fyk/I.gs;
-  const fyd_c = Math.min(fyd, 400);  // tope compresión CE 21 Art. 30
+  const fyd_c = Math.min(fyd, 400);  // tope compresión criterio EHE-08
 
   // Empujes sobre el fuste (no incluyen la zapata)
   // Empuje activo triangular sobre H_m: presión base = γ·H·K_a (a la altura del arranque, y desde abajo)
@@ -1381,10 +1381,10 @@ function comprobar(I, E, P){
   // Flag: doble armadura necesaria (μ > 0.42)
   const trasdos_doble_arm = (As_trasdos_req === null);
   if(trasdos_doble_arm){
-    // Tope práctico: 4% cuantía máxima CE 21 Art. 42.3.5 (evita peso de acero infinito)
+    // Tope práctico: 4% cuantía máxima CE 21 Anejo 19 §9.6.2 (evita peso de acero infinito)
     As_trasdos_req = 0.04 * b_fuste * (I.ea*1000);
   }
-  // Cuantías mínimas muro CE 21 Art. 42.3.5
+  // Cuantías mínimas muro EHE-08 Art. 42.3.5
   const As_min_v_geom_total = 0.0028 * b_fuste * (I.ea*1000);  // 0.28% total en ambas caras
   const As_min_v_geom_cara = 0.0009 * b_fuste * (I.ea*1000);   // 0.09% en cada cara (asignación típica 2/3-1/3)
   const As_trasdos_adoptar = Math.max(As_trasdos_req, As_min_v_geom_cara);
@@ -1392,7 +1392,7 @@ function comprobar(I, E, P){
   // Armadura intradós (vertical) — geométrica mínima
   const As_intrados_adoptar = As_min_v_geom_cara;
 
-  // Armadura horizontal (en cada cara) — 0.10% mínimo geom. (CE 21 Art. 42.3.5)
+  // Armadura horizontal (en cada cara) — 0.10% mínimo geom. (EHE-08 Art. 42.3.5)
   const As_h_min_cara = 0.0010 * b_fuste * (I.ea*1000);
   const As_h_adoptar = As_h_min_cara;
 
@@ -1538,7 +1538,7 @@ function comprobar(I, E, P){
   // Superior (talón): flexión por peso terreno (signo +)
   let As_zap_sup = dimensionaFlexionSimple(M_t_d, 1000, d_zap, fcd, fyd);
   if(As_zap_sup===null) As_zap_sup = 99999;
-  // Cuantía geométrica mínima zapata (CE 21 Art. 42.3.5: 0.0009 en cada cara, total 0.0018)
+  // Cuantía geométrica mínima zapata (EHE-08 Art. 42.3.5: 0.0009 en cada cara, total 0.0018)
   const As_min_zap_cara = 0.0009 * 1000 * I.ez*1000;
   const As_zap_inf_adoptar = Math.max(As_zap_inf, As_min_zap_cara);
   const As_zap_sup_adoptar = Math.max(As_zap_sup, As_min_zap_cara);
@@ -1551,7 +1551,7 @@ function comprobar(I, E, P){
   const sel_zap_sup = seleccionaArmado(As_zap_sup_adoptar, cand_zap, SMAX);
   const sel_zap_trans = seleccionaArmado(As_zap_trans, cand_zap, SMAX);
 
-  // ───── Cortante zapata (CE 21 Art. 23.3) ─────
+  // ───── Cortante zapata (CE 21 Anejo 19 §6.2.2) ─────
   // ρ_l aproximado del armado adoptado
   const rho_p = As_zap_inf_adoptar / (1000*d_zap);
   const rho_t = As_zap_sup_adoptar / (1000*d_zap);
@@ -2797,7 +2797,7 @@ function tablaArmadoTrasdos(I, C){
     });
   }
   h+='</tbody></table></div></div>';
-  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px">A_s requerida = '+f0(C.As_trasdos_req)+' mm²/m · A_s,mín cara = '+f0(C.As_min_v_geom_cara)+' mm²/m · A_s ADOPTAR = <b style="color:var(--green)">'+f0(C.As_trasdos_adoptar)+' mm²/m</b>. Restricciones: s ≤ 300 mm (CE 21 Art. 42.3.5), Ø_base 10-25, Ø_espera 16-32.</div>';
+  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px">A_s requerida = '+f0(C.As_trasdos_req)+' mm²/m · A_s,mín cara = '+f0(C.As_min_v_geom_cara)+' mm²/m · A_s ADOPTAR = <b style="color:var(--green)">'+f0(C.As_trasdos_adoptar)+' mm²/m</b>. Restricciones: s ≤ 300 mm (criterio EHE-08), Ø_base 10-25, Ø_espera 16-32.</div>';
   return h;
 }
 
@@ -2818,7 +2818,7 @@ function tablaArmadoIntradosHoriz(I, C){
     }
   });
   h+='</tbody></table>';
-  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px">Cuantías mínimas geométricas en cada cara (CE 21 Art. 42.3.5): vertical 0,09% · horizontal 0,10%. Separación s_max ≤ 300 mm.</div>';
+  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px">Cuantías mínimas geométricas en cada cara (EHE-08 Art. 42.3.5): vertical 0,09% · horizontal 0,10%. Separación s_max ≤ 300 mm.</div>';
   return h;
 }
 
@@ -2851,7 +2851,7 @@ function tablaArmadoZapata(I, C){
     h+='<tr class="recom"><td>Zap. TRANSVERSAL (reparto)</td><td>'+f0(C.As_zap_trans)+'</td><td>Ø'+selT.d+'</td><td>'+selT.s+'</td><td class="ok">'+f0(selT.As_real)+'</td><td>—</td></tr>';
   }
   h+='</tbody></table>';
-  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px">Cuantía mín. geom. zapata cara (CE 21): 0,09%. Ø admisibles cimentación: 12, 16, 20, 25. Separación s_max ≤ 300 mm. Cortante sin cercos (V_Rd,c) según CE 21 Art. 23.3 / EC2 §6.2.2.</div>';
+  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px">Cuantía mín. geom. zapata cara (criterio EHE-08): 0,09%. Ø admisibles cimentación: 12, 16, 20, 25. Separación s_max ≤ 300 mm. Cortante sin cercos (V_Rd,c) según CE 21 Anejo 19 / EC2 §6.2.2.</div>';
   return h;
 }
 
@@ -2870,7 +2870,7 @@ function generarPDF(){
   html+='<div class="ph"><img class="ph-logo" src="'+logo+'" alt="SE">';
   html+='<div class="ph-t"><div class="ph-tag">Seguridad Estructural SL &middot; Ingenier&iacute;a de estructuras &mdash; Hormig&oacute;n Armado &middot; Muro en M&eacute;nsula</div>';
   html+='<div class="ph-h1">C&aacute;lculo de Muro en M&eacute;nsula &mdash; '+tipoLabel(I.tipo)+'</div>';
-  html+='<div class="ph-sub">CTE DB-SE-C &middot; CE 2021 Art. 22-23 &middot; EC2:2004 &sect;6.1 &middot; EC7</div></div>';
+  html+='<div class="ph-sub">CTE DB-SE-C &middot; CE 2021 Anejo 19 &middot; EC2:2004 &sect;6.1 &middot; EC7</div></div>';
   html+='<div class="ph-r"><div class="ph-bdg">CE 2021 &middot; CTE-SE-C</div><br>Fecha: '+fecha+'<br><a href="https://seguridadestructural.com" target="_blank">Seguridad Estructural SL</a><br><a href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a></div></div>';
 
   // ───── Identificación ─────
@@ -2955,7 +2955,7 @@ function generarPDF(){
     ['Fórmula', 'M<sub>Ed</sub> = γ<sub>F</sub>·(E<sub>aH</sub>·H<sub>m</sub>/3 + E<sub>q</sub>·H<sub>m</sub>/2 + …)<br>μ = M<sub>Ed</sub>/(b·d²·f<sub>cd</sub>) &middot; ω = 1 − √(1−2μ) &middot; A<sub>s</sub> = ω·b·d·f<sub>cd</sub>/f<sub>yd</sub>'],
     ['Sustitución', 'H<sub>m</sub> = '+f2(C.H_m)+' m &middot; M<sub>Ed</sub> = γ<sub>F</sub>·'+f1(C.M_arranque)+' = '+f1(C.M_arranque_d)+' kN·m/m<br>d = '+f0(I.ea*1000)+'−'+f0(I.r)+' = '+f0(C.d_fuste)+' mm &middot; f<sub>cd</sub> = '+f1(C.fcd)+' MPa &middot; f<sub>yd</sub> = '+f1(C.fyd)+' MPa'],
     ['Resultado', 'A<sub>s,req</sub> = '+f0(C.As_trasdos_req)+' mm²/m &middot; A<sub>s,mín cara</sub> = '+f0(C.As_min_v_geom_cara)+' mm²/m → <b>A<sub>s</sub> adoptar = '+f0(C.As_trasdos_adoptar)+' mm²/m</b>'],
-    ['Normativa', 'CE 21 Art. 22 (flexión ELU) &middot; Art. 42.3.5 (cuantías: 0,09% en cada cara, 0,28% total) &middot; <b style="color:#0e7c3e">✓ Armadura calculada</b>']
+    ['Normativa', 'CE 21 Anejo 19 §6.1 (flexión ELU) &middot; EHE-08 Art. 42.3.5 (cuantías: 0,09% en cada cara, 0,28% total) &middot; <b style="color:#0e7c3e">✓ Armadura calculada</b>']
   ]);
 
   // --- Cortante fuste ---
@@ -2963,7 +2963,7 @@ function generarPDF(){
     ['Fórmula', 'V<sub>Rd,c</sub> = (0,18/γ<sub>c</sub>)·k·(100·ρ<sub>l</sub>·f<sub>ck</sub>)<sup>1/3</sup>·b·d<br>k = 1 + √(200/d) ≤ 2,0'],
     ['Sustitución', 'k = '+f3(Math.min(2,1+Math.sqrt(200/C.d_fuste)))+' &middot; ρ<sub>l</sub> = '+f4(C.rho_f)+'<br>V<sub>Rd,c</sub> = '+f1(C.V_Rd_fuste)+' kN/m &middot; V<sub>Ed</sub> = γ<sub>F</sub>·V<sub>arr</sub> = '+f1(C.V_arranque_d)+' kN/m'],
     ['Resultado', 'V<sub>Ed</sub> = '+f1(C.V_arranque_d)+' '+(C.cort_fuste_ok?'≤':'>')+' V<sub>Rd,c</sub> = '+f1(C.V_Rd_fuste)+' kN/m'],
-    ['Normativa', 'CE 21 Art. 23.3 &middot; EC2 §6.2.2 &middot; '+(C.cort_fuste_ok?'<b style="color:#0e7c3e">✓ Sin cercos necesarios</b>':'<b style="color:#bd3838">✗ Requiere armadura transversal</b>')]
+    ['Normativa', 'CE 21 Anejo 19 &middot; EC2 §6.2.2 &middot; '+(C.cort_fuste_ok?'<b style="color:#0e7c3e">✓ Sin cercos necesarios</b>':'<b style="color:#bd3838">✗ Requiere armadura transversal</b>')]
   ]);
 
   // --- Flexión y cortante puntera ---
@@ -2972,7 +2972,7 @@ function generarPDF(){
       ['Fórmula', 'M<sub>p</sub> = ∫<sub>0</sub><sup>B<sub>p</sub></sup> [σ(x) − γ<sub>h</sub>·e<sub>z</sub> − γ·h<sub>terr,p</sub>]·(B<sub>p</sub>−x) dx<br>V<sub>p,d</sub> a distancia d de la cara &middot; V<sub>Rd,c</sub> ídem fuste'],
       ['Sustitución', 'σ<sub>max</sub> = '+f0(C.sigma_max)+' kPa &middot; B<sub>p</sub> = '+f2(I.Bp)+' m &middot; d = '+f0(C.d_zap)+' mm<br>M<sub>p,d</sub> = '+f1(C.M_p_d)+' kN·m/m &middot; V<sub>p,d</sub> = '+f1(C.V_p_d)+' kN/m'],
       ['Resultado', 'A<sub>s,inf</sub> = <b>'+f0(C.As_zap_inf_adoptar)+' mm²/m</b> &middot; V<sub>Rd,c</sub> = '+f1(C.V_Rd_p)+' kN/m &middot; ρ<sub>l</sub> = '+f4(C.rho_p)],
-      ['Normativa', 'CE 21 Art. 22 + Art. 23.3 &middot; '+(C.cort_p_ok?'<b style="color:#0e7c3e">✓ Cumple flexión y cortante</b>':'<b style="color:#bd3838">✗ Cortante insuficiente</b>')]
+      ['Normativa', 'CE 21 Anejo 19 §6.1 + Anejo 19 §6.2.2 &middot; '+(C.cort_p_ok?'<b style="color:#0e7c3e">✓ Cumple flexión y cortante</b>':'<b style="color:#bd3838">✗ Cortante insuficiente</b>')]
     ]);
   }
 
@@ -2982,7 +2982,7 @@ function generarPDF(){
       ['Fórmula', 'M<sub>t</sub> = ∫<sub>B<sub>p</sub>+e<sub>a</sub></sub><sup>B</sup> [γ<sub>terr</sub>·H<sub>m</sub> + q<sub>t</sub> + γ<sub>h</sub>·e<sub>z</sub> − σ(x)]·(x − x<sub>face</sub>) dx<br>Armado SUPERIOR (carga neta hacia abajo)'],
       ['Sustitución', 'B<sub>t</sub> = '+f2(I.Bt)+' m &middot; M<sub>t,d</sub> = '+f1(C.M_t_d)+' kN·m/m &middot; V<sub>t,d</sub> = '+f1(C.V_t_d)+' kN/m'],
       ['Resultado', 'A<sub>s,sup</sub> = <b>'+f0(C.As_zap_sup_adoptar)+' mm²/m</b> &middot; V<sub>Rd,c</sub> = '+f1(C.V_Rd_t)+' kN/m &middot; ρ<sub>l</sub> = '+f4(C.rho_t)],
-      ['Normativa', 'CE 21 Art. 22 + Art. 23.3 &middot; '+(C.cort_t_ok?'<b style="color:#0e7c3e">✓ Cumple flexión y cortante</b>':'<b style="color:#bd3838">✗ Cortante insuficiente</b>')]
+      ['Normativa', 'CE 21 Anejo 19 §6.1 + Anejo 19 §6.2.2 &middot; '+(C.cort_t_ok?'<b style="color:#0e7c3e">✓ Cumple flexión y cortante</b>':'<b style="color:#bd3838">✗ Cortante insuficiente</b>')]
     ]);
   }
 
@@ -3034,13 +3034,13 @@ function generarPDF(){
   const selZT = C.sel_zap_trans.length>0?C.sel_zap_trans[0]:null;
   if(selZT) html+='<tr><td>Zapata · transversal</td><td>Ø'+selZT.d+'</td><td>'+selZT.s+'</td><td>'+f0(selZT.As_real)+'</td><td>Armadura de reparto (≈20% long.)</td></tr>';
   html+='</tbody></table>';
-  html+='<div style="font-size:7.5pt;color:#666;margin-top:4pt"><b>Restricciones aplicadas:</b> separación máxima s ≤ 300 mm (CE 21 Art. 42.3.5) &middot; Ø zapata = 12, 16, 20, 25 &middot; Ø fuste = 10, 12, 16, 20, 25.</div></div>';
+  html+='<div style="font-size:7.5pt;color:#666;margin-top:4pt"><b>Restricciones aplicadas:</b> separación máxima s ≤ 300 mm (criterio EHE-08) &middot; Ø zapata = 12, 16, 20, 25 &middot; Ø fuste = 10, 12, 16, 20, 25.</div></div>';
 
   // ───── Normativa ─────
   html+='<div class="ps"><div class="ps-t">Normativa aplicada</div>';
   html+='<div class="pnorm-pastel"><span class="pnorm-r">RD 470/2021</span><span class="pnorm-d">Código Estructural &middot; Hormigón armado</span></div>';
-  html+='<div class="pnorm-pastel"><span class="pnorm-r">CE 21 Art. 22-23</span><span class="pnorm-d">ELU de agotamiento de secciones (flexión y cortante)</span></div>';
-  html+='<div class="pnorm-pastel"><span class="pnorm-r">CE 21 Art. 42.3.5</span><span class="pnorm-d">Cuantías mínimas en muros (0,28% total; 0,09% por cara; s ≤ 300 mm)</span></div>';
+  html+='<div class="pnorm-pastel"><span class="pnorm-r">CE 21 Anejo 19 §6.1-6.2</span><span class="pnorm-d">ELU de agotamiento de secciones (flexión y cortante)</span></div>';
+  html+='<div class="pnorm-pastel"><span class="pnorm-r">EHE-08 Art. 42.3.5</span><span class="pnorm-d">Cuantías mínimas en muros (0,28% total; 0,09% por cara; s ≤ 300 mm)</span></div>';
   html+='<div class="pnorm-pastel"><span class="pnorm-r">CTE DB-SE-C §4.2-4.4</span><span class="pnorm-d">Cimientos &middot; Empujes &middot; Capacidad portante &middot; Estabilidad global</span></div>';
   html+='<div class="pnorm-pastel"><span class="pnorm-r">EC2:2004 §6.1-6.2</span><span class="pnorm-d">EN 1992-1-1 &middot; Estructuras de hormigón</span></div>';
   html+='<div class="pnorm-pastel"><span class="pnorm-r">EC7 §6.5</span><span class="pnorm-d">EN 1997-1 &middot; Cálculo geotécnico</span></div>';

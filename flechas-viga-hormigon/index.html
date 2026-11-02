@@ -216,7 +216,7 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 09:46) -->
+<!-- SEO generado por publish.py (2026-11-02 10:04) -->
 <meta name="description" content="Calcula la flecha instantánea, diferida, activa y total de vigas biapoyadas, biempotradas y ménsulas de hormigón armado según Código Estructural 2021 y EC2 7.4.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/flechas-viga-hormigon/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -256,7 +256,7 @@ window.SE_SITE={slug:'flechas-viga-hormigon',gtm:'GTM-KTK4N7T',ga4:'',consentMod
     </div>
   </div>
   <div class="hdr-right">
-    <span class="badge">Art. 50 &middot; EC2 &sect;7.4</span>
+    <span class="badge">Anejo 19 &middot; EC2 &sect;7.4</span>
     <a class="weblink" href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a>
   </div>
 </header>
@@ -294,7 +294,7 @@ window.SE_SITE={slug:'flechas-viga-hormigon',gtm:'GTM-KTK4N7T',ga4:'',consentMod
 
   <div class="sec-title">Materiales</div>
   <div class="grid2">
-    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Art. 27."><label for="fck">f<sub>ck</sub></label><div class="field-row">
+    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Anejo 19 §3.1.2."><label for="fck">f<sub>ck</sub></label><div class="field-row">
       <select id="fck">
         <option value="20">20</option><option value="25" selected>25</option><option value="30">30</option>
         <option value="35">35</option><option value="40">40</option><option value="45">45</option><option value="50">50</option>
@@ -373,7 +373,7 @@ window.SE_SITE={slug:'flechas-viga-hormigon',gtm:'GTM-KTK4N7T',ga4:'',consentMod
   </div>
 </section>
 <footer>
-  <span>C&oacute;digo Estructural 2021 &middot; Art. 50 &middot; EC2:2004 &sect;7.4</span>
+  <span>C&oacute;digo Estructural 2021 &middot; Anejo 19 &middot; EC2:2004 &sect;7.4</span>
   <span>Seguridad Estructural SL &middot; seguridadestructural.com</span>
 </footer>
 </div>
@@ -490,7 +490,7 @@ function calcular(){
   const M_cp = p_cp*L*L*M_max_factor/1e6; // kN·m
   const M_total_serv = p_total*L*L*M_max_factor/1e6;
 
-  // FIX 2026-05-12 #5: método ζ-curvaturas (EC2 §7.4.3 Eq. 7.18, CE 21 Art. 50.2.2.2)
+  // FIX 2026-05-12 #5: método ζ-curvaturas (EC2 §7.4.3 Eq. 7.18, CE 21 Anejo 19 §7.4.3)
   // en lugar de Branson (ACI 318 / EHE-08 derogada). β_zeta = 0.5 carga sostenida.
   // ζ = 1 − β·(M_cr/M_a)²  (si M_a > M_cr; si no, ζ=0 sin fisurar)
   // Inercia equivalente: 1/I_eq = ζ/I_fis + (1−ζ)/I_b
@@ -695,11 +695,11 @@ function generarPDF(){
   const logo=LOGO_PDF_JPG;
   const apoyoTxt={BE:'Biempotrada',BA:'Biapoyada',MENS:'M&eacute;nsula'}[R.apoyo];
   let pasos='';
-  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Materiales</span><span class="pc-a">CE 21 Art. 21</span></div>'
+  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Materiales</span><span class="pc-a">CE 21 Anejo 19 §3.1</span></div>'
     +'<div class="pc-f">E<sub>cm</sub> = 22000&middot;((f<sub>ck</sub>+8)/10)<sup>0.3</sup> = '+f0(R.Ecm)+' MPa\n&alpha;<sub>e</sub> = '+f3(R.alpha_e)+'\nf<sub>ctm</sub> = '+f3(R.fctm)+' MPa</div></div>';
   pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Inercias</span><span class="pc-a">EC2 &sect;7.4.3</span></div>'
     +'<div class="pc-f">I<sub>b</sub> (bruta) = '+R.I_b.toExponential(3)+' mm&#8308;\nM<sub>cr</sub> = f<sub>ctm</sub>&middot;W<sub>b</sub> = '+f2(R.M_cr)+' kN&middot;m\nx<sub>fis</sub> = '+f1(R.x_fis)+' mm\nI<sub>fis</sub> = '+R.I_fis.toExponential(3)+' mm&#8308;</div></div>';
-  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Inercia equivalente (&zeta;-curvaturas)</span><span class="pc-a">EC2 &sect;7.4.3 Eq. 7.18 &middot; CE 21 Art. 50.2.2.2</span></div>'
+  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Inercia equivalente (&zeta;-curvaturas)</span><span class="pc-a">EC2 &sect;7.4.3 Eq. 7.18 &middot; CE 21 Anejo 19 §7.4.3</span></div>'
     +'<div class="pc-f">M<sub>cp</sub> = '+f2(R.M_cp)+' kN&middot;m '+(R.M_cp>R.M_cr?'&gt; M<sub>cr</sub> &rarr; secci&oacute;n fisurada':'&le; M<sub>cr</sub>')+'\n&zeta; = 1 &minus; &beta;&middot;(M<sub>cr</sub>/M<sub>a</sub>)&sup2;  (&beta;=0.5 carga sostenida)\n1/I<sub>eq</sub> = &zeta;/I<sub>fis</sub> + (1&minus;&zeta;)/I<sub>b</sub> &rarr; I<sub>eq,cp</sub> = '+R.I_eq_cp.toExponential(3)+' mm&#8308;</div></div>';
   pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Flechas</span><span class="pc-a"></span></div>'
     +'<div class="pc-f">&delta;<sub>i,cp</sub> = k&middot;p<sub>cp</sub>&middot;L&#8308;/(E&middot;I<sub>eq</sub>) = '+f2(R.delta_i_cp)+' mm\n&delta;<sub>dif</sub> = &phi;(&infin;,t<sub>0</sub>)&middot;&delta;<sub>i,cp</sub> = '+f2(R.phi_inf)+'&middot;'+f2(R.delta_i_cp)+' = '+f2(R.delta_dif)+' mm\n&delta;<sub>i,q</sub> = '+f2(R.delta_i_q)+' mm\n&delta;<sub>activa</sub> = &delta;<sub>i,q</sub>+&delta;<sub>dif</sub> = '+f2(R.delta_activa)+' mm</div>'
@@ -709,7 +709,7 @@ function generarPDF(){
     '<div class="ph"><img class="ph-logo" src="'+logo+'" alt="SE">'
     +'<div class="ph-t"><div class="ph-tag">Seguridad Estructural SL &middot; Ingenier&iacute;a de estructuras &mdash; Hormig&oacute;n Armado &middot; ELS Flechas</div>'
     +'<div class="ph-h1">Comprobaci&oacute;n a Flecha &mdash; '+apoyoTxt+'</div>'
-    +'<div class="ph-sub">C&oacute;digo Estructural 2021 &middot; Art. 50 &middot; EC2:2004 &sect;7.4</div></div>'
+    +'<div class="ph-sub">C&oacute;digo Estructural 2021 &middot; Anejo 19 &middot; EC2:2004 &sect;7.4</div></div>'
     +'<div class="ph-r"><div class="ph-bdg">CE 2021 &middot; EC2 ELS</div><br>Fecha: '+fecha+'<br><a href="https://seguridadestructural.com" target="_blank">Seguridad Estructural SL</a><br><a href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a></div></div>'
     +'<div class="ps"><div class="ps-t">Datos</div><table class="pt"><tbody>'
     +'<tr><td class="pk">Tipo</td><td>'+apoyoTxt+'</td><td class="pk">L</td><td>'+R.L+' mm</td></tr>'
@@ -724,7 +724,7 @@ function generarPDF(){
     +'<div class="presult-d">'+(R.ok?'&#10003; CUMPLE':'&#10007; NO CUMPLE')+' &mdash; L&iacute;mite '+f2(R.lim_val)+' mm &mdash; aprov. '+(R.ratio*100).toFixed(1)+'%</div>'
     +'<div class="presult-det">&delta;<sub>i,cp</sub>='+f2(R.delta_i_cp)+' mm &middot; &delta;<sub>dif</sub>='+f2(R.delta_dif)+' mm &middot; &delta;<sub>total</sub>='+f2(R.delta_total)+' mm</div></div>'
     +'<div class="ps"><div class="ps-t">Normativa aplicada</div>'
-    +'<div class="pnorm"><span class="pnorm-r">CE 2021</span><span class="pnorm-d">C&oacute;digo Estructural &middot; Art. 50 (Estado L&iacute;mite de Deformaci&oacute;n)</span></div>'
+    +'<div class="pnorm"><span class="pnorm-r">CE 2021</span><span class="pnorm-d">C&oacute;digo Estructural &middot; Anejo 19 §7.4 (Estado L&iacute;mite de Deformaci&oacute;n)</span></div>'
     +'<div class="pnorm"><span class="pnorm-r">EC2:2004</span><span class="pnorm-d">EN 1992-1-1 &sect;7.4 Deflection control</span></div>'
     +'<div class="pnorm"><span class="pnorm-r">CTE DB-SE</span><span class="pnorm-d">Limitaciones de flecha activa para tabiquer&iacute;a (L/500) y total (L/250)</span></div></div>'
     +'<div class="paviso"><div class="paviso-t">Aviso legal &mdash; Validaci&oacute;n profesional obligatoria</div><p>Los resultados generados por esta herramienta tienen car&aacute;cter <b>orientativo</b> y deben ser revisados, validados e interpretados por un t&eacute;cnico cualificado y autorizado para el ejercicio de la actividad profesional correspondiente (ingeniero o arquitecto colegiado). El usuario asume toda la responsabilidad sobre la aplicaci&oacute;n de los resultados al proyecto real, debiendo verificar la idoneidad de los datos de entrada, la coherencia con la normativa vigente y la compatibilidad con las particularidades del caso concreto. Seguridad Estructural SL no garantiza la exactitud absoluta de los c&aacute;lculos ni se responsabiliza de los da&ntilde;os, perjuicios o p&eacute;rdidas derivadas de un uso indebido o de una interpretaci&oacute;n incorrecta de los resultados.</p></div>'+'<div class="ppie"><img src="'+logo+'" alt="SE"><span><a href="https://seguridadestructural.com" target="_blank">Seguridad Estructural SL</a> &middot; Ingenier&iacute;a de estructuras &middot; <a href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a></span><span>'+fecha+'</span></div>';

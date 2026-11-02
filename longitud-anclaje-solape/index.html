@@ -309,7 +309,7 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 09:46) -->
+<!-- SEO generado por publish.py (2026-11-02 10:04) -->
 <meta name="description" content="Calcula la longitud de anclaje lb,net y de solape ls de barras corrugadas según el Código Estructural 2021 (Anejo 19, apartados 8.4 y 8.7): coeficientes alfa y PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/longitud-anclaje-solape/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -529,7 +529,7 @@ window.SE_SITE={slug:'longitud-anclaje-solape',gtm:'GTM-KTK4N7T',ga4:'',consentM
 
   <!-- α₃ -->
   <div class="field">
-    <label for="inK">&alpha;<sub>3</sub> &mdash; Confinamiento transversal <span class="tip" data-tip="Art. 69.5 CE &mdash; K seg&uacute;n posici&oacute;n de la barra y confinamiento. &Sigma;Ast = &aacute;rea total de armadura transversal en la zona de anclaje.">?</span></label>
+    <label for="inK">&alpha;<sub>3</sub> &mdash; Confinamiento transversal <span class="tip" data-tip="CE Anejo 19 §8.4 &mdash; K seg&uacute;n posici&oacute;n de la barra y confinamiento. &Sigma;Ast = &aacute;rea total de armadura transversal en la zona de anclaje.">?</span></label>
     <select id="inK">
       <option value="0.10" selected>Barra recta / zona interior (K=0,10)</option>
       <option value="0.05">Barra recta / zona borde (K=0,05)</option>
@@ -544,7 +544,7 @@ window.SE_SITE={slug:'longitud-anclaje-solape',gtm:'GTM-KTK4N7T',ga4:'',consentM
 
   <!-- α₄ -->
   <div class="field">
-    <label for="inSold">&alpha;<sub>4</sub> &mdash; Barra soldada <span class="tip" data-tip="Art. 69.5 CE &mdash; Si existe una barra soldada transversalmente de di&aacute;metro &ge; &Oslash;, &alpha;4 = 0,7. En caso contrario, &alpha;4 = 1,0.">?</span></label>
+    <label for="inSold">&alpha;<sub>4</sub> &mdash; Barra soldada <span class="tip" data-tip="CE Anejo 19 §8.4 &mdash; Si existe una barra soldada transversalmente de di&aacute;metro &ge; &Oslash;, &alpha;4 = 0,7. En caso contrario, &alpha;4 = 1,0.">?</span></label>
     <select id="inSold">
       <option value="no" selected>Sin barra soldada (α₄=1,0)</option>
       <option value="yes">Barra soldada ≥Ø (α₄=0,7)</option>
@@ -553,7 +553,7 @@ window.SE_SITE={slug:'longitud-anclaje-solape',gtm:'GTM-KTK4N7T',ga4:'',consentM
 
   <!-- α₅ -->
   <div class="field" id="fieldP">
-    <label for="inP">&alpha;<sub>5</sub> &mdash; Presi&oacute;n transversal <span class="tip" data-tip="Art. 69.5 CE &mdash; Presi&oacute;n transversal p [MPa] perpendicular al plano de hendimiento en ELU. &alpha;5 = 1 &minus; 0,04&middot;p, acotado entre 0,7 y 1,0.">?</span></label>
+    <label for="inP">&alpha;<sub>5</sub> &mdash; Presi&oacute;n transversal <span class="tip" data-tip="CE Anejo 19 §8.4 &mdash; Presi&oacute;n transversal p [MPa] perpendicular al plano de hendimiento en ELU. &alpha;5 = 1 &minus; 0,04&middot;p, acotado entre 0,7 y 1,0.">?</span></label>
     <div class="field-row"><input type="number" id="inP" step="0.1" value="0" min="0"><span class="unit">MPa</span></div>
     <div class="field-msg warn" id="msgP">Presi&oacute;n p elevada (&gt;10 MPa)</div>
   </div>
@@ -573,7 +573,7 @@ window.SE_SITE={slug:'longitud-anclaje-solape',gtm:'GTM-KTK4N7T',ga4:'',consentM
       </select>
     </div>
     <div class="field">
-      <label for="inPctSolape">% barras solapadas <span class="tip" data-tip="Art. 70.3 CE &mdash; Tabla 70.3. Porcentaje de barras solapadas en la misma secci&oacute;n respecto del total de la secci&oacute;n de acero.">?</span></label>
+      <label for="inPctSolape">% barras solapadas <span class="tip" data-tip="CE Anejo 19 §8.7.3 &mdash; Tabla 8.3. Porcentaje de barras solapadas en la misma secci&oacute;n respecto del total de la secci&oacute;n de acero.">?</span></label>
       <select id="inPctSolape">
         <option value="lt25" selected>&lt; 25% (α₆=1,00)</option>
         <option value="c33">≈ 33% (α₆=1,15)</option>
@@ -641,7 +641,7 @@ window.SE_SITE={slug:'longitud-anclaje-solape',gtm:'GTM-KTK4N7T',ga4:'',consentM
 </section>
 <footer>
   <span>Seguridad Estructural SL &middot; C&oacute;digo Estructural RD 470/2021</span>
-  <span>Art. 69&ndash;70 CE</span>
+  <span>CE Anejo 19 §8.4 y §8.7</span>
 </footer>
 
 </div><!-- /wrap -->
@@ -751,7 +751,7 @@ function validate(inp) {
   if (inp.p > 10)
     warnings.push('Presión p elevada. Verificar hipótesis.');
   if (inp.phi > 32)
-    warnings.push('η₂=(132−Ø)/100 aplicado (Art. 69.5 CE)');
+    warnings.push('η₂=(132−Ø)/100 aplicado (CE Anejo 19 §8.4)');
 
   return { errors, warnings };
 }
@@ -820,7 +820,7 @@ function calc(inp) {
     a5 = Math.min(1.0, Math.max(0.7, 1 - 0.04 * inp.p));
   }
 
-  // Corrección normativa Art. 69.5
+  // Corrección normativa Anejo 19 §8.4
   let prod_235 = a2 * a3 * a5;
   const flag_235_limitado = prod_235 < 0.7;
   if (flag_235_limitado) prod_235 = 0.7;
@@ -931,50 +931,50 @@ function buildSteps(r) {
   steps.push({ n:'01',
     formula: 'f<sub>ctm</sub> = 0,30 &middot; f<sub>ck</sub><sup>2/3</sup>',
     subst: '= 0,30 &middot; ' + inp.fck + '<sup>2/3</sup>',
-    val: f(r.fctm) + ' MPa', art: 'Art. 24 CE' });
+    val: f(r.fctm) + ' MPa', art: 'CE Anejo 19 §3.1' });
 
   // 02 fctk005
   steps.push({ n:'02',
     formula: 'f<sub>ctk,0,05</sub> = 0,70 &middot; f<sub>ctm</sub>',
     subst: '= 0,70 &middot; ' + f(r.fctm) + ' MPa',
-    val: f(r.fctk005) + ' MPa', art: 'Art. 24 CE' });
+    val: f(r.fctk005) + ' MPa', art: 'CE Anejo 19 §3.1' });
 
   // 03 fctd
   steps.push({ n:'03',
     formula: 'f<sub>ctd</sub> = f<sub>ctk,0,05</sub> / &gamma;<sub>c</sub>',
     subst: '= ' + f(r.fctk005) + ' / ' + fc(inp.gc),
-    val: f(r.fctd) + ' MPa', art: 'Art. 24 CE' });
+    val: f(r.fctd) + ' MPa', art: 'CE Anejo 19 §3.1' });
 
   // 04 η₁
   steps.push({ n:'04',
     formula: '&eta;<sub>1</sub> &mdash; Posici&oacute;n de hormigonado',
     subst: inp.posicion === 'buena' ? 'Buena posici&oacute;n &rarr; &eta;<sub>1</sub> = 1,00' : 'Deficiente &rarr; &eta;<sub>1</sub> = 0,70',
-    val: fc(r.eta1), art: 'Art. 69.5 CE' });
+    val: fc(r.eta1), art: 'CE Anejo 19 §8.4' });
 
   // 05 η₂
   if (inp.phi <= 32) {
     steps.push({ n:'05',
       formula: '&eta;<sub>2</sub> &mdash; Di&aacute;metro de la barra',
       subst: '&Oslash; = ' + inp.phi + ' mm &le; 32 mm &rarr; &eta;<sub>2</sub> = 1,00',
-      val: fc(r.eta2), art: 'Art. 69.5 CE' });
+      val: fc(r.eta2), art: 'CE Anejo 19 §8.4' });
   } else {
     steps.push({ n:'05',
       formula: '&eta;<sub>2</sub> = (132 &minus; &Oslash;) / 100',
       subst: '= (132 &minus; ' + inp.phi + ') / 100',
-      val: fc(r.eta2), art: 'Art. 69.5 CE', warn: true });
+      val: fc(r.eta2), art: 'CE Anejo 19 §8.4', warn: true });
   }
 
   // 06 fbd
   steps.push({ n:'06',
     formula: 'f<sub>bd</sub> = 2,25 &middot; &eta;<sub>1</sub> &middot; &eta;<sub>2</sub> &middot; f<sub>ctd</sub>',
     subst: '= 2,25 &middot; ' + fc(r.eta1) + ' &middot; ' + fc(r.eta2) + ' &middot; ' + f(r.fctd) + ' MPa',
-    val: f(r.fbd) + ' MPa', art: 'Art. 69.5 CE', hl: true });
+    val: f(r.fbd) + ' MPa', art: 'CE Anejo 19 §8.4', hl: true });
 
   // 07 fyd
   steps.push({ n:'07',
     formula: 'f<sub>yd</sub> = f<sub>yk</sub> / &gamma;<sub>s</sub>',
     subst: '= ' + inp.fyk + ' / ' + fc(inp.gs),
-    val: f(r.fyd) + ' MPa', art: 'Art. 30 CE' });
+    val: f(r.fyd) + ' MPa', art: 'CE Anejo 19 §3.2.7' });
 
   // 08 As,barra
   steps.push({ n:'08',
@@ -998,7 +998,7 @@ function buildSteps(r) {
   steps.push({ n:'11',
     formula: 'l<sub>b,rqd</sub> = (&Oslash; / 4) &middot; (&sigma;<sub>sd</sub> / f<sub>bd</sub>)',
     subst: '= (' + inp.phi + ' mm / 4) &middot; (' + f(r.ssd) + ' MPa / ' + f(r.fbd) + ' MPa)',
-    val: f1(r.lb_rqd) + ' mm', art: 'Art. 69.5 CE', hl: true });
+    val: f1(r.lb_rqd) + ' mm', art: 'CE Anejo 19 §8.4', hl: true });
 
   // 12 α₁
   {
@@ -1013,9 +1013,9 @@ function buildSteps(r) {
         (inp.cd > thr ? '&gt;' : '&le;') + ' 3&Oslash; = ' + f1(thr) + ' mm &rarr; &alpha;<sub>1</sub> = ' + fc(r.a1);
     }
     steps.push({ n:'12',
-      formula: '&alpha;<sub>1</sub> &mdash; Forma del anclaje (Tabla 69.5)',
+      formula: '&alpha;<sub>1</sub> &mdash; Forma del anclaje (Tabla 8.2)',
       subst: sub,
-      val: fc(r.a1), art: 'Art. 69.5 CE' });
+      val: fc(r.a1), art: 'CE Anejo 19 §8.4' });
   }
 
   // 13 α₂
@@ -1032,7 +1032,7 @@ function buildSteps(r) {
     steps.push({ n:'13',
       formula: '&alpha;<sub>2</sub> = 1 &minus; 0,15 &middot; (c<sub>d</sub> &minus; ' + refStr + ') / &Oslash; &rarr; [0,7 &ndash; 1,0]',
       subst: sub,
-      val: fc(r.a2), art: 'Art. 69.5 CE' });
+      val: fc(r.a2), art: 'CE Anejo 19 §8.4' });
   }
 
   // 14 λ
@@ -1061,14 +1061,14 @@ function buildSteps(r) {
     steps.push({ n:'15',
       formula: '&alpha;<sub>3</sub> = 1 &minus; K &middot; &lambda; &rarr; [0,7 &ndash; 1,0]',
       subst: sub,
-      val: fc(r.a3), art: 'Art. 69.5 CE' });
+      val: fc(r.a3), art: 'CE Anejo 19 §8.4' });
   }
 
   // 16 α₄
   steps.push({ n:'16',
     formula: '&alpha;<sub>4</sub> &mdash; Barra soldada',
     subst: inp.soldadura ? 'Barra soldada &ge; &Oslash; &rarr; &alpha;<sub>4</sub> = 0,70' : 'Sin soldadura &rarr; &alpha;<sub>4</sub> = 1,00',
-    val: fc(r.a4), art: 'Art. 69.5 CE' });
+    val: fc(r.a4), art: 'CE Anejo 19 §8.4' });
 
   // 17 α₅
   {
@@ -1082,7 +1082,7 @@ function buildSteps(r) {
     steps.push({ n:'17',
       formula: '&alpha;<sub>5</sub> = 1 &minus; 0,04 &middot; p &rarr; [0,7 &ndash; 1,0]',
       subst: sub,
-      val: fc(r.a5), art: 'Art. 69.5 CE' });
+      val: fc(r.a5), art: 'CE Anejo 19 §8.4' });
   }
 
   // 18 Verification α₂·α₃·α₅
@@ -1093,14 +1093,14 @@ function buildSteps(r) {
       formula: 'Verificaci&oacute;n: &alpha;<sub>2</sub> &middot; &alpha;<sub>3</sub> &middot; &alpha;<sub>5</sub> &ge; 0,70',
       subst: '= ' + fc(r.a2) + ' &middot; ' + fc(r.a3) + ' &middot; ' + fc(r.a5) + ' = ' + fc3(raw) +
         (ok ? ' &ge; 0,70 &#10004;' : ' &lt; 0,70 &rarr; se adopta 0,70 &#9888;'),
-      val: fc3(r.prod_235), art: 'Art. 69.5 CE', warn: !ok });
+      val: fc3(r.prod_235), art: 'CE Anejo 19 §8.4', warn: !ok });
   }
 
   // 19 lb,net
   steps.push({ n:'19',
     formula: 'l<sub>b,net</sub> = &alpha;<sub>1</sub> &middot; &alpha;<sub>4</sub> &middot; (&alpha;<sub>2</sub>&middot;&alpha;<sub>3</sub>&middot;&alpha;<sub>5</sub>) &middot; l<sub>b,rqd</sub>',
     subst: '= ' + fc(r.a1) + ' &middot; ' + fc(r.a4) + ' &middot; ' + fc3(r.prod_235) + ' &middot; ' + f1(r.lb_rqd) + ' mm',
-    val: f1(r.lb_net_calc) + ' mm', art: 'Art. 69.5 CE', hl: true });
+    val: f1(r.lb_net_calc) + ' mm', art: 'CE Anejo 19 §8.4', hl: true });
 
   // 20 lb,min
   {
@@ -1111,27 +1111,27 @@ function buildSteps(r) {
     steps.push({ n:'20',
       formula: 'l<sub>b,min</sub> = m&aacute;x(' + (isT ? '0,3' : '0,6') + ' &middot; l<sub>b,rqd</sub>; ' + (isT ? '10' : '10') + '&Oslash;; ' + v3 + ' mm)',
       subst: '= m&aacute;x(' + f1(v1) + '; ' + f1(v2) + '; ' + v3 + ') mm',
-      val: f1(r.lb_min) + ' mm', art: 'Art. 69.5 CE' });
+      val: f1(r.lb_min) + ' mm', art: 'CE Anejo 19 §8.4' });
   }
 
   // 21 lb,net ADOPTED
   steps.push({ n:'21',
     formula: 'l<sub>b,net</sub> ADOPTADO = m&aacute;x(l<sub>b,net calc</sub>; l<sub>b,min</sub>) &rarr; ceil',
     subst: '= m&aacute;x(' + f1(r.lb_net_calc) + '; ' + f1(r.lb_min) + ') &rarr; ' + utils.fmtInt(r.lb_net) + ' mm',
-    val: utils.fmtInt(r.lb_net) + ' mm', art: 'Art. 69.5 CE', fin: true });
+    val: utils.fmtInt(r.lb_net) + ' mm', art: 'CE Anejo 19 §8.4', fin: true });
 
   // Lap steps (22–25)
   if (inp.solape && r.a6 !== undefined) {
     const a6Labels = { lt25: '< 25%', c33: '≈ 33%', c50: '≈ 50%', gt50: '> 50%' };
     steps.push({ n:'22',
-      formula: '&alpha;<sub>6</sub> &mdash; % barras solapadas (Tabla 70.3)',
+      formula: '&alpha;<sub>6</sub> &mdash; % barras solapadas (Tabla 8.3)',
       subst: a6Labels[inp.pct_solape] + ' &rarr; &alpha;<sub>6</sub> = ' + fc(r.a6),
-      val: fc(r.a6), art: 'Art. 70.3 CE' });
+      val: fc(r.a6), art: 'CE Anejo 19 §8.7.3' });
 
     steps.push({ n:'23',
       formula: 'l<sub>s,calc</sub> = &alpha;<sub>6</sub> &middot; l<sub>b,net</sub>',
       subst: '= ' + fc(r.a6) + ' &middot; ' + utils.fmtInt(r.lb_net) + ' mm',
-      val: f1(r.ls_calc) + ' mm', art: 'Art. 70.3 CE' });
+      val: f1(r.ls_calc) + ' mm', art: 'CE Anejo 19 §8.7.3' });
 
     {
       const v1 = 0.3 * r.a6 * r.lb_rqd;
@@ -1139,13 +1139,13 @@ function buildSteps(r) {
       steps.push({ n:'24',
         formula: 'l<sub>s,min</sub> = m&aacute;x(0,3 &middot; &alpha;<sub>6</sub> &middot; l<sub>b,rqd</sub>; 15&Oslash;; 200 mm)',
         subst: '= m&aacute;x(' + f1(v1) + '; ' + f1(v2) + '; 200) mm',
-        val: f1(r.ls_min) + ' mm', art: 'Art. 70.3 CE' });
+        val: f1(r.ls_min) + ' mm', art: 'CE Anejo 19 §8.7.3' });
     }
 
     steps.push({ n:'25',
       formula: 'l<sub>s</sub> ADOPTADO = m&aacute;x(l<sub>s,calc</sub>; l<sub>s,min</sub>) &rarr; ceil',
       subst: '= m&aacute;x(' + f1(r.ls_calc) + '; ' + f1(r.ls_min) + ') &rarr; ' + utils.fmtInt(r.ls) + ' mm',
-      val: utils.fmtInt(r.ls) + ' mm', art: 'Art. 70.3 CE', finAmber: true });
+      val: utils.fmtInt(r.ls) + ' mm', art: 'CE Anejo 19 §8.7.3', finAmber: true });
   }
 
   return steps;
@@ -1355,7 +1355,7 @@ function generarPDF() {
     <div class="ph-t">
       <div class="ph-tag">Seguridad Estructural SL &middot; Ingenier&iacute;a de estructuras</div>
       <div class="ph-h1">LISTADO JUSTIFICATIVO DE C&Aacute;LCULO</div>
-      <div class="ph-sub">Longitudes de anclaje y solape &mdash; Art. 69&ndash;70 CE</div>
+      <div class="ph-sub">Longitudes de anclaje y solape &mdash; CE Anejo 19 §8.4 y §8.7</div>
     </div>
     <div class="ph-r">
       <div class="ph-bdg">RD 470/2021 &middot; C&oacute;digo Estructural</div><br>
@@ -1375,10 +1375,10 @@ function generarPDF() {
   // Normativa
   html += `<div class="ps"><div class="ps-t">Normativa de referencia</div>
     <div class="pnorm"><span class="pnorm-r">RD 470/2021</span><span class="pnorm-d">C&oacute;digo Estructural</span></div>
-    <div class="pnorm"><span class="pnorm-r">Art. 24 CE</span><span class="pnorm-d">Resistencia del hormig&oacute;n a tracci&oacute;n</span></div>
-    <div class="pnorm"><span class="pnorm-r">Art. 30 CE</span><span class="pnorm-d">Resistencia de c&aacute;lculo del acero</span></div>
-    <div class="pnorm"><span class="pnorm-r">Art. 69 CE</span><span class="pnorm-d">Anclaje de armaduras pasivas</span></div>
-    <div class="pnorm"><span class="pnorm-r">Art. 70 CE</span><span class="pnorm-d">Empalme por solapamiento</span></div>
+    <div class="pnorm"><span class="pnorm-r">CE Anejo 19 §3.1</span><span class="pnorm-d">Resistencia del hormig&oacute;n a tracci&oacute;n</span></div>
+    <div class="pnorm"><span class="pnorm-r">CE Anejo 19 §3.2.7</span><span class="pnorm-d">Resistencia de c&aacute;lculo del acero</span></div>
+    <div class="pnorm"><span class="pnorm-r">CE Anejo 19 §8.4</span><span class="pnorm-d">Anclaje de armaduras pasivas</span></div>
+    <div class="pnorm"><span class="pnorm-r">CE Anejo 19 §8.7</span><span class="pnorm-d">Empalme por solapamiento</span></div>
   </div>`;
 
   // Datos de partida
@@ -1418,10 +1418,10 @@ function generarPDF() {
 
   // Notes
   html += `<div class="ps"><div class="ps-t">Notas</div>
-    <div class="pnota">1. C&aacute;lculo seg&uacute;n Art. 69 y 70 del C&oacute;digo Estructural (RD 470/2021).</div>
-    <div class="pnota">2. El producto &alpha;<sub>2</sub>&middot;&alpha;<sub>3</sub>&middot;&alpha;<sub>5</sub> se verifica como conjunto &ge; 0,70 sin redistribuci&oacute;n entre coeficientes individuales (Art. 69.5 CE).</div>
+    <div class="pnota">1. C&aacute;lculo según el Anejo 19 (§8.4 y §8.7) del Código Estructural (RD 470/2021).</div>
+    <div class="pnota">2. El producto &alpha;<sub>2</sub>&middot;&alpha;<sub>3</sub>&middot;&alpha;<sub>5</sub> se verifica como conjunto &ge; 0,70 sin redistribuci&oacute;n entre coeficientes individuales (CE Anejo 19 §8.4).</div>
     <div class="pnota">3. Resultado final redondeado al mm entero superior (Math.ceil).</div>
-    <div class="pnota">4. Para &Oslash; &gt; 32 mm se aplica &eta;<sub>2</sub>=(132&minus;&Oslash;)/100 (Art. 69.5 CE).</div>
+    <div class="pnota">4. Para &Oslash; &gt; 32 mm se aplica &eta;<sub>2</sub>=(132&minus;&Oslash;)/100 (CE Anejo 19 §8.4).</div>
     <div class="pnota">5. l<sub>b,net</sub> y l<sub>s</sub> adoptados = m&aacute;ximo entre valor calculado y m&iacute;nimo normativo.</div>
   </div>`;
 

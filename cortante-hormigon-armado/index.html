@@ -248,7 +248,7 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 09:46) -->
+<!-- SEO generado por publish.py (2026-11-02 10:04) -->
 <meta name="description" content="Comprueba el cortante de secciones rectangulares y circulares de hormigón armado según el Código Estructural 2021 y EC2: VRd,c, VRd,s, VRd,max e informe PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/cortante-hormigon-armado/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -288,7 +288,7 @@ window.SE_SITE={slug:'cortante-hormigon-armado',gtm:'GTM-KTK4N7T',ga4:'',consent
     </div>
   </div>
   <div class="hdr-right">
-    <span class="badge">Art. 23.4 &middot; EC2</span>
+    <span class="badge">Anejo 19 &middot; EC2</span>
     <a class="weblink" href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a>
   </div>
 </header>
@@ -334,14 +334,14 @@ window.SE_SITE={slug:'cortante-hormigon-armado',gtm:'GTM-KTK4N7T',ga4:'',consent
 
   <div class="sec-title">Hormigón</div>
   <div class="grid2">
-    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Art. 27."><label for="fck">f<sub>ck</sub></label><div class="field-row">
+    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Anejo 19 §3.1.2."><label for="fck">f<sub>ck</sub></label><div class="field-row">
       <select id="fck">
         <option value="20">20</option><option value="25" selected>25</option><option value="30">30</option>
         <option value="35">35</option><option value="40">40</option><option value="45">45</option>
         <option value="50">50</option><option value="55">55</option><option value="60">60</option>
       </select><span class="unit">MPa</span></div></div>
-    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Art. 15)."><label for="gc">&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
-    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Art. 22.6). EHE-08 antigua: 0.85."><label for="acc">&alpha;<sub>cc</sub></label><div class="field-row">
+    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Anejo 19 §2.4.2.4)."><label for="gc">&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Anejo 19 §3.1.6). EHE-08 antigua: 0.85."><label for="acc">&alpha;<sub>cc</sub></label><div class="field-row">
       <select id="acc">
         <option value="1.00" selected>1.00 (CE 21)</option>
         <option value="0.85">0.85 (EHE-08)</option>
@@ -367,7 +367,7 @@ window.SE_SITE={slug:'cortante-hormigon-armado',gtm:'GTM-KTK4N7T',ga4:'',consent
     </div>
     <div class="grid2">
       <div class="field"><label for="fywk">f<sub>ywk</sub></label><div class="field-row"><input type="number" id="fywk" value="500" min="200"><span class="unit">MPa</span></div></div>
-      <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Art. 15)."><label for="gs">&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+      <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Anejo 19 §2.4.2.4)."><label for="gs">&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
     </div>
     <div class="field">
       <label for="theta_range">&#952; &mdash; Áng. biela compresión (21.8° ÷ 45°)</label>
@@ -430,7 +430,7 @@ window.SE_SITE={slug:'cortante-hormigon-armado',gtm:'GTM-KTK4N7T',ga4:'',consent
   </div>
 </section>
 <footer>
-  <span>Código Estructural 2021 &middot; Art. 23.4 &middot; EC2:2004 &sect;6.2</span>
+  <span>Código Estructural 2021 &middot; Anejo 19 &middot; EC2:2004 &sect;6.2</span>
   <span>Seguridad Estructural SL &middot; seguridadestructural.com</span>
 </footer>
 </div>
@@ -521,7 +521,7 @@ function calcular(){
   const sigma_cp_raw=(NEd*1000)/Ac;
   const sigma_cp=Math.min(sigma_cp_raw,0.2*fcd);
 
-  // Parámetros VRd,c — Art. 23.4.2 / EC2 §6.2.2
+  // Parámetros VRd,c — Anejo 19 / EC2 §6.2.2
   const k=Math.min(1+Math.sqrt(200/d),2.0);
   const rho_l=Math.min(Asl/(bw*d),0.02);
   const CRdc=0.18/gc;
@@ -538,11 +538,11 @@ function calcular(){
   if(modo==='sin'){
     R.VRd=VRdc; R.ok=VRdc>=VEd;
   } else {
-    // Armadura transversal — Art. 23.4.3 / EC2 §6.2.3
+    // Armadura transversal — Anejo 19 / EC2 §6.2.3
     const phi_e=gv('phi_e'), nr=gv('nramas'), s_est=gv('s_est');
     const fywk=gv('fywk'), gs=gv('gs');
     const theta_deg_raw=parseFloat(document.getElementById('theta_num').value);
-    // FIX 2026-05-14 (C3): validar rango CE 21 Art. 37.3 — cot θ ∈ [1, 2.5] ↔ θ ∈ [21.8°, 45°]
+    // FIX 2026-05-14 (C3): validar rango CE 21 Anejo 19 §6.2.3 — cot θ ∈ [1, 2.5] ↔ θ ∈ [21.8°, 45°]
     const theta_deg=Math.min(45, Math.max(21.8, theta_deg_raw));
     const theta_clamped = Math.abs(theta_deg_raw - theta_deg) > 0.01;
     const theta=theta_deg*Math.PI/180;
@@ -634,7 +634,7 @@ function renderResultados(R){
     h+=step('13','&#957;&#8321; = 0.6&middot;(1&minus;f<sub>ck</sub>/250)',f4(R.nu1));
     h+=step('14','z = 0.9&middot;d',f2(R.z)+' mm');
     h+=step('15','&#952; = '+f1(R.theta_deg)+'&deg;'
-      +(R.theta_clamped?' <span style="color:#fc4">&#9888; clampeado de '+f1(R.theta_deg_raw)+'&deg; (CE 21 Art. 37.3: cot&#952; &isin; [1, 2.5])</span>':'')
+      +(R.theta_clamped?' <span style="color:#fc4">&#9888; clampeado de '+f1(R.theta_deg_raw)+'&deg; (CE 21 Anejo 19 §6.2.3: cot&#952; &isin; [1, 2.5])</span>':'')
       +' &rarr; cot&#952; = '+f3(R.cotT), f3(R.cotT), R.theta_clamped?'wrn':'');
     h+=step('16','V<sub>Rd,s</sub> = (A<sub>sw</sub>/s)&middot;z&middot;f<sub>ywd</sub>&middot;cot&#952;',f2(R.VRds)+' kN','hl');
     h+=step('17','V<sub>Rd,max</sub> = b<sub>w</sub>&middot;z&middot;&#957;&#8321;&middot;f<sub>cd</sub>/(cot&#952;+tan&#952;)',f2(R.VRdmax)+' kN','hl');
@@ -863,13 +863,13 @@ function generarPDF(){
 
   let pasos='<div class="pc"><div class="pc-h"><span class="pc-n">Canto útil</span><span class="pc-a">geometría</span></div>'
     +'<div class="pc-f">d = '+(R.seccion==='rect'?R.h_sec:R.bw)+' − '+R.rgeom+' − '+(R.modo==='con'?R.phi_e:0)+' − '+R.phi_l+'/2 = '+f1(R.d)+' mm</div></div>';
-  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Parámetros base</span><span class="pc-a">Art. 23.4.2</span></div>'
+  pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Parámetros base</span><span class="pc-a">Anejo 19 §6.2.2</span></div>'
     +'<div class="pc-f">fcd='+R.fck+'/'+f2(R.gc)+'='+f2(R.fcd)+' MPa\nk=1+√(200/'+f1(R.d)+')='+f3(R.k)+' ≤ 2.0\nρl='+f2(R.Asl_cm2)+'×100/('+R.bw+'×'+f1(R.d)+')='+f4(R.rho_l)+'</div></div>';
   pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">V<sub>Rd,c</sub></span><span class="pc-a">Ec. 23.12</span></div>'
     +'<div class="pc-f">vmin=0.035×'+f3(R.k)+'^1.5×'+R.fck+'^0.5='+f4(R.v_min)+' N/mm²\nv1='+f4(R.CRdc)+'×'+f3(R.k)+'×(100×'+f4(R.rho_l)+'×'+R.fck+')^(1/3)+0.15×'+f3(R.sigma_cp)+'='+f4(R.v1_f)+' N/mm²\nv=max('+f4(R.v1_f)+', '+f4(R.v1_m)+')='+f4(R.v1)+' N/mm²</div>'
     +'<div class="pc-r">VRdc='+f4(R.v1)+'×'+R.bw+'×'+f1(R.d)+'/1000='+f2(R.VRdc)+' kN</div></div>';
   if(R.modo==='con'){
-    pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Armadura transversal</span><span class="pc-a">Art. 23.4.3</span></div>'
+    pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">Armadura transversal</span><span class="pc-a">Anejo 19 §6.2.3</span></div>'
       +'<div class="pc-f">Asw='+R.nr+'×π×('+R.phi_e+'/2)²='+f2(R.Asw)+' mm²\nfywd=min('+R.fywk+'/'+f2(R.gs)+', 400)='+f2(R.fywd)+' MPa\nν1=0.6×(1−'+R.fck+'/250)='+f4(R.nu1)+'\nz=0.9×'+f1(R.d)+'='+f2(R.z)+' mm\nθ='+f1(R.theta_deg)+'° → cotθ='+f3(R.cotT)+'</div></div>';
     pasos+='<div class="pc"><div class="pc-h"><span class="pc-n">V<sub>Rd,s</sub> y V<sub>Rd,max</sub></span></div>'
       +'<div class="pc-f">VRds=('+f2(R.Asw)+'/'+R.s_est+')×'+f2(R.z)+'×'+f2(R.fywd)+'×'+f3(R.cotT)+'/1000='+f2(R.VRds)+' kN\nVRdmax='+R.bw+'×'+f2(R.z)+'×'+f4(R.nu1)+'×'+f2(R.fcd)+'/('+f3(R.cotT)+'+'+f3(R.tanT)+')/1000='+f2(R.VRdmax)+' kN\nVRd=min('+f2(R.VRds)+', '+f2(R.VRdmax)+')='+f2(R.VRd)+' kN</div></div>';
@@ -883,7 +883,7 @@ function generarPDF(){
     '<div class="ph"><img class="ph-logo" src="'+logo+'" alt="SE">'
     +'<div class="ph-t"><div class="ph-tag">Seguridad Estructural SL · Ingeniería de estructuras — Hormigón Armado · Cálculo a Cortante</div>'
     +'<div class="ph-h1">Comprobación a Cortante — '+tipoSec+'</div>'
-    +'<div class="ph-sub">Código Estructural 2021 · Art. 23.4 · EC2:2004 §6.2</div></div>'
+    +'<div class="ph-sub">Código Estructural 2021 · Anejo 19 · EC2:2004 §6.2</div></div>'
     +'<div class="ph-r"><div class="ph-bdg">CE 2021 · EC2</div><br>Fecha: '+fecha+'<br><a href="https://seguridadestructural.com" target="_blank">Seguridad Estructural SL</a><br><a href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a></div></div>'
     +'<div class="ps"><div class="ps-t">Datos de la sección</div><table class="pt"><tbody>'+rg+'</tbody></table></div>'
     +'<div class="ps"><div class="ps-t">Materiales</div><table class="pt"><tbody>'
@@ -904,7 +904,7 @@ function generarPDF(){
     +'<div class="presult-d">'+(ok?'✓ CUMPLE':'✗ NO CUMPLE')+' &mdash; V<sub>Ed</sub> = '+f2(R.VEd)+' kN &mdash; aprov. '+f1(R.VEd/R.VRd*100)+'%</div>'
     +'<div class="presult-det">'+(R.modo==='sin'?'Sin arm. transversal · VRd=VRd,c':'Con arm. transversal · '+(R.VRd===R.VRds?'Limita arm. (VRd,s)':'Limita biela (VRd,max)'))+'</div></div>'
     +'<div class="ps"><div class="ps-t">Normativa aplicada</div>'
-    +'<div class="pnorm"><span class="pnorm-r">CE 2021</span><span class="pnorm-d">Código Estructural · Art. 23.4 (Estado Límite Último frente a cortante)</span></div>'
+    +'<div class="pnorm"><span class="pnorm-r">CE 2021</span><span class="pnorm-d">Código Estructural · Anejo 19 §6.2 (Estado Límite Último frente a cortante)</span></div>'
     +'<div class="pnorm"><span class="pnorm-r">EC2:2004</span><span class="pnorm-d">EN 1992-1-1 §6.2 Shear</span></div></div>'
     +'<div class="paviso"><div class="paviso-t">Aviso legal &mdash; Validaci&oacute;n profesional obligatoria</div><p>Los resultados generados por esta herramienta tienen car&aacute;cter <b>orientativo</b> y deben ser revisados, validados e interpretados por un t&eacute;cnico cualificado y autorizado para el ejercicio de la actividad profesional correspondiente (ingeniero o arquitecto colegiado). El usuario asume toda la responsabilidad sobre la aplicaci&oacute;n de los resultados al proyecto real, debiendo verificar la idoneidad de los datos de entrada, la coherencia con la normativa vigente y la compatibilidad con las particularidades del caso concreto. Seguridad Estructural SL no garantiza la exactitud absoluta de los c&aacute;lculos ni se responsabiliza de los da&ntilde;os, perjuicios o p&eacute;rdidas derivadas de un uso indebido o de una interpretaci&oacute;n incorrecta de los resultados.</p></div>'+'<div class="ppie"><img src="'+logo+'" alt="SE"><span><a href="https://seguridadestructural.com" target="_blank">Seguridad Estructural SL</a> &middot; Ingenier&iacute;a de estructuras &middot; <a href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a></span><span>'+fecha+'</span></div>';
 

@@ -225,7 +225,7 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 09:46) -->
+<!-- SEO generado por publish.py (2026-11-02 10:04) -->
 <meta name="description" content="Calcula la esbeltez de un soporte de hormigón armado, la esbeltez límite y el momento de segundo orden por curvatura nominal según el CE 2021 y el EC2 §5.8.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/pandeo-soportes-hormigon/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -265,7 +265,7 @@ window.SE_SITE={slug:'pandeo-soportes-hormigon',gtm:'GTM-KTK4N7T',ga4:'',consent
     </div>
   </div>
   <div class="hdr-right">
-    <span class="badge">Art. 33 &middot; EC2 &sect;5.8</span>
+    <span class="badge">Anejo 19 &middot; EC2 &sect;5.8</span>
     <a class="weblink" href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a>
   </div>
 </header>
@@ -302,19 +302,19 @@ window.SE_SITE={slug:'pandeo-soportes-hormigon',gtm:'GTM-KTK4N7T',ga4:'',consent
 
   <div class="sec-title">Materiales y armadura</div>
   <div class="grid2">
-    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Art. 27."><label for="fck">f<sub>ck</sub></label><div class="field-row">
+    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Anejo 19 §3.1.2."><label for="fck">f<sub>ck</sub></label><div class="field-row">
       <select id="fck">
         <option value="20">20</option><option value="25" selected>25</option><option value="30">30</option>
         <option value="35">35</option><option value="40">40</option><option value="45">45</option><option value="50">50</option>
       </select><span class="unit">MPa</span></div></div>
-    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Art. 15)."><label for="gc">&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
-    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Art. 22.6). EHE-08 antigua: 0.85."><label for="acc">&alpha;<sub>cc</sub></label><div class="field-row">
+    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Anejo 19 §2.4.2.4)."><label for="gc">&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Anejo 19 §3.1.6). EHE-08 antigua: 0.85."><label for="acc">&alpha;<sub>cc</sub></label><div class="field-row">
       <select id="acc">
         <option value="1.00" selected>1.00 (CE 21)</option>
         <option value="0.85">0.85 (EHE-08)</option>
       </select><span class="unit">&mdash;</span></div></div>
-    <div class="field" title="Límite elástico característico del acero. B500S: 500 MPa; B400S: 400 MPa (CE 21 Art. 28). En compresión topado a 400 MPa (Art. 30)."><label for="fyk">f<sub>yk</sub></label><div class="field-row"><input type="number" id="fyk" value="500" min="200"><span class="unit">MPa</span></div></div>
-    <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Art. 15)."><label for="gs">&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+    <div class="field" title="Límite elástico característico del acero. B500S: 500 MPa; B400S: 400 MPa (CE 21 Anejo 19 §3.2.2). En compresión se limita a 400 MPa (criterio EHE-08)."><label for="fyk">f<sub>yk</sub></label><div class="field-row"><input type="number" id="fyk" value="500" min="200"><span class="unit">MPa</span></div></div>
+    <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Anejo 19 §2.4.2.4)."><label for="gs">&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
   </div>
   <div class="field"><label for="As_cm2">A<sub>s,tot</sub> (todas las barras)</label><div class="field-row"><input type="number" id="As_cm2" value="20.36" step="0.01" min="0.01"><span class="unit">cm&sup2;</span></div></div>
 
@@ -383,7 +383,7 @@ window.SE_SITE={slug:'pandeo-soportes-hormigon',gtm:'GTM-KTK4N7T',ga4:'',consent
   </div>
 </section>
 <footer>
-  <span>C&oacute;digo Estructural 2021 &middot; Art. 33 &middot; EC2:2004 &sect;5.8</span>
+  <span>C&oacute;digo Estructural 2021 &middot; Anejo 19 &middot; EC2:2004 &sect;5.8</span>
   <span>Seguridad Estructural SL &middot; seguridadestructural.com</span>
 </footer>
 </div>
@@ -484,7 +484,7 @@ function calcular(){
   // Cuantía mecánica
   const omega = As*fyd/(A_c*fcd);
 
-  // Esbeltez límite (CE 21 Art. 33.1.2 / EC2 §5.8.3.1)
+  // Esbeltez límite (CE 21 Anejo 19 / EC2 §5.8.3.1)
   // λ_lim = 35·(C/√n)·(1+2ω)^0.5 simplificada (España)
   // O EC2: λ_lim = 20·A·B·C/√n con A=0.7, B=√(1+2ω), C=1.7-r_m
   // Usaremos la fórmula simplificada: λ_lim = 35·√((1+0.24/e_rel + 3.4·(e_2/e_1−1)^2)/n)
@@ -540,9 +540,9 @@ function calcular(){
   // FIX 2026-05-12: reemplazo de M_Rd_approx (fórmula inventada no normativa) por
   // BISECCIÓN RIGUROSA sobre fibra neutra x con diagrama parábola-rectángulo CE 21 + EC2.
   // Hipótesis: armadura simétrica As_total/2 en cada cara, d=0.9·h, dp=0.1·h (válido
-  // para pilares estándar con r/h≈0.10). Aplica tope f_yd ≤ 400 MPa en compresión (Art. 30).
+  // para pilares estándar con r/h≈0.10). Aplica tope f_yd ≤ 400 MPa en compresión (criterio EHE-08).
   const fyd_t = fyd;                // tracción
-  const fyd_c = Math.min(fyd, 400); // compresión: tope Art. 30
+  const fyd_c = Math.min(fyd, 400); // compresión: tope criterio EHE-08
   const eps_cu_param = 0.0035, eps_c2_param = 0.0020;
   const lam_param = 0.8, eta_param = 1.0;
 
@@ -837,7 +837,7 @@ function generarPDF(){
     '<div class="ph"><img class="ph-logo" src="'+logo+'" alt="SE">'
     +'<div class="ph-t"><div class="ph-tag">Seguridad Estructural SL &middot; Ingenier&iacute;a de estructuras &mdash; Hormig&oacute;n Armado &middot; Pandeo de Soportes</div>'
     +'<div class="ph-h1">Comprobaci&oacute;n a Inestabilidad &mdash; '+(R.seccion==='rect'?'Rect.':'Circ.')+'</div>'
-    +'<div class="ph-sub">C&oacute;digo Estructural 2021 &middot; Art. 33 &middot; EC2:2004 &sect;5.8</div></div>'
+    +'<div class="ph-sub">C&oacute;digo Estructural 2021 &middot; Anejo 19 &middot; EC2:2004 &sect;5.8</div></div>'
     +'<div class="ph-r"><div class="ph-bdg">CE 2021 &middot; EC2</div><br>Fecha: '+fecha+'<br><a href="https://seguridadestructural.com" target="_blank">Seguridad Estructural SL</a><br><a href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a></div></div>'
     +'<div class="ps"><div class="ps-t">Datos</div><table class="pt"><tbody>'
     +'<tr><td class="pk">Secci&oacute;n</td><td>'+R.seccion+'</td><td class="pk">A<sub>c</sub></td><td>'+f0(R.A_c)+' mm&sup2;</td></tr>'
@@ -852,7 +852,7 @@ function generarPDF(){
     +'<div class="presult-d">'+(R.ok?'&#10003; CUMPLE':'&#10007; NO CUMPLE')+' &mdash; aprox. M<sub>Rd</sub> = '+f1(R.M_Rd_approx)+' kN&middot;m</div>'
     +'<div class="presult-det">Para comprobaci&oacute;n rigurosa usar pilar_hormigon_armado.html con (N<sub>Ed</sub>, M<sub>Ed,ef</sub>) = ('+R.NEd+', '+f1(R.M_Ed_eff)+')</div></div>'
     +'<div class="ps"><div class="ps-t">Normativa aplicada</div>'
-    +'<div class="pnorm"><span class="pnorm-r">CE 2021</span><span class="pnorm-d">C&oacute;digo Estructural &middot; Art. 33 (Inestabilidad estructural)</span></div>'
+    +'<div class="pnorm"><span class="pnorm-r">CE 2021</span><span class="pnorm-d">C&oacute;digo Estructural &middot; Anejo 19 §5.8 (Inestabilidad estructural)</span></div>'
     +'<div class="pnorm"><span class="pnorm-r">EC2:2004</span><span class="pnorm-d">EN 1992-1-1 &sect;5.8 Analysis of second order effects with axial load</span></div></div>'
     +'<div class="paviso"><div class="paviso-t">Aviso legal &mdash; Validaci&oacute;n profesional obligatoria</div><p>Los resultados generados por esta herramienta tienen car&aacute;cter <b>orientativo</b> y deben ser revisados, validados e interpretados por un t&eacute;cnico cualificado y autorizado para el ejercicio de la actividad profesional correspondiente (ingeniero o arquitecto colegiado). El usuario asume toda la responsabilidad sobre la aplicaci&oacute;n de los resultados al proyecto real, debiendo verificar la idoneidad de los datos de entrada, la coherencia con la normativa vigente y la compatibilidad con las particularidades del caso concreto. Seguridad Estructural SL no garantiza la exactitud absoluta de los c&aacute;lculos ni se responsabiliza de los da&ntilde;os, perjuicios o p&eacute;rdidas derivadas de un uso indebido o de una interpretaci&oacute;n incorrecta de los resultados.</p></div>'+'<div class="ppie"><img src="'+logo+'" alt="SE"><span><a href="https://seguridadestructural.com" target="_blank">Seguridad Estructural SL</a> &middot; Ingenier&iacute;a de estructuras &middot; <a href="https://seguridadestructural.com" target="_blank">seguridadestructural.com</a></span><span>'+fecha+'</span></div>';
 

@@ -388,9 +388,12 @@ footer a:hover{color:var(--amber);}
 .se-gate-legal{font-size:11px!important;color:#8a92a3!important;margin:.8rem 0 0!important;line-height:1.4;}
 .se-gate-x{position:absolute;top:10px;right:12px;background:transparent;border:none;color:#8a92a3;font-size:26px;line-height:1;cursor:pointer;padding:4px 8px;}
 @media print{.seo-info,.se-consent,.se-gate{display:none!important;}}
+/* accesibilidad (Lighthouse): contraste >= 4.5:1 del texto blanco sobre los botones principales */
+.btn-calc,.seo-btn,.se-consent button.pri,.se-gate-btn{background:#2b63d9;}
+.btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-01 22:59) -->
+<!-- SEO generado por publish.py (2026-11-02 09:46) -->
 <meta name="description" content="Calcula muros de contención en ménsula: vuelco, deslizamiento, hundimiento, armado de fuste y zapata y coste por metro según CE 2021 y CTE DB-SE-C. Con PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-mensula-contencion/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -442,23 +445,23 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   <!-- 0 - IDENTIFICACIÓN -->
   <div class="sec-title"><span class="sec-num">0</span>Identificación</div>
   <div class="grid2">
-    <div class="field"><label>Proyecto</label><div class="field-row"><input type="text" id="inProyecto" placeholder="—"></div></div>
-    <div class="field"><label>Referencia</label><div class="field-row"><input type="text" id="inRef" placeholder="—"></div></div>
+    <div class="field"><label for="inProyecto">Proyecto</label><div class="field-row"><input type="text" id="inProyecto" placeholder="—"></div></div>
+    <div class="field"><label for="inRef">Referencia</label><div class="field-row"><input type="text" id="inRef" placeholder="—"></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>Elemento</label><div class="field-row"><input type="text" id="inElem" placeholder="—"></div></div>
-    <div class="field"><label>Redactor</label><div class="field-row"><input type="text" id="inRedactor" placeholder="—"></div></div>
+    <div class="field"><label for="inElem">Elemento</label><div class="field-row"><input type="text" id="inElem" placeholder="—"></div></div>
+    <div class="field"><label for="inRedactor">Redactor</label><div class="field-row"><input type="text" id="inRedactor" placeholder="—"></div></div>
   </div>
 
   <!-- 1a - TIPO DE MURO (encofrado a 1 o 2 caras) -->
   <div class="sec-title"><span class="sec-num">1</span>Tipo de muro y zapata</div>
-  <div class="field"><label>Encofrado del muro <span class="tip" title="A UNA CARA: el muro se hormigona contra el terreno (excavación talud o entibación). Solo se encofra el intradós. Resulta más económico, pero requiere recubrimiento mayor en trasdós (70 mm típico CE 21 clase IIa-IIb). Sólo es posible si la zapata tiene PUNTERA (excéntrica) que permita ejecutar primero la zapata sin invadir el terreno trasdós.&#10;&#10;A DOS CARAS: muro encofrado por las dos caras. Habitual con relleno posterior compactado por capas. Suele exigir impermeabilización del trasdós (en cuyo caso δ=0). Recubrimientos típicos: 35 mm intradós + 50 mm trasdós.">?</span></label>
+  <div class="field"><label for="inEncofrado">Encofrado del muro <span class="tip" title="A UNA CARA: el muro se hormigona contra el terreno (excavación talud o entibación). Solo se encofra el intradós. Resulta más económico, pero requiere recubrimiento mayor en trasdós (70 mm típico CE 21 clase IIa-IIb). Sólo es posible si la zapata tiene PUNTERA (excéntrica) que permita ejecutar primero la zapata sin invadir el terreno trasdós.&#10;&#10;A DOS CARAS: muro encofrado por las dos caras. Habitual con relleno posterior compactado por capas. Suele exigir impermeabilización del trasdós (en cuyo caso δ=0). Recubrimientos típicos: 35 mm intradós + 50 mm trasdós.">?</span></label>
     <select id="inEncofrado">
       <option value="2c" selected>A 2 caras (relleno posterior)</option>
       <option value="1c">A 1 cara (contra terreno) — solo excéntrico</option>
     </select>
   </div>
-  <div class="field"><label>Clase ambiente CIMENTACIÓN <span class="tip" title="Determina el recubrimiento mínimo según CE 21 Anejo 9.&#10;&#10;• IIa: humedad alta sin agresividad química (cimentaciones enterradas en suelo no agresivo)&#10;• IIb: humedad alta + ciclos hielo-deshielo&#10;• IIIa: marina aérea&#10;• IV: ataque químico moderado">?</span></label>
+  <div class="field"><label for="inAmbCim">Clase ambiente CIMENTACIÓN <span class="tip" title="Determina el recubrimiento mínimo según CE 21 Anejo 9.&#10;&#10;• IIa: humedad alta sin agresividad química (cimentaciones enterradas en suelo no agresivo)&#10;• IIb: humedad alta + ciclos hielo-deshielo&#10;• IIIa: marina aérea&#10;• IV: ataque químico moderado">?</span></label>
     <select id="inAmbCim" onchange="actualizarRecubrimientos()">
       <option value="IIa" selected>IIa (cimentación enterrada normal)</option>
       <option value="IIb">IIb (hielo-deshielo)</option>
@@ -466,7 +469,7 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
       <option value="IV">IV (química moderada)</option>
     </select>
   </div>
-  <div class="field"><label>Clase ambiente MURO <span class="tip" title="Clase exposición del fuste del muro. Si el muro queda expuesto al aire libre (intradós), la cara intradós suele ser IIa o XC2-XC4. Si el muro está completamente enterrado, IIa. Para muros marítimos o de carretera (sales) usar IIIa/IIIc o IIIb.">?</span></label>
+  <div class="field"><label for="inAmbMuro">Clase ambiente MURO <span class="tip" title="Clase exposición del fuste del muro. Si el muro queda expuesto al aire libre (intradós), la cara intradós suele ser IIa o XC2-XC4. Si el muro está completamente enterrado, IIa. Para muros marítimos o de carretera (sales) usar IIIa/IIIc o IIIb.">?</span></label>
     <select id="inAmbMuro" onchange="actualizarRecubrimientos()">
       <option value="IIa" selected>IIa (muro enterrado o protegido)</option>
       <option value="IIb">IIb (hielo-deshielo)</option>
@@ -498,27 +501,27 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
 
   <!-- 2 - GEOMETRÍA -->
   <div class="sec-title"><span class="sec-num">2</span>Geometría</div>
-  <div class="field"><label>Tipo de fuste <span class="tip" title="MURO VERTICAL: paredes paralelas, espesor constante (e_a = e_c). Habitual en muros pequeños y medios (H ≤ 5 m), más simple de construir.&#10;&#10;FUSTE VARIABLE: el espesor decrece con la altura (e_a > e_c). Más eficiente para muros altos (H > 5 m). La cara intradós queda vertical y la cara trasdós se inclina hacia el intradós conforme sube.">?</span></label>
+  <div class="field"><label for="inFuste">Tipo de fuste <span class="tip" title="MURO VERTICAL: paredes paralelas, espesor constante (e_a = e_c). Habitual en muros pequeños y medios (H ≤ 5 m), más simple de construir.&#10;&#10;FUSTE VARIABLE: el espesor decrece con la altura (e_a > e_c). Más eficiente para muros altos (H > 5 m). La cara intradós queda vertical y la cara trasdós se inclina hacia el intradós conforme sube.">?</span></label>
     <select id="inFuste" onchange="aplicarTipoFuste()">
       <option value="vertical" selected>Vertical (e_a = e_c, recto)</option>
       <option value="variable">Variable (talud trasdós, e_a &gt; e_c)</option>
     </select>
   </div>
   <div class="grid2">
-    <div class="field"><label>H total muro <span class="tip" title="Altura total desde la base de la zapata hasta coronación">?</span></label><div class="field-row"><input type="number" id="inH" step="0.05" value="4.50" min="0.5"><span class="unit">m</span></div></div>
-    <div class="field"><label>H zapata e_z</label><div class="field-row"><input type="number" id="inEz" step="0.05" value="0.60" min="0.2"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inH">H total muro <span class="tip" title="Altura total desde la base de la zapata hasta coronación">?</span></label><div class="field-row"><input type="number" id="inH" step="0.05" value="4.50" min="0.5"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inEz">H zapata e_z</label><div class="field-row"><input type="number" id="inEz" step="0.05" value="0.60" min="0.2"><span class="unit">m</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>Espesor coronación e_c</label><div class="field-row"><input type="number" id="inEc" step="0.05" value="0.30" min="0.15"><span class="unit">m</span></div></div>
-    <div class="field"><label>Espesor arranque e_a</label><div class="field-row"><input type="number" id="inEa" step="0.05" value="0.30" min="0.15"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inEc">Espesor coronación e_c</label><div class="field-row"><input type="number" id="inEc" step="0.05" value="0.30" min="0.15"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inEa">Espesor arranque e_a</label><div class="field-row"><input type="number" id="inEa" step="0.05" value="0.30" min="0.15"><span class="unit">m</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>B puntera (intradós)</label><div class="field-row"><input type="number" id="inBp" step="0.05" value="0.80" min="0"><span class="unit">m</span></div></div>
-    <div class="field"><label>B talón (trasdós)</label><div class="field-row"><input type="number" id="inBt" step="0.05" value="1.50" min="0"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inBp">B puntera (intradós)</label><div class="field-row"><input type="number" id="inBp" step="0.05" value="0.80" min="0"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inBt">B talón (trasdós)</label><div class="field-row"><input type="number" id="inBt" step="0.05" value="1.50" min="0"><span class="unit">m</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>Profund. enterramiento d_emp</label><div class="field-row"><input type="number" id="inDemp" step="0.05" value="0.80" min="0"><span class="unit">m</span></div></div>
-    <div class="field"><label>Inclinación trasdós β</label><div class="field-row"><input type="number" id="inBeta" step="1" value="0" min="-30" max="30"><span class="unit">°</span></div></div>
+    <div class="field"><label for="inDemp">Profund. enterramiento d_emp</label><div class="field-row"><input type="number" id="inDemp" step="0.05" value="0.80" min="0"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inBeta">Inclinación trasdós β</label><div class="field-row"><input type="number" id="inBeta" step="1" value="0" min="-30" max="30"><span class="unit">°</span></div></div>
   </div>
   <div class="toggle-row">
     <input type="checkbox" id="inTacon">
@@ -526,8 +529,8 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   </div>
   <div id="taconInputs" style="display:none">
     <div class="grid2">
-      <div class="field"><label>Altura tacón h_t</label><div class="field-row"><input type="number" id="inHtacon" step="0.05" value="0.30" min="0.1"><span class="unit">m</span></div></div>
-      <div class="field"><label>Ancho tacón b_t</label><div class="field-row"><input type="number" id="inBtacon" step="0.05" value="0.30" min="0.1"><span class="unit">m</span></div></div>
+      <div class="field"><label for="inHtacon">Altura tacón h_t</label><div class="field-row"><input type="number" id="inHtacon" step="0.05" value="0.30" min="0.1"><span class="unit">m</span></div></div>
+      <div class="field"><label for="inBtacon">Ancho tacón b_t</label><div class="field-row"><input type="number" id="inBtacon" step="0.05" value="0.30" min="0.1"><span class="unit">m</span></div></div>
     </div>
   </div>
   <div class="info-line" id="geomInfo">B total = 2.75 m · B_efectivo (núcleo central) = 2.75/6 = 0.46 m</div>
@@ -535,12 +538,12 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   <!-- 3 - TERRENO -->
   <div class="sec-title"><span class="sec-num">3</span>Terreno</div>
   <div class="grid3">
-    <div class="field"><label>γ [kN/m³]</label><div class="field-row"><input type="number" id="inGamma" step="0.5" value="18" min="14" max="24"><span class="unit"></span></div></div>
-    <div class="field"><label>φ' [°]</label><div class="field-row"><input type="number" id="inPhi" step="1" value="30" min="15" max="45"><span class="unit">°</span></div></div>
-    <div class="field"><label>c' [kPa]</label><div class="field-row"><input type="number" id="inC" step="1" value="0" min="0"><span class="unit"></span></div></div>
+    <div class="field"><label for="inGamma">γ [kN/m³]</label><div class="field-row"><input type="number" id="inGamma" step="0.5" value="18" min="14" max="24"><span class="unit"></span></div></div>
+    <div class="field"><label for="inPhi">φ' [°]</label><div class="field-row"><input type="number" id="inPhi" step="1" value="30" min="15" max="45"><span class="unit">°</span></div></div>
+    <div class="field"><label for="inC">c' [kPa]</label><div class="field-row"><input type="number" id="inC" step="1" value="0" min="0"><span class="unit"></span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>δ muro-terreno <span class="tip" title="Ángulo de rozamiento entre el muro y el terreno (CTE DB-SE-C). Valores típicos:&#10;&#10;• Muro encofrado a 1 cara (terreno directo): 2/3·φ' (rozamiento alto)&#10;• Muro encofrado a 1 cara con lámina drenante (huevera): δ=0 (sin rozamiento)&#10;• Muro encofrado a 1 cara con impermeabilización: δ=0&#10;• Muro encofrado a 2 caras (con relleno posterior): 1/2·φ' a 1/3·φ' (suele estar impermeabilizado por convención)&#10;&#10;Selector rápido al lado →">?</span></label>
+    <div class="field"><label for="inDelta">δ muro-terreno <span class="tip" title="Ángulo de rozamiento entre el muro y el terreno (CTE DB-SE-C). Valores típicos:&#10;&#10;• Muro encofrado a 1 cara (terreno directo): 2/3·φ' (rozamiento alto)&#10;• Muro encofrado a 1 cara con lámina drenante (huevera): δ=0 (sin rozamiento)&#10;• Muro encofrado a 1 cara con impermeabilización: δ=0&#10;• Muro encofrado a 2 caras (con relleno posterior): 1/2·φ' a 1/3·φ' (suele estar impermeabilizado por convención)&#10;&#10;Selector rápido al lado →">?</span></label>
       <div class="field-row">
         <input type="number" id="inDelta" step="1" value="20" min="0" max="40"><span class="unit">°</span>
         <select id="inDeltaPreset" onchange="aplicarDeltaPreset()" style="flex:0 0 auto;font-size:10px">
@@ -552,12 +555,12 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
         </select>
       </div>
     </div>
-    <div class="field"><label>σ_adm terreno</label><div class="field-row"><input type="number" id="inSigmaAdm" step="10" value="200" min="50" max="500"><span class="unit">kPa</span></div></div>
+    <div class="field"><label for="inSigmaAdm">σ_adm terreno</label><div class="field-row"><input type="number" id="inSigmaAdm" step="10" value="200" min="50" max="500"><span class="unit">kPa</span></div></div>
   </div>
 
   <!-- 4 - EMPUJES -->
   <div class="sec-title"><span class="sec-num">4</span>Empujes</div>
-  <div class="field"><label>Tipo de empuje activo</label>
+  <div class="field"><label for="inEmpuje">Tipo de empuje activo</label>
     <select id="inEmpuje">
       <option value="rankine_act" selected>Activo Rankine</option>
       <option value="coulomb_act">Activo Coulomb (α, β, δ)</option>
@@ -565,8 +568,8 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
     </select>
   </div>
   <div class="grid2">
-    <div class="field"><label>α paramento trasdós <span class="tip" title="Ángulo del paramento del muro respecto a la horizontal. 90° = vertical (Coulomb)">?</span></label><div class="field-row"><input type="number" id="inAlpha" step="1" value="90" min="60" max="100"><span class="unit">°</span></div></div>
-    <div class="field"><label>Considerar cohesión c' <span class="tip" title="En suelos cohesivos (c' > 0), la presión activa en la zona superior puede ser NEGATIVA (tracción) hasta una profundidad z₀ = 2c'/(γ·√K_a). En la práctica el suelo NO transmite tracción, por lo que esta zona se considera 'fisurada' y se descuenta del empuje.&#10;&#10;Sí: aplica la corrección 2c'·√K_a → empuje activo reducido (más optimista, exige investigar c').&#10;No: ignora la cohesión (conservador, simplemente Rankine sin descuento).&#10;&#10;Recomendación: usar 'No' salvo que c' esté confirmado por ensayos triaxiales.">?</span></label>
+    <div class="field"><label for="inAlpha">α paramento trasdós <span class="tip" title="Ángulo del paramento del muro respecto a la horizontal. 90° = vertical (Coulomb)">?</span></label><div class="field-row"><input type="number" id="inAlpha" step="1" value="90" min="60" max="100"><span class="unit">°</span></div></div>
+    <div class="field"><label for="inUsarCoh">Considerar cohesión c' <span class="tip" title="En suelos cohesivos (c' > 0), la presión activa en la zona superior puede ser NEGATIVA (tracción) hasta una profundidad z₀ = 2c'/(γ·√K_a). En la práctica el suelo NO transmite tracción, por lo que esta zona se considera 'fisurada' y se descuenta del empuje.&#10;&#10;Sí: aplica la corrección 2c'·√K_a → empuje activo reducido (más optimista, exige investigar c').&#10;No: ignora la cohesión (conservador, simplemente Rankine sin descuento).&#10;&#10;Recomendación: usar 'No' salvo que c' esté confirmado por ensayos triaxiales.">?</span></label>
       <select id="inUsarCoh">
         <option value="no" selected>No (suelo granular o conservador)</option>
         <option value="si">Sí (descontar 2c'·√K_a)</option>
@@ -579,8 +582,8 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   </div>
   <div id="pasivoInputs" style="display:none">
     <div class="grid2">
-      <div class="field"><label>Cota desde donde actúa</label><div class="field-row"><input type="number" id="inCotaPp" step="0.05" value="0.30" min="0"><span class="unit">m</span></div></div>
-      <div class="field"><label>Movilización <span class="tip" title="Fracción del empuje pasivo realmente movilizada (CTE recomienda usar 33-50% en condiciones servicio)">?</span></label>
+      <div class="field"><label for="inCotaPp">Cota desde donde actúa</label><div class="field-row"><input type="number" id="inCotaPp" step="0.05" value="0.30" min="0"><span class="unit">m</span></div></div>
+      <div class="field"><label for="inMovPp">Movilización <span class="tip" title="Fracción del empuje pasivo realmente movilizada (CTE recomienda usar 33-50% en condiciones servicio)">?</span></label>
         <select id="inMovPp">
           <option value="0.33">33% (CTE servicio)</option>
           <option value="0.50" selected>50% (movilización media)</option>
@@ -599,8 +602,8 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   </div>
   <div id="sismoInputs" style="display:none">
     <div class="grid2">
-      <div class="field"><label>k_h coef. horizontal <span class="tip" title="k_h = a_c·S/g · ρ donde a_c es la aceleración de cálculo. Típico: 0.04-0.20">?</span></label><div class="field-row"><input type="number" id="inKh" step="0.01" value="0.10" min="0" max="0.50"></div></div>
-      <div class="field"><label>k_v coef. vertical</label><div class="field-row"><input type="number" id="inKv" step="0.01" value="0.05" min="-0.20" max="0.20"></div></div>
+      <div class="field"><label for="inKh">k_h coef. horizontal <span class="tip" title="k_h = a_c·S/g · ρ donde a_c es la aceleración de cálculo. Típico: 0.04-0.20">?</span></label><div class="field-row"><input type="number" id="inKh" step="0.01" value="0.10" min="0" max="0.50"></div></div>
+      <div class="field"><label for="inKv">k_v coef. vertical</label><div class="field-row"><input type="number" id="inKv" step="0.01" value="0.05" min="-0.20" max="0.20"></div></div>
     </div>
     <div class="info-line">Empuje activo dinámico K_AE con incremento sísmico aplicado a 0.6·H sobre la base (recomendación EC8).</div>
   </div>
@@ -608,12 +611,12 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   <!-- 5 - CARGAS -->
   <div class="sec-title"><span class="sec-num">5</span>Cargas</div>
   <div class="grid2">
-    <div class="field"><label>q sobrecarga trasdós</label><div class="field-row"><input type="number" id="inQt" step="1" value="10" min="0"><span class="unit">kPa</span></div></div>
-    <div class="field"><label>q sobrecarga intradós</label><div class="field-row"><input type="number" id="inQi" step="1" value="0" min="0"><span class="unit">kPa</span></div></div>
+    <div class="field"><label for="inQt">q sobrecarga trasdós</label><div class="field-row"><input type="number" id="inQt" step="1" value="10" min="0"><span class="unit">kPa</span></div></div>
+    <div class="field"><label for="inQi">q sobrecarga intradós</label><div class="field-row"><input type="number" id="inQi" step="1" value="0" min="0"><span class="unit">kPa</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>N carga muerta (coron.) <span class="tip" title="Carga vertical concentrada que llega a la coronación del muro por metro lineal de muro. Procede normalmente del peso del forjado o cargo de cubierta que apoya sobre el muro. Ejemplo: forjado de hormigón 250 kg/m² × L_apoyo = 5 kN/m por cada metro de muro.">?</span></label><div class="field-row"><input type="number" id="inN" step="1" value="0" min="0"><span class="unit">kN/m</span></div></div>
-    <div class="field"><label>e_N excentricidad <span class="tip" title="Distancia horizontal desde el EJE del muro a la línea de acción de la carga N coronación. Convención:&#10;&#10;• e_N > 0 (positivo): N desplazada hacia el TRASDÓS (terreno) → momento ESTABILIZANTE&#10;• e_N < 0 (negativo): N desplazada hacia el INTRADÓS (aire) → momento VOLCADOR&#10;• e_N = 0: carga centrada en el eje del muro (caso típico)&#10;&#10;Si el muro recibe el forjado en una mensilla en el lado intradós, e_N será negativo (∼ -ec/2).">?</span></label><div class="field-row"><input type="number" id="inEn" step="0.01" value="0" min="-0.5" max="0.5"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inN">N carga muerta (coron.) <span class="tip" title="Carga vertical concentrada que llega a la coronación del muro por metro lineal de muro. Procede normalmente del peso del forjado o cargo de cubierta que apoya sobre el muro. Ejemplo: forjado de hormigón 250 kg/m² × L_apoyo = 5 kN/m por cada metro de muro.">?</span></label><div class="field-row"><input type="number" id="inN" step="1" value="0" min="0"><span class="unit">kN/m</span></div></div>
+    <div class="field"><label for="inEn">e_N excentricidad <span class="tip" title="Distancia horizontal desde el EJE del muro a la línea de acción de la carga N coronación. Convención:&#10;&#10;• e_N > 0 (positivo): N desplazada hacia el TRASDÓS (terreno) → momento ESTABILIZANTE&#10;• e_N < 0 (negativo): N desplazada hacia el INTRADÓS (aire) → momento VOLCADOR&#10;• e_N = 0: carga centrada en el eje del muro (caso típico)&#10;&#10;Si el muro recibe el forjado en una mensilla en el lado intradós, e_N será negativo (∼ -ec/2).">?</span></label><div class="field-row"><input type="number" id="inEn" step="0.01" value="0" min="-0.5" max="0.5"><span class="unit">m</span></div></div>
   </div>
 
   <!-- 6 - NIVEL FREÁTICO -->
@@ -624,8 +627,8 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   </div>
   <div id="nfInputs" style="display:none">
     <div class="grid2">
-      <div class="field"><label>h_w desde coronación</label><div class="field-row"><input type="number" id="inHw" step="0.1" value="2.0" min="0"><span class="unit">m</span></div></div>
-      <div class="field"><label>γ_w agua</label><div class="field-row"><input type="number" id="inGw" step="0.1" value="9.81" min="9"><span class="unit">kN/m³</span></div></div>
+      <div class="field"><label for="inHw">h_w desde coronación</label><div class="field-row"><input type="number" id="inHw" step="0.1" value="2.0" min="0"><span class="unit">m</span></div></div>
+      <div class="field"><label for="inGw">γ_w agua</label><div class="field-row"><input type="number" id="inGw" step="0.1" value="9.81" min="9"><span class="unit">kN/m³</span></div></div>
     </div>
     <div class="toggle-row">
       <input type="checkbox" id="inDrenaje" checked>
@@ -636,35 +639,35 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   <!-- 7 - MATERIALES -->
   <div class="sec-title"><span class="sec-num">7</span>Materiales</div>
   <div class="grid3">
-    <div class="field"><label>f_ck [MPa]</label>
+    <div class="field"><label for="inFck">f_ck [MPa]</label>
       <select id="inFck">
         <option value="25">25</option><option value="30" selected>30</option><option value="35">35</option><option value="40">40</option>
       </select>
     </div>
-    <div class="field"><label>γ_c</label><div class="field-row"><input type="number" id="inGc" step="0.05" value="1.50" min="1.0"><span class="unit"></span></div></div>
-    <div class="field"><label>γ_s</label><div class="field-row"><input type="number" id="inGs" step="0.05" value="1.15" min="1.0"><span class="unit"></span></div></div>
+    <div class="field"><label for="inGc">γ_c</label><div class="field-row"><input type="number" id="inGc" step="0.05" value="1.50" min="1.0"><span class="unit"></span></div></div>
+    <div class="field"><label for="inGs">γ_s</label><div class="field-row"><input type="number" id="inGs" step="0.05" value="1.15" min="1.0"><span class="unit"></span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>f_yk [MPa]</label>
+    <div class="field"><label for="inFyk">f_yk [MPa]</label>
       <select id="inFyk">
         <option value="500" selected>500 (B500S)</option><option value="400">400</option>
       </select>
     </div>
-    <div class="field"><label>r general (legacy)</label><div class="field-row"><input type="number" id="inR" step="5" value="50" min="25"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="inR">r general (legacy)</label><div class="field-row"><input type="number" id="inR" step="5" value="50" min="25"><span class="unit">mm</span></div></div>
   </div>
   <div class="info-line">Recubrimientos automáticos según clases de ambiente y tipo de encofrado (CE 21 Anejo 9). Editables:</div>
   <div class="grid2">
-    <div class="field"><label>r_zap base <span class="tip" title="Recubrimiento INFERIOR de la zapata. Si se ejecuta sobre hormigón de limpieza: 35-40 mm. Si se vierte directamente sobre el terreno: 70 mm.">?</span></label><div class="field-row"><input type="number" id="inRzapB" step="5" value="35" min="25"><span class="unit">mm</span></div></div>
-    <div class="field"><label>r_zap lateral <span class="tip" title="Recubrimiento LATERAL de la zapata (contra el terreno). Típico 70 mm CE 21 ambiente IIa.">?</span></label><div class="field-row"><input type="number" id="inRzapL" step="5" value="70" min="25"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="inRzapB">r_zap base <span class="tip" title="Recubrimiento INFERIOR de la zapata. Si se ejecuta sobre hormigón de limpieza: 35-40 mm. Si se vierte directamente sobre el terreno: 70 mm.">?</span></label><div class="field-row"><input type="number" id="inRzapB" step="5" value="35" min="25"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="inRzapL">r_zap lateral <span class="tip" title="Recubrimiento LATERAL de la zapata (contra el terreno). Típico 70 mm CE 21 ambiente IIa.">?</span></label><div class="field-row"><input type="number" id="inRzapL" step="5" value="70" min="25"><span class="unit">mm</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>r_muro intradós <span class="tip" title="Recubrimiento de la cara INTRADÓS del muro. Para muro encofrado a 2 caras: 35 mm. Si está expuesto a la intemperie: 40-45 mm. Para muro con impermeabilización: 35 mm.">?</span></label><div class="field-row"><input type="number" id="inRmuroI" step="5" value="35" min="20"><span class="unit">mm</span></div></div>
-    <div class="field"><label>r_muro trasdós <span class="tip" title="Recubrimiento de la cara TRASDÓS del muro. A 1 cara (contra terreno): 70 mm. A 2 caras: 35-50 mm. Con impermeabilización adicional: 35 mm.">?</span></label><div class="field-row"><input type="number" id="inRmuroT" step="5" value="50" min="25"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="inRmuroI">r_muro intradós <span class="tip" title="Recubrimiento de la cara INTRADÓS del muro. Para muro encofrado a 2 caras: 35 mm. Si está expuesto a la intemperie: 40-45 mm. Para muro con impermeabilización: 35 mm.">?</span></label><div class="field-row"><input type="number" id="inRmuroI" step="5" value="35" min="20"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="inRmuroT">r_muro trasdós <span class="tip" title="Recubrimiento de la cara TRASDÓS del muro. A 1 cara (contra terreno): 70 mm. A 2 caras: 35-50 mm. Con impermeabilización adicional: 35 mm.">?</span></label><div class="field-row"><input type="number" id="inRmuroT" step="5" value="50" min="25"><span class="unit">mm</span></div></div>
   </div>
 
   <!-- 8 - CAPACIDAD PORTANTE -->
   <div class="sec-title"><span class="sec-num">8</span>Capacidad portante</div>
-  <div class="field"><label>Modelo <span class="tip" title="σ_adm DIRECTA: introduces la tensión admisible que da el estudio geotécnico y se comprueba que σ_max(N+M) ≤ σ_adm. Simple y conservador.&#10;&#10;BRINCH-HANSEN: calcula la capacidad portante última q_h del terreno a partir de γ, φ', c', D_f, B' (ancho efectivo descontando excentricidad) y de los factores de forma, profundidad e inclinación de la carga. La capacidad admisible es q_adm = q_h/γ_BH + γ·D_f. Más riguroso, permite OPTIMIZAR mejor ya que aprovecha la profundidad y el ancho efectivo.&#10;&#10;Los inputs que usa Brinch-Hansen (γ, φ', c', D_f=d_emp, B_ef=B−2|e|) SE TOMAN AUTOMÁTICAMENTE de los campos ya rellenados arriba (sección 3 Terreno + 2 Geometría). Solo introduces γ_BH (coef. seguridad parcial, típicamente 3.0 para CTE).">?</span></label>
+  <div class="field"><label for="inModeloCP">Modelo <span class="tip" title="σ_adm DIRECTA: introduces la tensión admisible que da el estudio geotécnico y se comprueba que σ_max(N+M) ≤ σ_adm. Simple y conservador.&#10;&#10;BRINCH-HANSEN: calcula la capacidad portante última q_h del terreno a partir de γ, φ', c', D_f, B' (ancho efectivo descontando excentricidad) y de los factores de forma, profundidad e inclinación de la carga. La capacidad admisible es q_adm = q_h/γ_BH + γ·D_f. Más riguroso, permite OPTIMIZAR mejor ya que aprovecha la profundidad y el ancho efectivo.&#10;&#10;Los inputs que usa Brinch-Hansen (γ, φ', c', D_f=d_emp, B_ef=B−2|e|) SE TOMAN AUTOMÁTICAMENTE de los campos ya rellenados arriba (sección 3 Terreno + 2 Geometría). Solo introduces γ_BH (coef. seguridad parcial, típicamente 3.0 para CTE).">?</span></label>
     <select id="inModeloCP">
       <option value="sigma_adm" selected>σ_adm directa (lineal trapezoidal)</option>
       <option value="brinch">Brinch-Hansen-Vesić (riguroso con N_c, N_q, N_γ)</option>
@@ -672,8 +675,8 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   </div>
   <div id="brinchInputs" style="display:none">
     <div class="grid2">
-      <div class="field"><label>γ_BH coef. seg.</label><div class="field-row"><input type="number" id="inGammaBH" step="0.1" value="3.0" min="1.0"><span class="unit"></span></div></div>
-      <div class="field"><label>D_f profundidad <span class="tip" title="Profundidad efectiva desde la cota terreno intradós hasta la base de la zapata. Se toma automáticamente de 'd_emp' (sección 2 Geometría).">?</span></label><div class="field-row"><input type="text" id="inDfShow" disabled value="=d_emp"><span class="unit">m</span></div></div>
+      <div class="field"><label for="inGammaBH">γ_BH coef. seg.</label><div class="field-row"><input type="number" id="inGammaBH" step="0.1" value="3.0" min="1.0"><span class="unit"></span></div></div>
+      <div class="field"><label for="inDfShow">D_f profundidad <span class="tip" title="Profundidad efectiva desde la cota terreno intradós hasta la base de la zapata. Se toma automáticamente de 'd_emp' (sección 2 Geometría).">?</span></label><div class="field-row"><input type="text" id="inDfShow" disabled value="=d_emp"><span class="unit">m</span></div></div>
     </div>
     <div class="info-line">q_h = c·N_c·s_c·d_c·i_c + q·N_q·s_q·d_q·i_q + ½γ·B'·N_γ·s_γ·d_γ·i_γ &middot; N_c, N_q, N_γ se calculan automáticamente a partir de φ'. B' = B − 2·|e| (ancho efectivo).</div>
   </div>
@@ -681,7 +684,7 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   <!-- 9 - ARMADO -->
   <div class="sec-title"><span class="sec-num">9</span>Armado: diámetros, patillas, solapes</div>
   <div class="grid2">
-    <div class="field"><label>Ø base fuste (preferido)</label>
+    <div class="field"><label for="inDbaseFuste">Ø base fuste (preferido)</label>
       <select id="inDbaseFuste">
         <option value="10">Ø10</option>
         <option value="12" selected>Ø12</option>
@@ -689,7 +692,7 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
         <option value="20">Ø20</option>
       </select>
     </div>
-    <div class="field"><label>Ø base zapata (preferido)</label>
+    <div class="field"><label for="inDbaseZap">Ø base zapata (preferido)</label>
       <select id="inDbaseZap">
         <option value="12">Ø12</option>
         <option value="16" selected>Ø16</option>
@@ -699,12 +702,12 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
     </div>
   </div>
   <div class="grid2">
-    <div class="field"><label>Patilla coronación muro <span class="tip" title="Longitud de la patilla de remate de las barras verticales del muro en su coronación. Mínimo recomendable: 10·Ø (CE 21 Art. 70). La patilla se dobla 90° hacia el intradós SIN salirse del espesor de la coronación (e_c − 2·rec).&#10;&#10;Valor por defecto: 100 mm. Editable. Si supera e_c − 2·rec, se trunca automáticamente al máximo permitido.">?</span></label><div class="field-row"><input type="number" id="inPatCoron" step="10" value="100" min="0"><span class="unit">mm</span></div></div>
-    <div class="field"><label>Patilla zapata <span class="tip" title="Longitud mínima en mm de la patilla vertical en los extremos de la armadura inferior/superior de la zapata. Mínimo: 10·Ø con tope inferior de 100 mm.&#10;&#10;Se precalcula como max(10·Ø, 100 mm); editable. Aplica a ambos extremos (puntera e intradós).">?</span></label><div class="field-row"><input type="number" id="inPatZap" step="10" value="160" min="0"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="inPatCoron">Patilla coronación muro <span class="tip" title="Longitud de la patilla de remate de las barras verticales del muro en su coronación. Mínimo recomendable: 10·Ø (CE 21 Art. 70). La patilla se dobla 90° hacia el intradós SIN salirse del espesor de la coronación (e_c − 2·rec).&#10;&#10;Valor por defecto: 100 mm. Editable. Si supera e_c − 2·rec, se trunca automáticamente al máximo permitido.">?</span></label><div class="field-row"><input type="number" id="inPatCoron" step="10" value="100" min="0"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="inPatZap">Patilla zapata <span class="tip" title="Longitud mínima en mm de la patilla vertical en los extremos de la armadura inferior/superior de la zapata. Mínimo: 10·Ø con tope inferior de 100 mm.&#10;&#10;Se precalcula como max(10·Ø, 100 mm); editable. Aplica a ambos extremos (puntera e intradós).">?</span></label><div class="field-row"><input type="number" id="inPatZap" step="10" value="160" min="0"><span class="unit">mm</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>Solape armadura horizontal (muro) <span class="tip" title="Distancia máxima entre solapes consecutivos de la armadura horizontal del muro. Práctica habitual: 6 m (longitud comercial estándar de las barras). Si el muro tiene menos longitud, ajustar.">?</span></label><div class="field-row"><input type="number" id="inSolapeH" step="0.5" value="6.0" min="2.0"><span class="unit">m</span></div></div>
-    <div class="field"><label>Solape armadura zapata <span class="tip" title="Distancia máxima entre solapes en la armadura LONGITUDINAL de la zapata (la que va paralela al muro). Habitual: 6 m. Si la zapata es continua a lo largo de un muro de mayor longitud, hay que prever solapes cada 6 m.">?</span></label><div class="field-row"><input type="number" id="inSolapeZ" step="0.5" value="6.0" min="2.0"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inSolapeH">Solape armadura horizontal (muro) <span class="tip" title="Distancia máxima entre solapes consecutivos de la armadura horizontal del muro. Práctica habitual: 6 m (longitud comercial estándar de las barras). Si el muro tiene menos longitud, ajustar.">?</span></label><div class="field-row"><input type="number" id="inSolapeH" step="0.5" value="6.0" min="2.0"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inSolapeZ">Solape armadura zapata <span class="tip" title="Distancia máxima entre solapes en la armadura LONGITUDINAL de la zapata (la que va paralela al muro). Habitual: 6 m. Si la zapata es continua a lo largo de un muro de mayor longitud, hay que prever solapes cada 6 m.">?</span></label><div class="field-row"><input type="number" id="inSolapeZ" step="0.5" value="6.0" min="2.0"><span class="unit">m</span></div></div>
   </div>
 
   <!-- 9b - CERCOS -->
@@ -714,10 +717,10 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   </div>
   <div id="cercosInputs" style="display:none">
     <div class="grid2">
-      <div class="field"><label>Ø cerco</label>
+      <div class="field"><label for="inDCerco">Ø cerco</label>
         <select id="inDCerco"><option value="8">Ø8</option><option value="10" selected>Ø10</option><option value="12">Ø12</option></select>
       </div>
-      <div class="field"><label>Patilla cerco <span class="tip" title="Longitud de cierre de cada cerco (gancho de 135° habitualmente). Mín 50 mm.">?</span></label><div class="field-row"><input type="number" id="inPatCerco" step="10" value="80" min="50"><span class="unit">mm</span></div></div>
+      <div class="field"><label for="inPatCerco">Patilla cerco <span class="tip" title="Longitud de cierre de cada cerco (gancho de 135° habitualmente). Mín 50 mm.">?</span></label><div class="field-row"><input type="number" id="inPatCerco" step="10" value="80" min="50"><span class="unit">mm</span></div></div>
     </div>
     <div class="info-line">Los cercos sólo se dimensionan si V_Ed,fuste &gt; V_Rd,c (sin cercos). Separación horizontal = sep. armadura vertical · Vertical = sep. armadura horizontal. Altura crítica = zona inferior donde V_Ed &gt; V_Rd,c.</div>
   </div>
@@ -725,24 +728,24 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
   <!-- 9c - ECONÓMICO -->
   <div class="sec-title">Precios unitarios</div>
   <div class="grid2">
-    <div class="field"><label>Hormigón HA-30 colocado <span class="tip" title="Precio del hormigón estructural colocado (HA-30 típico, incluye suministro + vertido + vibrado + curado). Referencia generadordeprecios.info: 90-110 €/m³.">?</span></label><div class="field-row"><input type="number" id="inPrecH" step="5" value="100" min="0"><span class="unit">€/m³</span></div></div>
-    <div class="field"><label>Acero B500S colocado <span class="tip" title="Precio del acero corrugado B500S colocado (incluye suministro + ferralla + colocación). Referencia generadordeprecios.info: 0.95-1.20 €/kg.">?</span></label><div class="field-row"><input type="number" id="inPrecS" step="0.05" value="1.00" min="0"><span class="unit">€/kg</span></div></div>
+    <div class="field"><label for="inPrecH">Hormigón HA-30 colocado <span class="tip" title="Precio del hormigón estructural colocado (HA-30 típico, incluye suministro + vertido + vibrado + curado). Referencia generadordeprecios.info: 90-110 €/m³.">?</span></label><div class="field-row"><input type="number" id="inPrecH" step="5" value="100" min="0"><span class="unit">€/m³</span></div></div>
+    <div class="field"><label for="inPrecS">Acero B500S colocado <span class="tip" title="Precio del acero corrugado B500S colocado (incluye suministro + ferralla + colocación). Referencia generadordeprecios.info: 0.95-1.20 €/kg.">?</span></label><div class="field-row"><input type="number" id="inPrecS" step="0.05" value="1.00" min="0"><span class="unit">€/kg</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>Excavación <span class="tip" title="Precio de la excavación del foso para la cimentación (m³ de terreno extraído). Referencia generadordeprecios.info para excavación mecánica en terreno medio: 8-15 €/m³.">?</span></label><div class="field-row"><input type="number" id="inPrecExc" step="1" value="12" min="0"><span class="unit">€/m³</span></div></div>
-    <div class="field"><label>Hormigón limpieza HL-150 <span class="tip" title="Hormigón pobre de limpieza (HL-150) bajo la zapata. Espesor típico 10 cm. Referencia: 60-80 €/m³.">?</span></label><div class="field-row"><input type="number" id="inPrecHL" step="5" value="70" min="0"><span class="unit">€/m³</span></div></div>
+    <div class="field"><label for="inPrecExc">Excavación <span class="tip" title="Precio de la excavación del foso para la cimentación (m³ de terreno extraído). Referencia generadordeprecios.info para excavación mecánica en terreno medio: 8-15 €/m³.">?</span></label><div class="field-row"><input type="number" id="inPrecExc" step="1" value="12" min="0"><span class="unit">€/m³</span></div></div>
+    <div class="field"><label for="inPrecHL">Hormigón limpieza HL-150 <span class="tip" title="Hormigón pobre de limpieza (HL-150) bajo la zapata. Espesor típico 10 cm. Referencia: 60-80 €/m³.">?</span></label><div class="field-row"><input type="number" id="inPrecHL" step="5" value="70" min="0"><span class="unit">€/m³</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>Encofrado muro <span class="tip" title="Precio del encofrado del fuste por m² de superficie encofrada. A 1 cara: 30-40 €/m² (solo se encofra una cara). A 2 caras: 50-65 €/m² (ambas caras). Tomar valor según tipo de encofrado.">?</span></label><div class="field-row"><input type="number" id="inPrecEnc" step="5" value="55" min="0"><span class="unit">€/m²</span></div></div>
-    <div class="field"><label>Espesor hormigón limpieza <span class="tip" title="Espesor del hormigón de limpieza HL-150 bajo la zapata. Típico 10 cm.">?</span></label><div class="field-row"><input type="number" id="inEHL" step="0.05" value="0.10" min="0.05"><span class="unit">m</span></div></div>
+    <div class="field"><label for="inPrecEnc">Encofrado muro <span class="tip" title="Precio del encofrado del fuste por m² de superficie encofrada. A 1 cara: 30-40 €/m² (solo se encofra una cara). A 2 caras: 50-65 €/m² (ambas caras). Tomar valor según tipo de encofrado.">?</span></label><div class="field-row"><input type="number" id="inPrecEnc" step="5" value="55" min="0"><span class="unit">€/m²</span></div></div>
+    <div class="field"><label for="inEHL">Espesor hormigón limpieza <span class="tip" title="Espesor del hormigón de limpieza HL-150 bajo la zapata. Típico 10 cm.">?</span></label><div class="field-row"><input type="number" id="inEHL" step="0.05" value="0.10" min="0.05"><span class="unit">m</span></div></div>
   </div>
 
   <!-- 10 - SEGURIDAD -->
   <div class="sec-title"><span class="sec-num">10</span>Coeficientes de seguridad</div>
   <div class="grid3">
-    <div class="field"><label>γ vuelco</label><div class="field-row"><input type="number" id="inGV" step="0.1" value="1.8" min="1.0"></div></div>
-    <div class="field"><label>γ deslizam.</label><div class="field-row"><input type="number" id="inGD" step="0.1" value="1.5" min="1.0"></div></div>
-    <div class="field"><label>γ acciones</label><div class="field-row"><input type="number" id="inGF" step="0.05" value="1.35" min="1.0"></div></div>
+    <div class="field"><label for="inGV">γ vuelco</label><div class="field-row"><input type="number" id="inGV" step="0.1" value="1.8" min="1.0"></div></div>
+    <div class="field"><label for="inGD">γ deslizam.</label><div class="field-row"><input type="number" id="inGD" step="0.1" value="1.5" min="1.0"></div></div>
+    <div class="field"><label for="inGF">γ acciones</label><div class="field-row"><input type="number" id="inGF" step="0.05" value="1.35" min="1.0"></div></div>
   </div>
 
   <!-- BUTTONS -->
@@ -3075,7 +3078,7 @@ actualizarRecubrimientos();
 </script>
 
 <div id="se-consent" class="se-consent" role="dialog" aria-label="Aviso de cookies">
-  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Más información</a></p>
+  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Política de cookies</a></p>
   <div class="se-consent-btns"><button type="button" data-c="no">Rechazar</button><button type="button" data-c="ok" class="pri">Aceptar</button></div>
 </div>
 

@@ -59,7 +59,7 @@ a{color:var(--blue);}
 .seo-faq[open] summary::before{content:"–";}
 .seo-faq div{padding:.5rem 0 .2rem 1.2rem;}
 .cta{background:linear-gradient(135deg,rgba(59,123,255,.16),rgba(255,201,74,.10));border:1px solid var(--border2);border-radius:8px;padding:1.3rem 1.5rem;margin:2rem 0;}
-.btn{display:inline-block;background:var(--accent);color:#fff!important;text-decoration:none;font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:12px 20px;border-radius:5px;margin:.4rem .6rem .4rem 0;min-height:44px;line-height:20px;}
+.btn{display:inline-block;background:#2b63d9;color:#fff!important;text-decoration:none;font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:12px 20px;border-radius:5px;margin:.4rem .6rem .4rem 0;min-height:44px;line-height:20px;}
 footer{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--text3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem;}
 footer a{color:var(--text2);}
 .legal h2{font-size:16px;margin-top:1.8rem;}
@@ -118,6 +118,9 @@ footer a{color:var(--text2);}
 .se-gate-legal{font-size:11px!important;color:#8a92a3!important;margin:.8rem 0 0!important;line-height:1.4;}
 .se-gate-x{position:absolute;top:10px;right:12px;background:transparent;border:none;color:#8a92a3;font-size:26px;line-height:1;cursor:pointer;padding:4px 8px;}
 @media print{.seo-info,.se-consent,.se-gate{display:none!important;}}
+/* accesibilidad (Lighthouse): contraste >= 4.5:1 del texto blanco sobre los botones principales */
+.btn-calc,.seo-btn,.se-consent button.pri,.se-gate-btn{background:#2b63d9;}
+.btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
 <script>
@@ -168,7 +171,7 @@ window.SE_SITE={slug:'_aviso-legal',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic'
 </div>
 
 <div id="se-consent" class="se-consent" role="dialog" aria-label="Aviso de cookies">
-  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Más información</a></p>
+  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Política de cookies</a></p>
   <div class="se-consent-btns"><button type="button" data-c="no">Rechazar</button><button type="button" data-c="ok" class="pri">Aceptar</button></div>
 </div>
 

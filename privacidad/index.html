@@ -59,7 +59,7 @@ a{color:var(--blue);}
 .seo-faq[open] summary::before{content:"–";}
 .seo-faq div{padding:.5rem 0 .2rem 1.2rem;}
 .cta{background:linear-gradient(135deg,rgba(59,123,255,.16),rgba(255,201,74,.10));border:1px solid var(--border2);border-radius:8px;padding:1.3rem 1.5rem;margin:2rem 0;}
-.btn{display:inline-block;background:var(--accent);color:#fff!important;text-decoration:none;font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:12px 20px;border-radius:5px;margin:.4rem .6rem .4rem 0;min-height:44px;line-height:20px;}
+.btn{display:inline-block;background:#2b63d9;color:#fff!important;text-decoration:none;font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:12px 20px;border-radius:5px;margin:.4rem .6rem .4rem 0;min-height:44px;line-height:20px;}
 footer{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--text3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem;}
 footer a{color:var(--text2);}
 .legal h2{font-size:16px;margin-top:1.8rem;}
@@ -118,6 +118,9 @@ footer a{color:var(--text2);}
 .se-gate-legal{font-size:11px!important;color:#8a92a3!important;margin:.8rem 0 0!important;line-height:1.4;}
 .se-gate-x{position:absolute;top:10px;right:12px;background:transparent;border:none;color:#8a92a3;font-size:26px;line-height:1;cursor:pointer;padding:4px 8px;}
 @media print{.seo-info,.se-consent,.se-gate{display:none!important;}}
+/* accesibilidad (Lighthouse): contraste >= 4.5:1 del texto blanco sobre los botones principales */
+.btn-calc,.seo-btn,.se-consent button.pri,.se-gate-btn{background:#2b63d9;}
+.btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
 <script>
@@ -143,14 +146,14 @@ window.SE_SITE={slug:'_privacidad',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic',
 <p>Seguridad Estructural SL, CIF <span class="pending">[CIF PENDIENTE]</span>, C/ Dr. Ramón Muncharaz 1, 3º E-1, 28231 Las Rozas de Madrid (Madrid). Email: <a href="mailto:info1@seguridadestructural.com">info1@seguridadestructural.com</a>.</p>
 <h2>Datos que tratamos y finalidades</h2>
 <ul>
-<li><strong>Formulario de descarga del informe PDF:</strong> email, nombre (opcional), perfil profesional (opcional) y calculadora utilizada. Finalidad: facilitar la descarga del informe y enviarte información sobre nuestras calculadoras y servicios de ingeniería de estructuras. Base jurídica: tu consentimiento (art. 6.1.a RGPD), que puedes retirar en cualquier momento escribiendo a info1@seguridadestructural.com o desde el enlace de baja de cada comunicación.</li>
+<li><strong>Formulario de descarga del informe PDF:</strong> email, nombre (opcional), perfil profesional (opcional) y calculadora utilizada, junto con la fecha de la solicitud, la dirección IP anonimizada (sin su último tramo) y el tipo de navegador, que se registran por seguridad y para evitar abusos. Finalidad: facilitar la descarga del informe y enviarte información sobre nuestras calculadoras y servicios de ingeniería de estructuras. Base jurídica: tu consentimiento (art. 6.1.a RGPD), que puedes retirar en cualquier momento escribiendo a info1@seguridadestructural.com o desde el enlace de baja de cada comunicación.</li>
 <li><strong>Analítica web (Google Analytics 4 a través de Google Tag Manager):</strong> datos de navegación agregados (páginas vistas, calculadoras utilizadas, dispositivo, origen de la visita, país). Finalidad: conocer el uso de las herramientas y mejorarlas. Base jurídica: tu consentimiento, que prestas o rechazas en el aviso de cookies. Sin consentimiento no se activa ninguna cookie analítica.</li>
 <li><strong>Datos de cálculo:</strong> los valores que introduces en las calculadoras se procesan únicamente en tu navegador y no se envían a nuestros servidores.</li>
 </ul>
 <h2>Conservación</h2>
 <p>Los datos del formulario se conservan mientras no solicites su supresión o retires el consentimiento. Los datos analíticos se conservan según la configuración de Google Analytics (14 meses).</p>
 <h2>Destinatarios</h2>
-<p>Alojamiento de la web: GitHub, Inc. (GitHub Pages, Estados Unidos; acogido a cláusulas contractuales tipo). Analítica: Google Ireland Ltd. (Google Analytics y Google Tag Manager). Recogida del formulario: <span class="pending">[PROVEEDOR DEL FORMULARIO PENDIENTE DE DEFINIR]</span>. No se ceden datos a otros terceros salvo obligación legal.</p>
+<p>Alojamiento de la web: GitHub, Inc. (GitHub Pages, Estados Unidos; acogido a cláusulas contractuales tipo). Analítica: Google Ireland Ltd. (Google Analytics y Google Tag Manager). Recogida del formulario: los datos se envían cifrados (HTTPS) a un servidor propio de Seguridad Estructural SL y se almacenan en él, sin intervención de proveedores de formularios; la conexión se establece a través de la red de Tailscale Inc. (EE. UU.), que únicamente transporta el tráfico cifrado sin poder acceder a su contenido. El aviso interno de cada solicitud a nuestro equipo comercial se envía por WhatsApp (Meta Platforms Ireland Ltd.) e incluye únicamente los datos del formulario. No se ceden datos a otros terceros salvo obligación legal.</p>
 <h2>Derechos</h2>
 <p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a <a href="mailto:info1@seguridadestructural.com">info1@seguridadestructural.com</a>, indicando el derecho que ejercitas y acompañando una copia de tu documento de identidad. También puedes presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).</p>
 <h2 id="cookies">Política de cookies</h2>
@@ -170,7 +173,7 @@ window.SE_SITE={slug:'_privacidad',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic',
 </div>
 
 <div id="se-consent" class="se-consent" role="dialog" aria-label="Aviso de cookies">
-  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Más información</a></p>
+  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Política de cookies</a></p>
   <div class="se-consent-btns"><button type="button" data-c="no">Rechazar</button><button type="button" data-c="ok" class="pri">Aceptar</button></div>
 </div>
 

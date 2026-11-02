@@ -211,9 +211,12 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .se-gate-legal{font-size:11px!important;color:#8a92a3!important;margin:.8rem 0 0!important;line-height:1.4;}
 .se-gate-x{position:absolute;top:10px;right:12px;background:transparent;border:none;color:#8a92a3;font-size:26px;line-height:1;cursor:pointer;padding:4px 8px;}
 @media print{.seo-info,.se-consent,.se-gate{display:none!important;}}
+/* accesibilidad (Lighthouse): contraste >= 4.5:1 del texto blanco sobre los botones principales */
+.btn-calc,.seo-btn,.se-consent button.pri,.se-gate-btn{background:#2b63d9;}
+.btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-01 22:59) -->
+<!-- SEO generado por publish.py (2026-11-02 09:46) -->
 <meta name="description" content="Calcula la flecha instantánea, diferida, activa y total de vigas biapoyadas, biempotradas y ménsulas de hormigón armado según Código Estructural 2021 y EC2 7.4.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/flechas-viga-hormigon/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -269,42 +272,42 @@ window.SE_SITE={slug:'flechas-viga-hormigon',gtm:'GTM-KTK4N7T',ga4:'',consentMod
 
   <div class="sec-title">Geometr&iacute;a viga</div>
   <div class="grid2">
-    <div class="field"><label>L (luz)</label><div class="field-row"><input type="number" id="L" value="6000" min="500"><span class="unit">mm</span></div></div>
-    <div class="field"><label>Apoyos articulados</label><div class="field-row">
+    <div class="field"><label for="L">L (luz)</label><div class="field-row"><input type="number" id="L" value="6000" min="500"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="apoyos">Apoyos articulados</label><div class="field-row">
       <select id="apoyos">
         <option value="luz" selected>L (entre ejes)</option>
         <option value="luz_libre">L libre</option>
       </select><span class="unit">&mdash;</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>b</label><div class="field-row"><input type="number" id="b" value="300" min="80"><span class="unit">mm</span></div></div>
-    <div class="field"><label>h</label><div class="field-row"><input type="number" id="h" value="500" min="80"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="b">b</label><div class="field-row"><input type="number" id="b" value="300" min="80"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="h">h</label><div class="field-row"><input type="number" id="h" value="500" min="80"><span class="unit">mm</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>r (al eje)</label><div class="field-row"><input type="number" id="r" value="50" min="20"><span class="unit">mm</span></div></div>
-    <div class="field"><label>r' (compr., al eje)</label><div class="field-row"><input type="number" id="rp" value="50" min="20"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="r">r (al eje)</label><div class="field-row"><input type="number" id="r" value="50" min="20"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="rp">r' (compr., al eje)</label><div class="field-row"><input type="number" id="rp" value="50" min="20"><span class="unit">mm</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>A<sub>s</sub> (tracci&oacute;n)</label><div class="field-row"><input type="number" id="As_cm2" value="20.36" step="0.01" min="0.01"><span class="unit">cm&sup2;</span></div></div>
-    <div class="field"><label>A'<sub>s</sub> (compresi&oacute;n)</label><div class="field-row"><input type="number" id="Asp_cm2" value="0" step="0.01" min="0"><span class="unit">cm&sup2;</span></div></div>
+    <div class="field"><label for="As_cm2">A<sub>s</sub> (tracci&oacute;n)</label><div class="field-row"><input type="number" id="As_cm2" value="20.36" step="0.01" min="0.01"><span class="unit">cm&sup2;</span></div></div>
+    <div class="field"><label for="Asp_cm2">A'<sub>s</sub> (compresi&oacute;n)</label><div class="field-row"><input type="number" id="Asp_cm2" value="0" step="0.01" min="0"><span class="unit">cm&sup2;</span></div></div>
   </div>
 
   <div class="sec-title">Materiales</div>
   <div class="grid2">
-    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Art. 27."><label>f<sub>ck</sub></label><div class="field-row">
+    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Art. 27."><label for="fck">f<sub>ck</sub></label><div class="field-row">
       <select id="fck">
         <option value="20">20</option><option value="25" selected>25</option><option value="30">30</option>
         <option value="35">35</option><option value="40">40</option><option value="45">45</option><option value="50">50</option>
       </select><span class="unit">MPa</span></div></div>
-    <div class="field"><label>E<sub>s</sub></label><div class="field-row"><input type="number" id="Es" value="200000" min="100000"><span class="unit">MPa</span></div></div>
+    <div class="field"><label for="Es">E<sub>s</sub></label><div class="field-row"><input type="number" id="Es" value="200000" min="100000"><span class="unit">MPa</span></div></div>
   </div>
 
   <div class="sec-title">Cargas (servicio)</div>
   <div class="grid2">
-    <div class="field"><label>g<sub>k</sub> (perm.)</label><div class="field-row"><input type="number" id="g" value="15" step="0.1" min="0"><span class="unit">kN/m</span></div></div>
-    <div class="field"><label>q<sub>k</sub> (var.)</label><div class="field-row"><input type="number" id="q" value="10" step="0.1" min="0"><span class="unit">kN/m</span></div></div>
+    <div class="field"><label for="g">g<sub>k</sub> (perm.)</label><div class="field-row"><input type="number" id="g" value="15" step="0.1" min="0"><span class="unit">kN/m</span></div></div>
+    <div class="field"><label for="q">q<sub>k</sub> (var.)</label><div class="field-row"><input type="number" id="q" value="10" step="0.1" min="0"><span class="unit">kN/m</span></div></div>
   </div>
-  <div class="field"><label>&psi;<sub>2</sub> (cuasi-perm.)</label><div class="field-row">
+  <div class="field"><label for="psi2">&psi;<sub>2</sub> (cuasi-perm.)</label><div class="field-row">
     <select id="psi2">
       <option value="0.3" selected>0.3 — vivienda/oficina</option>
       <option value="0.6">0.6 — comercial/p&uacute;blica</option>
@@ -314,8 +317,8 @@ window.SE_SITE={slug:'flechas-viga-hormigon',gtm:'GTM-KTK4N7T',ga4:'',consentMod
 
   <div class="sec-title">Fluencia y l&iacute;mite</div>
   <div class="grid2">
-    <div class="field"><label>&phi;(&infin;,t<sub>0</sub>)</label><div class="field-row"><input type="number" id="phi_inf" value="2.0" step="0.1" min="0" max="4"><span class="unit">&mdash;</span></div></div>
-    <div class="field"><label>L&iacute;mite L/x</label><div class="field-row">
+    <div class="field"><label for="phi_inf">&phi;(&infin;,t<sub>0</sub>)</label><div class="field-row"><input type="number" id="phi_inf" value="2.0" step="0.1" min="0" max="4"><span class="unit">&mdash;</span></div></div>
+    <div class="field"><label for="lim_x">L&iacute;mite L/x</label><div class="field-row">
       <select id="lim_x">
         <option value="500" selected>L/500 — tabiquer&iacute;a</option>
         <option value="350">L/350 — tabiquer&iacute;a (CTE)</option>
@@ -343,9 +346,9 @@ window.SE_SITE={slug:'flechas-viga-hormigon',gtm:'GTM-KTK4N7T',ga4:'',consentMod
   <div class="seo-grid">
     <article class="seo-card">
       <h2>¿Qué calcula esta herramienta?</h2>
-      <p>Calcula las flechas de vigas y nervios de forjado de hormigón armado de sección rectangular, biempotradas, biapoyadas o en ménsula, bajo cargas de servicio, según el Código Estructural 2021 (Art. 50) y el Eurocódigo 2 (apartado 7.4.3). Obtiene el momento de fisuración, la inercia fisurada, la inercia equivalente por el método ζ y las flechas instantánea, diferida, activa y total frente al límite L/x. Incluye gráficos e informe PDF.</p>
+      <p>Calcula las flechas de vigas y nervios de forjado de hormigón armado de sección rectangular, biempotradas, biapoyadas o en ménsula, bajo cargas de servicio, según el Código Estructural 2021 (Anejo 19) y el Eurocódigo 2, apartado 7.4.3. Obtiene el momento de fisuración, la inercia fisurada, la inercia equivalente por el método ζ y las flechas instantánea, diferida, activa y total frente al límite L/x. Incluye gráficos e informe PDF.</p>
       <h3>Normativa aplicada</h3>
-      <ul><li>Código Estructural 2021, Art. 50: Estado Límite de Deformación; comprobación de las flechas de vigas y forjados en servicio.</li><li>Código Estructural 2021, Art. 50.2.2.2 y EC2 apartado 7.4.3 (ecuación 7.18): interpolación entre estado no fisurado y fisurado con ζ = 1 - β·(Mcr/Ma)², β = 0,5 para carga sostenida, y 1/Ieq = ζ/Ifis + (1 - ζ)/Ib.</li><li>Código Estructural 2021, Art. 21 y EC2 Tabla 3.1: fctm para el momento de fisuración Mcr = fctm·W y módulo Ecm = 22000·((fck + 8)/10)^0,3 para la relación αe = Es/Ecm.</li><li>Combinación cuasi-permanente g + ψ2·q con ψ2 según el uso (0,3 vivienda y oficinas, 0,6 comercial y pública concurrencia, 0,8 almacenes, 0 nieve o viento) para la flecha instantánea de referencia y la diferida.</li><li>Límite de flecha seleccionable entre L/500, L/350, L/300 y L/250, valores de referencia del CTE DB-SE y del Código Estructural 2021 para flecha activa con tabiquería, sin elementos dañables y flecha total.</li></ul>
+      <ul><li>Código Estructural 2021 (Anejo 19) y Eurocódigo 2, apartado 7.4: Estado Límite de Deformación; comprobación de las flechas de vigas y forjados en servicio.</li><li>Código Estructural 2021 (Anejo 19) y Eurocódigo 2, apartado 7.4.3 (ecuación 7.18): interpolación entre estado no fisurado y fisurado con ζ = 1 - β·(Mcr/Ma)², β = 0,5 para carga sostenida, y 1/Ieq = ζ/Ifis + (1 - ζ)/Ib.</li><li>Código Estructural 2021 (Anejo 19) y Eurocódigo 2, tabla 3.1: fctm para el momento de fisuración Mcr = fctm·W y módulo Ecm = 22000·((fck + 8)/10)^0,3 para la relación αe = Es/Ecm.</li><li>Combinación cuasi-permanente g + ψ2·q con ψ2 según el uso (0,3 vivienda y oficinas, 0,6 comercial y pública concurrencia, 0,8 almacenes, 0 nieve o viento) para la flecha instantánea de referencia y la diferida.</li><li>Límite de flecha seleccionable entre L/500, L/350, L/300 y L/250, valores de referencia del CTE DB-SE y del Código Estructural 2021 para flecha activa con tabiquería, sin elementos dañables y flecha total.</li></ul>
     </article>
     <article class="seo-card">
       <h2 id="como-usar">Cómo usar la calculadora</h2>
@@ -732,7 +735,7 @@ function cerrarPDF(){ document.getElementById('parea').classList.remove('visible
 </script>
 
 <div id="se-consent" class="se-consent" role="dialog" aria-label="Aviso de cookies">
-  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Más información</a></p>
+  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Política de cookies</a></p>
   <div class="se-consent-btns"><button type="button" data-c="no">Rechazar</button><button type="button" data-c="ok" class="pri">Aceptar</button></div>
 </div>
 

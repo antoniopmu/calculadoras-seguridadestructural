@@ -229,9 +229,12 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .se-gate-legal{font-size:11px!important;color:#8a92a3!important;margin:.8rem 0 0!important;line-height:1.4;}
 .se-gate-x{position:absolute;top:10px;right:12px;background:transparent;border:none;color:#8a92a3;font-size:26px;line-height:1;cursor:pointer;padding:4px 8px;}
 @media print{.seo-info,.se-consent,.se-gate{display:none!important;}}
+/* accesibilidad (Lighthouse): contraste >= 4.5:1 del texto blanco sobre los botones principales */
+.btn-calc,.seo-btn,.se-consent button.pri,.se-gate-btn{background:#2b63d9;}
+.btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-01 22:59) -->
+<!-- SEO generado por publish.py (2026-11-02 09:46) -->
 <meta name="description" content="Comprueba la torsión de secciones rectangulares de hormigón armado según el Código Estructural 2021 y EC2: TRd,max, cercos, armadura longitudinal y cortante.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/torsion-hormigon-armado/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -280,41 +283,41 @@ window.SE_SITE={slug:'torsion-hormigon-armado',gtm:'GTM-KTK4N7T',ga4:'',consentM
 <div class="panel-in">
   <div class="sec-title">Geometr&iacute;a (rectangular)</div>
   <div class="grid2">
-    <div class="field"><label>b &mdash; Ancho</label><div class="field-row"><input type="number" id="b" value="300" min="100"><span class="unit">mm</span></div></div>
-    <div class="field"><label>h &mdash; Canto</label><div class="field-row"><input type="number" id="h" value="500" min="100"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="b">b &mdash; Ancho</label><div class="field-row"><input type="number" id="b" value="300" min="100"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="h">h &mdash; Canto</label><div class="field-row"><input type="number" id="h" value="500" min="100"><span class="unit">mm</span></div></div>
   </div>
-  <div class="field"><label>Recubrimiento c (al exterior)</label><div class="field-row"><input type="number" id="c" value="35" min="20" max="80"><span class="unit">mm</span></div></div>
+  <div class="field"><label for="c">Recubrimiento c (al exterior)</label><div class="field-row"><input type="number" id="c" value="35" min="20" max="80"><span class="unit">mm</span></div></div>
 
   <div class="sec-title">Materiales</div>
   <div class="grid3">
-    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Art. 27."><label>f<sub>ck</sub></label><div class="field-row">
+    <div class="field" title="Resistencia característica del hormigón a compresión a 28 días (probeta cilíndrica). CE 21 Art. 27."><label for="fck">f<sub>ck</sub></label><div class="field-row">
       <select id="fck">
         <option value="20">20</option><option value="25" selected>25</option><option value="30">30</option>
         <option value="35">35</option><option value="40">40</option><option value="45">45</option><option value="50">50</option>
       </select><span class="unit">MPa</span></div></div>
-    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Art. 15)."><label>&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
-    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Art. 22.6). EHE-08 antigua: 0.85."><label>&alpha;<sub>cc</sub></label><div class="field-row">
+    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Art. 15)."><label for="gc">&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Art. 22.6). EHE-08 antigua: 0.85."><label for="acc">&alpha;<sub>cc</sub></label><div class="field-row">
       <select id="acc">
         <option value="1.00" selected>1.00 (CE 21)</option>
         <option value="0.85">0.85 (EHE-08)</option>
       </select><span class="unit">&mdash;</span></div></div>
-    <div class="field" title="Límite elástico característico del acero. B500S: 500 MPa; B400S: 400 MPa (CE 21 Art. 28). En compresión topado a 400 MPa (Art. 30)."><label>f<sub>yk</sub></label><div class="field-row"><input type="number" id="fyk" value="500" min="200"><span class="unit">MPa</span></div></div>
-    <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Art. 15)."><label>&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+    <div class="field" title="Límite elástico característico del acero. B500S: 500 MPa; B400S: 400 MPa (CE 21 Art. 28). En compresión topado a 400 MPa (Art. 30)."><label for="fyk">f<sub>yk</sub></label><div class="field-row"><input type="number" id="fyk" value="500" min="200"><span class="unit">MPa</span></div></div>
+    <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Art. 15)."><label for="gs">&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
   </div>
 
   <div class="sec-title">Armadura transversal (cercos)</div>
   <div class="grid3">
-    <div class="field"><label>&#966;<sub>e</sub></label><div class="field-row"><input type="number" id="phi_e" value="8" min="6" max="16"><span class="unit">mm</span></div></div>
-    <div class="field"><label>s (sep.)</label><div class="field-row"><input type="number" id="s_est" value="150" min="40" max="400"><span class="unit">mm</span></div></div>
-    <div class="field"><label>n.ramas</label><div class="field-row"><input type="number" id="nramas" value="2" min="1" max="4"><span class="unit">&mdash;</span></div></div>
+    <div class="field"><label for="phi_e">&#966;<sub>e</sub></label><div class="field-row"><input type="number" id="phi_e" value="8" min="6" max="16"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="s_est">s (sep.)</label><div class="field-row"><input type="number" id="s_est" value="150" min="40" max="400"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="nramas">n.ramas</label><div class="field-row"><input type="number" id="nramas" value="2" min="1" max="4"><span class="unit">&mdash;</span></div></div>
   </div>
 
   <div class="sec-title">Armadura longitudinal</div>
-  <div class="field"><label>A<sub>sl</sub> &mdash; total perim&eacute;tricamente</label><div class="field-row"><input type="number" id="Asl_cm2" value="6.28" step="0.01" min="0"><span class="unit">cm&sup2;</span></div></div>
+  <div class="field"><label for="Asl_cm2">A<sub>sl</sub> &mdash; total perim&eacute;tricamente</label><div class="field-row"><input type="number" id="Asl_cm2" value="6.28" step="0.01" min="0"><span class="unit">cm&sup2;</span></div></div>
 
   <div class="sec-title">&Aacute;ngulo bielas</div>
   <div class="field">
-    <label>&theta; (21.8&deg; &divide; 45&deg;)</label>
+    <label for="theta_range">&theta; (21.8&deg; &divide; 45&deg;)</label>
     <div class="field-row">
       <input type="range" id="theta_range" min="218" max="450" step="1" value="450"
         oninput="document.getElementById('theta_num').value=(this.value/10).toFixed(1);"
@@ -328,8 +331,8 @@ window.SE_SITE={slug:'torsion-hormigon-armado',gtm:'GTM-KTK4N7T',ga4:'',consentM
 
   <div class="sec-title">Esfuerzos</div>
   <div class="grid2">
-    <div class="field"><label>T<sub>Ed</sub></label><div class="field-row"><input type="number" id="TEd" value="20" min="0" step="0.1"><span class="unit">kN&middot;m</span></div></div>
-    <div class="field"><label>V<sub>Ed</sub> (combinado)</label><div class="field-row"><input type="number" id="VEd" value="0" min="0"><span class="unit">kN</span></div></div>
+    <div class="field"><label for="TEd">T<sub>Ed</sub></label><div class="field-row"><input type="number" id="TEd" value="20" min="0" step="0.1"><span class="unit">kN&middot;m</span></div></div>
+    <div class="field"><label for="VEd">V<sub>Ed</sub> (combinado)</label><div class="field-row"><input type="number" id="VEd" value="0" min="0"><span class="unit">kN</span></div></div>
   </div>
 
   <button class="btn-calc" onclick="calcular()">&#9654; Calcular</button>
@@ -351,9 +354,9 @@ window.SE_SITE={slug:'torsion-hormigon-armado',gtm:'GTM-KTK4N7T',ga4:'',consentM
   <div class="seo-grid">
     <article class="seo-card">
       <h2>¿Qué calcula esta herramienta?</h2>
-      <p>Comprueba el Estado Límite Último de torsión en secciones rectangulares de hormigón armado según el Código Estructural 2021 (Art. 24) y el Eurocódigo 2 (EN 1992-1-1, apartado 6.3). Aplica el modelo de sección hueca eficaz de pared delgada y obtiene la resistencia de la biela comprimida TRd,max, la de los cercos TRd,s y la de la armadura longitudinal TRd,sl, más la interacción torsión-cortante. Devuelve aprovechamiento, veredicto, esquemas e informe PDF.</p>
+      <p>Comprueba el Estado Límite Último de torsión en secciones rectangulares de hormigón armado según el Código Estructural 2021 (Anejo 19) y el Eurocódigo 2 (EN 1992-1-1), apartado 6.3. Aplica el modelo de sección hueca eficaz de pared delgada y obtiene la resistencia de la biela comprimida TRd,max, la de los cercos TRd,s y la de la armadura longitudinal TRd,sl, más la interacción torsión-cortante. Devuelve aprovechamiento, veredicto, esquemas e informe PDF.</p>
       <h3>Normativa aplicada</h3>
-      <ul><li>Código Estructural 2021, Art. 24: Estado Límite Último de agotamiento por torsión en secciones de hormigón armado.</li><li>EN 1992-1-1 (EC2), apartado 6.3.1: sección hueca eficaz equivalente con espesor tef = A/u, no menor que el doble de la distancia del borde al eje del cerco, área encerrada Ak y perímetro uk de la línea media.</li><li>EN 1992-1-1 (EC2), apartado 6.3.2: resistencia de las bielas TRd,max = 2·ν·αcw·fcd·Ak·tef·sinθ·cosθ, de los cercos TRd,s = (Asw/s)·2·Ak·fywd·cotθ y de la armadura longitudinal TRd,sl = 2·Ak·fyd·(Asl/uk)·tanθ.</li><li>EN 1992-1-1 (EC2), apartado 6.3.2(4): interacción torsión-cortante TEd/TRd,max + VEd/VRd,max ≤ 1 cuando actúa un cortante simultáneo.</li><li>Código Estructural 2021, Art. 37.3: ángulo de bielas θ entre 21,8° y 45° (cotθ entre 1 y 2,5); la calculadora recorta los valores fuera de rango.</li><li>Código Estructural 2021, Art. 15 y Art. 22.6: coeficientes parciales γc y γs y factor αcc (1,0 por defecto, 0,85 opcional como en la EHE-08); tensión de cálculo del acero limitada a 400 MPa en cercos y armadura longitudinal de torsión.</li></ul>
+      <ul><li>Código Estructural 2021 (Anejo 19) y Eurocódigo 2, apartado 6.3: Estado Límite Último de agotamiento por torsión en secciones de hormigón armado.</li><li>EN 1992-1-1 (EC2), apartado 6.3.1: sección hueca eficaz equivalente con espesor tef = A/u, no menor que el doble de la distancia del borde al eje del cerco, área encerrada Ak y perímetro uk de la línea media.</li><li>EN 1992-1-1 (EC2), apartado 6.3.2: resistencia de las bielas TRd,max = 2·ν·αcw·fcd·Ak·tef·sinθ·cosθ, de los cercos TRd,s = (Asw/s)·2·Ak·fywd·cotθ y de la armadura longitudinal TRd,sl = 2·Ak·fyd·(Asl/uk)·tanθ.</li><li>EN 1992-1-1 (EC2), apartado 6.3.2(4): interacción torsión-cortante TEd/TRd,max + VEd/VRd,max ≤ 1 cuando actúa un cortante simultáneo.</li><li>Código Estructural 2021 (Anejo 19) y Eurocódigo 2, apartado 6.2.3: ángulo de bielas θ entre 21,8° y 45° (cotθ entre 1 y 2,5); la calculadora recorta los valores fuera de rango.</li><li>Código Estructural 2021 (Anejo 19), apartados 2.4.2.4 y 3.1.6: coeficientes parciales γc y γs y factor αcc (1,0 por defecto, 0,85 opcional como en la EHE-08). La tensión de cálculo del acero se limita a 400 MPa en cercos y armadura longitudinal de torsión, criterio de la EHE-08 que la calculadora mantiene del lado de la seguridad.</li></ul>
     </article>
     <article class="seo-card">
       <h2 id="como-usar">Cómo usar la calculadora</h2>
@@ -707,7 +710,7 @@ function cerrarPDF(){ document.getElementById('parea').classList.remove('visible
 </script>
 
 <div id="se-consent" class="se-consent" role="dialog" aria-label="Aviso de cookies">
-  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Más información</a></p>
+  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Política de cookies</a></p>
   <div class="se-consent-btns"><button type="button" data-c="no">Rechazar</button><button type="button" data-c="ok" class="pri">Aceptar</button></div>
 </div>
 

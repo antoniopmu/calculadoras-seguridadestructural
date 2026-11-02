@@ -234,9 +234,12 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .se-gate-legal{font-size:11px!important;color:#8a92a3!important;margin:.8rem 0 0!important;line-height:1.4;}
 .se-gate-x{position:absolute;top:10px;right:12px;background:transparent;border:none;color:#8a92a3;font-size:26px;line-height:1;cursor:pointer;padding:4px 8px;}
 @media print{.seo-info,.se-consent,.se-gate{display:none!important;}}
+/* accesibilidad (Lighthouse): contraste >= 4.5:1 del texto blanco sobre los botones principales */
+.btn-calc,.seo-btn,.se-consent button.pri,.se-gate-btn{background:#2b63d9;}
+.btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-01 22:59) -->
+<!-- SEO generado por publish.py (2026-11-02 09:46) -->
 <meta name="description" content="Comprueba el punzonamiento de losas de hormigón armado en soportes interiores, de borde y de esquina según el Código Estructural 2021 y EC2 6.4, con armadura.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/punzonamiento-losa-hormigon/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -300,20 +303,20 @@ window.SE_SITE={slug:'punzonamiento-losa-hormigon',gtm:'GTM-KTK4N7T',ga4:'',cons
   <div id="grp-rect">
     <div class="sec-title">Geometr&iacute;a soporte rect.</div>
     <div class="grid2">
-      <div class="field"><label>c<sub>1</sub> (dim. x)</label><div class="field-row"><input type="number" id="c1" value="300" min="100" max="2000"><span class="unit">mm</span></div></div>
-      <div class="field"><label>c<sub>2</sub> (dim. y)</label><div class="field-row"><input type="number" id="c2" value="300" min="100" max="2000"><span class="unit">mm</span></div></div>
+      <div class="field"><label for="c1">c<sub>1</sub> (dim. x)</label><div class="field-row"><input type="number" id="c1" value="300" min="100" max="2000"><span class="unit">mm</span></div></div>
+      <div class="field"><label for="c2">c<sub>2</sub> (dim. y)</label><div class="field-row"><input type="number" id="c2" value="300" min="100" max="2000"><span class="unit">mm</span></div></div>
     </div>
   </div>
   <!-- Circular -->
   <div id="grp-circ" style="display:none">
     <div class="sec-title">Geometr&iacute;a soporte circ.</div>
-    <div class="field"><label>D &mdash; Di&aacute;metro</label><div class="field-row"><input type="number" id="Dsop" value="400" min="100" max="2000"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="Dsop">D &mdash; Di&aacute;metro</label><div class="field-row"><input type="number" id="Dsop" value="400" min="100" max="2000"><span class="unit">mm</span></div></div>
   </div>
 
   <div class="sec-title">Geometr&iacute;a losa</div>
   <div class="grid2">
-    <div class="field"><label>h<sub>losa</sub> &mdash; Canto</label><div class="field-row"><input type="number" id="hlosa" value="300" min="120" max="1000"><span class="unit">mm</span></div></div>
-    <div class="field"><label>r &mdash; Recubr. al eje</label><div class="field-row"><input type="number" id="r" value="40" min="20" max="100"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="hlosa">h<sub>losa</sub> &mdash; Canto</label><div class="field-row"><input type="number" id="hlosa" value="300" min="120" max="1000"><span class="unit">mm</span></div></div>
+    <div class="field"><label for="r">r &mdash; Recubr. al eje</label><div class="field-row"><input type="number" id="r" value="40" min="20" max="100"><span class="unit">mm</span></div></div>
   </div>
   <div class="field" style="background:rgba(122,182,255,.06);border-color:rgba(122,182,255,.25)">
     <label>d &mdash; Canto &uacute;til medio (calculado)</label>
@@ -322,37 +325,37 @@ window.SE_SITE={slug:'punzonamiento-losa-hormigon',gtm:'GTM-KTK4N7T',ga4:'',cons
 
   <div class="sec-title">Materiales</div>
   <div class="grid2">
-    <div class="field"><label>f<sub>ck</sub></label><div class="field-row">
+    <div class="field"><label for="fck">f<sub>ck</sub></label><div class="field-row">
       <select id="fck">
         <option value="20">20</option><option value="25" selected>25</option><option value="30">30</option>
         <option value="35">35</option><option value="40">40</option><option value="45">45</option>
         <option value="50">50</option>
       </select><span class="unit">MPa</span></div></div>
-    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Art. 15)."><label>&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
-    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Art. 22.6). EHE-08 antigua: 0.85."><label>&alpha;<sub>cc</sub></label><div class="field-row">
+    <div class="field" title="Coeficiente parcial seguridad hormigón. Normal 1.5; accidental 1.3; sísmico 1.5 (CE 21 Art. 15)."><label for="gc">&#947;<sub>c</sub></label><div class="field-row"><input type="number" id="gc" value="1.50" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+    <div class="field" title="Factor pérdida resistencia por carga sostenida. CE 21: 1.0 (default Art. 22.6). EHE-08 antigua: 0.85."><label for="acc">&alpha;<sub>cc</sub></label><div class="field-row">
       <select id="acc">
         <option value="1.00" selected>1.00 (CE 21)</option>
         <option value="0.85">0.85 (EHE-08)</option>
       </select><span class="unit">&mdash;</span></div></div>
   </div>
   <div class="grid2">
-    <div class="field"><label>f<sub>ywk</sub></label><div class="field-row"><input type="number" id="fywk" value="500" min="200" max="500"><span class="unit">MPa</span></div></div>
-    <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Art. 15)."><label>&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
+    <div class="field"><label for="fywk">f<sub>ywk</sub></label><div class="field-row"><input type="number" id="fywk" value="500" min="200" max="500"><span class="unit">MPa</span></div></div>
+    <div class="field" title="Coeficiente parcial seguridad acero. Normal 1.15; accidental 1.0; sísmico 1.0 (CE 21 Art. 15)."><label for="gs">&#947;<sub>s</sub></label><div class="field-row"><input type="number" id="gs" value="1.15" step="0.05" min="1.0"><span class="unit">&mdash;</span></div></div>
   </div>
 
   <div class="sec-title">Cuant&iacute;a long. de la losa</div>
-  <div class="field"><label>&#961;<sub>l</sub> media (geometr.)</label><div class="field-row"><input type="number" id="rho_l" value="0.010" step="0.001" min="0.001" max="0.02"><span class="unit">&mdash;</span></div></div>
+  <div class="field"><label for="rho_l">&#961;<sub>l</sub> media (geometr.)</label><div class="field-row"><input type="number" id="rho_l" value="0.010" step="0.001" min="0.001" max="0.02"><span class="unit">&mdash;</span></div></div>
   <div style="font-family:var(--mono);font-size:9.5px;color:var(--text3);margin-top:-2px;line-height:1.5">
     &#961;<sub>l</sub> = &radic;(&#961;<sub>lx</sub>&middot;&#961;<sub>ly</sub>) &le; 0.02. Tope autom&aacute;tico.
   </div>
 
   <div class="sec-title">Esfuerzos</div>
-  <div class="field"><label>F<sub>sd</sub> &mdash; Reacci&oacute;n soporte</label><div class="field-row"><input type="number" id="Fsd" value="600" min="1"><span class="unit">kN</span></div></div>
+  <div class="field"><label for="Fsd">F<sub>sd</sub> &mdash; Reacci&oacute;n soporte</label><div class="field-row"><input type="number" id="Fsd" value="600" min="1"><span class="unit">kN</span></div></div>
   <div class="grid2">
-    <div class="field"><label>M<sub>1</sub> (eje x)</label><div class="field-row"><input type="number" id="M1" value="0" min="0"><span class="unit">kN&middot;m</span></div></div>
-    <div class="field"><label>M<sub>2</sub> (eje y)</label><div class="field-row"><input type="number" id="M2" value="0" min="0"><span class="unit">kN&middot;m</span></div></div>
+    <div class="field"><label for="M1">M<sub>1</sub> (eje x)</label><div class="field-row"><input type="number" id="M1" value="0" min="0"><span class="unit">kN&middot;m</span></div></div>
+    <div class="field"><label for="M2">M<sub>2</sub> (eje y)</label><div class="field-row"><input type="number" id="M2" value="0" min="0"><span class="unit">kN&middot;m</span></div></div>
   </div>
-  <div class="field"><label>&beta; (factor excentr.)</label><div class="field-row">
+  <div class="field"><label for="beta_mode">&beta; (factor excentr.)</label><div class="field-row">
     <select id="beta_mode">
       <option value="auto" selected>Calcular &beta; (con M)</option>
       <option value="1.00">&beta; = 1.00 (centrado)</option>
@@ -363,7 +366,7 @@ window.SE_SITE={slug:'punzonamiento-losa-hormigon',gtm:'GTM-KTK4N7T',ga4:'',cons
 
   <div class="sec-title">Tensi&oacute;n axil en la losa (opcional)</div>
   <div class="field" title="EC2 §6.4.4(1) — sumar 0.10·σ_cp a v_Rd,c. σ_cp = (σ_cx + σ_cy)/2, compresión positiva. Útil en losas pretensadas o con axil horizontal. Default 0 = ignorado (conservador).">
-    <label>&sigma;<sub>cp</sub> = (&sigma;<sub>cx</sub>+&sigma;<sub>cy</sub>)/2</label>
+    <label for="sigma_cp">&sigma;<sub>cp</sub> = (&sigma;<sub>cx</sub>+&sigma;<sub>cy</sub>)/2</label>
     <div class="field-row"><input type="number" id="sigma_cp" value="0" step="0.1" min="0" max="20"><span class="unit">MPa</span></div>
   </div>
   <div style="font-family:var(--mono);font-size:9.5px;color:var(--text3);margin-top:-2px;line-height:1.5">
@@ -390,9 +393,9 @@ window.SE_SITE={slug:'punzonamiento-losa-hormigon',gtm:'GTM-KTK4N7T',ga4:'',cons
   <div class="seo-grid">
     <article class="seo-card">
       <h2>¿Qué calcula esta herramienta?</h2>
-      <p>Comprueba el Estado Límite Último de punzonamiento en losas de hormigón armado sobre soportes interiores, de borde o de esquina, según el Código Estructural 2021 (Art. 23.6) y el Eurocódigo 2 (EN 1992-1-1, apartado 6.4). Calcula los perímetros u0 y u1, la tensión vEd con el factor β, la resistencia vRd,c y el límite vRd,max, y dimensiona la armadura de punzonamiento necesaria. Incluye esquema en planta e informe PDF.</p>
+      <p>Comprueba el Estado Límite Último de punzonamiento en losas de hormigón armado sobre soportes interiores, de borde o de esquina, según el Código Estructural 2021 (Anejo 19) y el Eurocódigo 2 (EN 1992-1-1), apartado 6.4. Calcula los perímetros u0 y u1, la tensión vEd con el factor β, la resistencia vRd,c y el límite vRd,max, y dimensiona la armadura de punzonamiento necesaria. Incluye esquema en planta e informe PDF.</p>
       <h3>Normativa aplicada</h3>
-      <ul><li>Código Estructural 2021, Art. 23.6: Estado Límite Último de punzonamiento en losas y placas sobre soportes.</li><li>Código Estructural 2021, Art. 23.6.2 y EC2 apartado 6.4.4: resistencia sin armadura vRd,c = CRd,c·k·(100·ρl·fck)^(1/3) + 0,10·σcp, con mínimo vmin = 0,035·k^1,5·fck^0,5, evaluada en el perímetro crítico u1 situado a 2d del soporte.</li><li>EN 1992-1-1 (EC2), apartado 6.4.3: tensión de punzonamiento vEd = β·Fsd/(u1·d) y valores simplificados del factor β (1,15 soporte interior, 1,40 de borde, 1,50 de esquina).</li><li>Código Estructural 2021, Art. 23.6.3 y EC2 apartado 6.4.5: armadura de punzonamiento con fywd,ef = 250 + 0,25·d ≤ fywd, separación radial sr ≤ 0,75·d y perímetro uout a partir del cual no se requiere armadura.</li><li>Comprobación de la biela de compresión en el perímetro del soporte u0: vEd,0 ≤ vRd,max = 0,5·ν·fcd con ν = 0,6·(1 - fck/250).</li><li>Código Estructural 2021, Art. 15 y Art. 22.6: coeficientes parciales γc y γs y factor αcc (1,0 por defecto, 0,85 opcional como en la EHE-08).</li></ul>
+      <ul><li>Código Estructural 2021 (Anejo 19) y Eurocódigo 2, apartado 6.4: Estado Límite Último de punzonamiento en losas y placas sobre soportes.</li><li>Código Estructural 2021 (Anejo 19) y Eurocódigo 2, apartado 6.4.4: resistencia sin armadura vRd,c = CRd,c·k·(100·ρl·fck)^(1/3) + 0,10·σcp, con mínimo vmin = 0,035·k^1,5·fck^0,5, evaluada en el perímetro crítico u1 situado a 2d del soporte.</li><li>EN 1992-1-1 (EC2), apartado 6.4.3: tensión de punzonamiento vEd = β·Fsd/(u1·d) y valores simplificados del factor β (1,15 soporte interior, 1,40 de borde, 1,50 de esquina).</li><li>Código Estructural 2021 (Anejo 19) y Eurocódigo 2, apartado 6.4.5: armadura de punzonamiento con fywd,ef = 250 + 0,25·d ≤ fywd, separación radial sr ≤ 0,75·d y perímetro uout a partir del cual no se requiere armadura.</li><li>Comprobación de la biela de compresión en el perímetro del soporte u0: vEd,0 ≤ vRd,max = 0,5·ν·fcd con ν = 0,6·(1 - fck/250).</li><li>Código Estructural 2021 (Anejo 19), apartados 2.4.2.4 y 3.1.6: coeficientes parciales γc y γs y factor αcc (1,0 por defecto, 0,85 opcional como en la EHE-08).</li></ul>
     </article>
     <article class="seo-card">
       <h2 id="como-usar">Cómo usar la calculadora</h2>
@@ -911,7 +914,7 @@ updateD();
 </script>
 
 <div id="se-consent" class="se-consent" role="dialog" aria-label="Aviso de cookies">
-  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Más información</a></p>
+  <p>Usamos cookies analíticas (Google Analytics) para saber qué calculadoras se usan más y mejorarlas. Solo se activan si las aceptas. <a href="/privacidad/#cookies">Política de cookies</a></p>
   <div class="se-consent-btns"><button type="button" data-c="no">Rechazar</button><button type="button" data-c="ok" class="pri">Aceptar</button></div>
 </div>
 

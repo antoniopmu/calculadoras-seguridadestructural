@@ -393,7 +393,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 10:04) -->
+<!-- SEO generado por publish.py (2026-11-02 11:11) -->
 <meta name="description" content="Calcula muros de contención en ménsula: vuelco, deslizamiento, hundimiento, armado de fuste y zapata y coste por metro según CE 2021 y CTE DB-SE-C. Con PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-mensula-contencion/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -461,18 +461,18 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
       <option value="1c">A 1 cara (contra terreno) — solo excéntrico</option>
     </select>
   </div>
-  <div class="field"><label for="inAmbCim">Clase ambiente CIMENTACIÓN <span class="tip" title="Determina el recubrimiento mínimo según la EHE-08 Art. 37.2.4.&#10;&#10;• IIa: humedad alta sin agresividad química (cimentaciones enterradas en suelo no agresivo)&#10;• IIb: humedad alta + ciclos hielo-deshielo&#10;• IIIa: marina aérea&#10;• IV: ataque químico moderado">?</span></label>
+  <div class="field"><label for="inAmbCim">Clase ambiente CIMENTACIÓN <span class="tip" title="Determina el recubrimiento mínimo según la EHE-08 Art. 37.2.4.&#10;&#10;• IIa: humedad alta sin agresividad química (cimentaciones enterradas en suelo no agresivo)&#10;• IIb: humedad media (exteriores con precipitación media anual inferior a 600 mm)&#10;• IIIa: marina aérea&#10;• IV: cloruros de origen no marino. Heladas (H, F) y ataque químico (Qa, Qb, Qc) no están contemplados en este selector">?</span></label>
     <select id="inAmbCim" onchange="actualizarRecubrimientos()">
       <option value="IIa" selected>IIa (cimentación enterrada normal)</option>
-      <option value="IIb">IIb (hielo-deshielo)</option>
+      <option value="IIb">IIb (humedad media)</option>
       <option value="IIIa">IIIa (marina aérea)</option>
-      <option value="IV">IV (química moderada)</option>
+      <option value="IV">IV (cloruros no marinos)</option>
     </select>
   </div>
   <div class="field"><label for="inAmbMuro">Clase ambiente MURO <span class="tip" title="Clase exposición del fuste del muro. Si el muro queda expuesto al aire libre (intradós), la cara intradós suele ser IIa o XC2-XC4. Si el muro está completamente enterrado, IIa. Para muros marítimos o de carretera (sales) usar IIIa/IIIc o IIIb.">?</span></label>
     <select id="inAmbMuro" onchange="actualizarRecubrimientos()">
       <option value="IIa" selected>IIa (muro enterrado o protegido)</option>
-      <option value="IIb">IIb (hielo-deshielo)</option>
+      <option value="IIb">IIb (humedad media)</option>
       <option value="IIIa">IIIa (marina aérea)</option>
       <option value="IIIb">IIIb (sumergido marino)</option>
     </select>
@@ -2797,7 +2797,7 @@ function tablaArmadoTrasdos(I, C){
     });
   }
   h+='</tbody></table></div></div>';
-  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px">A_s requerida = '+f0(C.As_trasdos_req)+' mm²/m · A_s,mín cara = '+f0(C.As_min_v_geom_cara)+' mm²/m · A_s ADOPTAR = <b style="color:var(--green)">'+f0(C.As_trasdos_adoptar)+' mm²/m</b>. Restricciones: s ≤ 300 mm (criterio EHE-08), Ø_base 10-25, Ø_espera 16-32.</div>';
+  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px">A_s requerida = '+f0(C.As_trasdos_req)+' mm²/m · A_s,mín cara = '+f0(C.As_min_v_geom_cara)+' mm²/m · A_s ADOPTAR = <b style="color:var(--green)">'+f0(C.As_trasdos_adoptar)+' mm²/m</b>. Restricciones: s ≤ 300 mm (CE 21 Anejo 19 §9.3.1.1), Ø_base 10-25, Ø_espera 16-32.</div>';
   return h;
 }
 
@@ -3034,7 +3034,7 @@ function generarPDF(){
   const selZT = C.sel_zap_trans.length>0?C.sel_zap_trans[0]:null;
   if(selZT) html+='<tr><td>Zapata · transversal</td><td>Ø'+selZT.d+'</td><td>'+selZT.s+'</td><td>'+f0(selZT.As_real)+'</td><td>Armadura de reparto (≈20% long.)</td></tr>';
   html+='</tbody></table>';
-  html+='<div style="font-size:7.5pt;color:#666;margin-top:4pt"><b>Restricciones aplicadas:</b> separación máxima s ≤ 300 mm (criterio EHE-08) &middot; Ø zapata = 12, 16, 20, 25 &middot; Ø fuste = 10, 12, 16, 20, 25.</div></div>';
+  html+='<div style="font-size:7.5pt;color:#666;margin-top:4pt"><b>Restricciones aplicadas:</b> separación máxima s ≤ 300 mm (CE 21 Anejo 19 §9.3.1.1) &middot; Ø zapata = 12, 16, 20, 25 &middot; Ø fuste = 10, 12, 16, 20, 25.</div></div>';
 
   // ───── Normativa ─────
   html+='<div class="ps"><div class="ps-t">Normativa aplicada</div>';

@@ -309,7 +309,7 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 10:04) -->
+<!-- SEO generado por publish.py (2026-11-02 11:11) -->
 <meta name="description" content="Calcula la longitud de anclaje lb,net y de solape ls de barras corrugadas según el Código Estructural 2021 (Anejo 19, apartados 8.4 y 8.7): coeficientes alfa y PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/longitud-anclaje-solape/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -573,7 +573,7 @@ window.SE_SITE={slug:'longitud-anclaje-solape',gtm:'GTM-KTK4N7T',ga4:'',consentM
       </select>
     </div>
     <div class="field">
-      <label for="inPctSolape">% barras solapadas <span class="tip" data-tip="CE Anejo 19 §8.7.3 &mdash; Tabla 8.3. Porcentaje de barras solapadas en la misma secci&oacute;n respecto del total de la secci&oacute;n de acero.">?</span></label>
+      <label for="inPctSolape">% barras solapadas <span class="tip" data-tip="CE Anejo 19 §8.7.3 &mdash; Tabla A19.8.3. Porcentaje de barras solapadas en la misma secci&oacute;n respecto del total de la secci&oacute;n de acero.">?</span></label>
       <select id="inPctSolape">
         <option value="lt25" selected>&lt; 25% (α₆=1,00)</option>
         <option value="c33">≈ 33% (α₆=1,15)</option>
@@ -1013,7 +1013,7 @@ function buildSteps(r) {
         (inp.cd > thr ? '&gt;' : '&le;') + ' 3&Oslash; = ' + f1(thr) + ' mm &rarr; &alpha;<sub>1</sub> = ' + fc(r.a1);
     }
     steps.push({ n:'12',
-      formula: '&alpha;<sub>1</sub> &mdash; Forma del anclaje (Tabla 8.2)',
+      formula: '&alpha;<sub>1</sub> &mdash; Forma del anclaje (Tabla A19.8.2)',
       subst: sub,
       val: fc(r.a1), art: 'CE Anejo 19 §8.4' });
   }
@@ -1124,7 +1124,7 @@ function buildSteps(r) {
   if (inp.solape && r.a6 !== undefined) {
     const a6Labels = { lt25: '< 25%', c33: '≈ 33%', c50: '≈ 50%', gt50: '> 50%' };
     steps.push({ n:'22',
-      formula: '&alpha;<sub>6</sub> &mdash; % barras solapadas (Tabla 8.3)',
+      formula: '&alpha;<sub>6</sub> &mdash; % barras solapadas (Tabla A19.8.3)',
       subst: a6Labels[inp.pct_solape] + ' &rarr; &alpha;<sub>6</sub> = ' + fc(r.a6),
       val: fc(r.a6), art: 'CE Anejo 19 §8.7.3' });
 

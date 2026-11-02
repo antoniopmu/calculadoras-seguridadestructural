@@ -231,7 +231,7 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 10:04) -->
+<!-- SEO generado por publish.py (2026-11-02 11:11) -->
 <meta name="description" content="Calcula el momento último MRd de una viga en T de hormigón armado según el Código Estructural 2021 y EC2: bloque comprimido en ala o alma y aprovechamiento.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/flexion-simple-seccion-t/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -644,7 +644,7 @@ function renderResultados(R){
   if(R.Asp>0) h+=step('C2','&#961;<sub>sup</sub> = A<sub>s</sub>&prime;/(b<sub>w</sub>&middot;d)',f4(R.rho_sup));
   h+=step('C3','&omega; = A<sub>s</sub>&middot;f<sub>yd</sub>/(b<sub>w</sub>&middot;d&middot;f<sub>cd</sub>)',f3(R.omega_mec)+' (cuant&iacute;a mec&aacute;nica)','hl');
   h+=sepStep('&mdash;&mdash; Disposici&oacute;n constructiva &mdash;&mdash;');
-  h+=step('D1','Separaci&oacute;n libre barras','s<sub>min</sub>=max(&phi;,20mm,d<sub>g</sub>+5) &middot; s<sub>max</sub>=300 mm (CE 21 Anejo 19 §8.2)','wrn');
+  h+=step('D1','Separaci&oacute;n libre barras','s<sub>min</sub>=max(&phi;,20mm,d<sub>g</sub>+5) &middot; s<sub>max</sub>=300 mm (s<sub>min</sub>: CE 21 Anejo 19 §8.2; s<sub>max</sub>: criterio EHE-08)','wrn');
   h+=step('D2','Anclaje en apoyos','Verificar con anclaje_solape.html (Anejo 19 §8.4)','wrn');
   h+=step('19','Aprov. = M<sub>Ed</sub>/M<sub>Rd</sub>',f3(R.ratio),R.ok?'fin':'err');
   h+='</div>';

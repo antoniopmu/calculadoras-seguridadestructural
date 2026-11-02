@@ -393,7 +393,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-02 11:35) -->
+<!-- SEO generado por publish.py (2026-11-02 12:13) -->
 <meta name="description" content="Calcula muros de contención en ménsula: vuelco, deslizamiento, hundimiento, armado de fuste y zapata y coste por metro según CE 2021 y CTE DB-SE-C. Con PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-mensula-contencion/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -710,6 +710,11 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
     <div class="field"><label for="inSolapeZ">Solape armadura zapata <span class="tip" title="Distancia máxima entre solapes en la armadura LONGITUDINAL de la zapata (la que va paralela al muro). Habitual: 6 m. Si la zapata es continua a lo largo de un muro de mayor longitud, hay que prever solapes cada 6 m.">?</span></label><div class="field-row"><input type="number" id="inSolapeZ" step="0.5" value="6.0" min="2.0"><span class="unit">m</span></div></div>
   </div>
 
+  <!-- 9a - JUNTAS DE CONTRACCIÓN (cuantía horizontal mínima, CE 2021 Anejo 19 §9.6.3) -->
+  <div class="toggle-row">
+    <input type="checkbox" id="inJuntasH">
+    <label for="inJuntasH" title="CE 2021 Anejo 19 §9.6.3(1): la cuantía mínima horizontal (0,0032·A_c con B500S; 0,004·A_c con B400S, repartida en las dos caras) puede reducirse a 0,002·A_c si se disponen juntas verticales de contracción a distancias inferiores a 7,5 m. Marcar solo si se cumple. La reducción por altura de fuste superior a 2,5 m no se aplica (lado seguro).">Juntas verticales de contracción a &lt; 7,5 m (A_s,h,min = 0,002·A_c)</label>
+  </div>
   <!-- 9b - CERCOS -->
   <div class="toggle-row">
     <input type="checkbox" id="inCercos">
@@ -770,11 +775,11 @@ window.SE_SITE={slug:'muro-mensula-contencion',gtm:'GTM-KTK4N7T',ga4:'',consentM
       <h2>¿Qué calcula esta herramienta?</h2>
       <p>Esta calculadora dimensiona muros de contención en ménsula con zapata centrada, excéntrica, de autocontención o solo talón. Calcula empujes de Rankine, Coulomb o al reposo, con sobrecarga, nivel freático y sismo, comprueba vuelco, deslizamiento y hundimiento según el CTE DB-SE-C, dimensiona el armado del fuste y de la zapata según el Código Estructural 2021, estima cuantías y coste por metro lineal, optimiza la geometría y genera un informe PDF.</p>
       <h3>Normativa aplicada</h3>
-      <ul><li>CTE DB-SE-C, estabilidad de elementos de contención: seguridad al vuelco (coeficiente por defecto 1,8), al deslizamiento (1,5) con rozamiento base-terreno μ = tan(2φ&#x27;/3), y al hundimiento frente a la tensión admisible del terreno.</li><li>CTE DB-SE-C, empujes del terreno: empuje activo de Rankine Ka = tan²(45° - φ&#x27;/2), empuje activo de Coulomb con rozamiento muro-terreno δ, inclinación del paramento α y del relleno β, y empuje al reposo K0 = 1 - sen φ&#x27; (Jaky).</li><li>Capacidad portante por el método de Brinch-Hansen y Vesić: factores Nc, Nq y Nγ, factores de profundidad e inclinación de la carga, ancho eficaz B&#x27; = B - 2·|e| y coeficiente de seguridad γ_BH (3,0 por defecto), como alternativa a la comprobación directa con σadm.</li><li>Código Estructural 2021: dimensionado a flexión simple en ELU del fuste y de la zapata con fcd = fck/γc y fyd = fyk/γs, cuantías geométricas mínimas de muros (0,09 % vertical por cara y 0,10 % horizontal) y de zapatas (0,09 % por cara).</li><li>Resistencia a cortante sin armadura transversal VRd,c según la formulación del Código Estructural 2021 equivalente al Eurocódigo 2 apartado 6.2.2, aplicada al fuste en el arranque y a puntera y talón a una distancia d de la cara del muro.</li><li>NCSE-02 y Eurocódigo 8: empuje sísmico por el método de Mononobe-Okabe con coeficientes kh y kv, aplicando el incremento dinámico a 0,6·H sobre la base.</li></ul>
+      <ul><li>CTE DB-SE-C, estabilidad de elementos de contención: seguridad al vuelco (coeficiente por defecto 1,8), al deslizamiento (1,5) con rozamiento base-terreno μ = tan(2φ&#x27;/3), y al hundimiento frente a la tensión admisible del terreno.</li><li>CTE DB-SE-C, empujes del terreno: empuje activo de Rankine Ka = tan²(45° - φ&#x27;/2), empuje activo de Coulomb con rozamiento muro-terreno δ, inclinación del paramento α y del relleno β, y empuje al reposo K0 = 1 - sen φ&#x27; (Jaky).</li><li>Capacidad portante por el método de Brinch-Hansen y Vesić: factores Nc, Nq y Nγ, factores de profundidad e inclinación de la carga, ancho eficaz B&#x27; = B - 2·|e| y coeficiente de seguridad γ_BH (3,0 por defecto), como alternativa a la comprobación directa con σadm.</li><li>Código Estructural 2021: dimensionado a flexión simple en ELU del fuste y de la zapata con fcd = fck/γc y fyd = fyk/γs. Cuantías mínimas del fuste con los valores nacionales del Anejo 19: en vertical, en la cara traccionada el mayor valor entre la expresión 9.1, As,min = (W/z)·fctm,fl/fyd, y el 60 % de 0,002·Ac (apartados 9.6.1, 9.2.1.1 y 9.6.2), y en la cara comprimida la mitad de 0,002·Ac (apartado 9.6.2(2)); en horizontal, 0,0032·Ac con B500S o 0,004·Ac con B400S repartida en las dos caras, reducible a 0,002·Ac con juntas verticales de contracción a menos de 7,5 m (apartado 9.6.3), y no menos del 20 % de la vertical principal (apartado 9.3.1.1(2)). En la zapata se mantiene el criterio de la EHE-08, 0,09 % por cara.</li><li>Resistencia a cortante sin armadura transversal VRd,c según la formulación del Código Estructural 2021 equivalente al Eurocódigo 2 apartado 6.2.2, aplicada al fuste en el arranque y a puntera y talón a una distancia d de la cara del muro.</li><li>NCSE-02 y Eurocódigo 8: empuje sísmico por el método de Mononobe-Okabe con coeficientes kh y kv, aplicando el incremento dinámico a 0,6·H sobre la base.</li></ul>
     </article>
     <article class="seo-card">
       <h2 id="como-usar">Cómo usar la calculadora</h2>
-      <ol><li>Selecciona el tipo de zapata (centrada, excéntrica con puntera, autocontención o solo talón), el encofrado a una o dos caras y las clases de ambiente de muro y cimentación, que fijan los recubrimientos por defecto.</li><li>Introduce la geometría: altura total H, canto de zapata, espesores de coronación y arranque (fuste vertical o variable), vuelos de puntera y talón, profundidad de empotramiento y, si procede, tacón antideslizamiento.</li><li>Define el terreno (γ, φ&#x27;, c&#x27;, δ muro-terreno y σadm) y el tipo de empuje: activo de Rankine, activo de Coulomb o al reposo, con cohesión opcional, empuje pasivo parcialmente movilizado y acciones sísmicas de Mononobe-Okabe.</li><li>Añade las cargas (sobrecargas en trasdós e intradós, carga vertical en coronación con su excentricidad y nivel freático con o sin drenaje) y elige materiales, recubrimientos y el modelo de capacidad portante: σadm directa o Brinch-Hansen.</li><li>Ajusta los diámetros base, patillas, solapes, cercos y los precios unitarios, y revisa los coeficientes de seguridad de vuelco, deslizamiento y acciones.</li><li>Pulsa Calcular para ver las comprobaciones, los esquemas y el armado; usa Optimizar coste para buscar la geometría más económica que cumpla y exporta el informe en PDF.</li></ol>
+      <ol><li>Selecciona el tipo de zapata (centrada, excéntrica con puntera, autocontención o solo talón), el encofrado a una o dos caras y las clases de ambiente de muro y cimentación, que fijan los recubrimientos por defecto.</li><li>Introduce la geometría: altura total H, canto de zapata, espesores de coronación y arranque (fuste vertical o variable), vuelos de puntera y talón, profundidad de empotramiento y, si procede, tacón antideslizamiento.</li><li>Define el terreno (γ, φ&#x27;, c&#x27;, δ muro-terreno y σadm) y el tipo de empuje: activo de Rankine, activo de Coulomb o al reposo, con cohesión opcional, empuje pasivo parcialmente movilizado y acciones sísmicas de Mononobe-Okabe.</li><li>Añade las cargas (sobrecargas en trasdós e intradós, carga vertical en coronación con su excentricidad y nivel freático con o sin drenaje) y elige materiales, recubrimientos y el modelo de capacidad portante: σadm directa o Brinch-Hansen.</li><li>Ajusta los diámetros base, patillas, solapes, cercos y los precios unitarios, marca si hay juntas verticales de contracción a menos de 7,5 m y revisa los coeficientes de seguridad de vuelco, deslizamiento y acciones.</li><li>Pulsa Calcular para ver las comprobaciones, los esquemas y el armado; usa Optimizar coste para buscar la geometría más económica que cumpla y exporta el informe en PDF.</li></ol>
       <h3>Hipótesis y limitaciones</h3>
       <ul><li>El cálculo se realiza por metro lineal de muro, con reparto de tensiones bajo la zapata lineal: trapezoidal dentro del núcleo central (e ≤ B/6) y triangular fuera de él.</li><li>El empuje activo se evalúa sobre la altura total H desde la base de la zapata; la sobrecarga del trasdós genera un empuje rectangular q·Ka·H y el agua solo actúa si existe nivel freático y el drenaje está desactivado.</li><li>La componente vertical del empuje de Coulomb se considera favorable, y el empuje pasivo solo se cuenta a partir de la cota indicada y con la fracción de movilización elegida (33 % a 100 %).</li><li>En el fuste, si la sección requiere doble armadura (μ &gt; 0,42) la herramienta limita la cuantía al 4 % y lo señala; los cercos solo se dimensionan cuando VEd supera VRd,c y la opción está activada.</li><li>Las mediciones y el coste por metro lineal son estimaciones a partir de los precios unitarios introducidos y de hipótesis de solapes y patillas; el optimizador recorre una malla discreta de cantos y vuelos y solo acepta configuraciones estables.</li><li>Los resultados son orientativos y deben ser revisados y validados por un técnico competente, junto con el estudio geotécnico, antes de su aplicación en proyecto.</li></ul>
     </article>
@@ -971,6 +976,7 @@ function recolectar(){
     solapeH:gv('inSolapeH'), solapeZ:gv('inSolapeZ'),
     // Cercos
     cercos:$('inCercos').checked, DCerco:parseInt($('inDCerco').value), patCerco:gv('inPatCerco'),
+    juntasH: ($('inJuntasH') ? $('inJuntasH').checked : false),
     modeloCP:$('inModeloCP').value, gammaBH:gv('inGammaBH'),
     DbaseFuste:parseInt($('inDbaseFuste').value), DbaseZap:parseInt($('inDbaseZap').value),
     // Económico ampliado
@@ -1157,14 +1163,16 @@ function V_Rd_c(d_mm, ro_l, fck_MPa, gc, b_mm){
 
 // Selecciona la mejor pareja Ø + separación para cubrir A_s_req
 // candidatos: lista de diámetros admisibles (mm). s_max ≤ 300 mm.
-function seleccionaArmado(As_req_mm2, candidatos, s_max_mm){
+function seleccionaArmado(As_req_mm2, candidatos, s_max_mm, limitarS){
   const opciones = [];
   candidatos.forEach(d=>{
     const Ab = AREA_BARRA(d);
     // sep en mm para cubrir A_s en ancho 1000 mm: s = Ab*1000/As_req
     let s_calc = Ab * 1000 / Math.max(1, As_req_mm2);
     // limitar a s_max (=> aumenta A_s real)
-    if(s_calc > s_max_mm) return;  // ese Ø queda demasiado disperso → descartar
+    // FIX 2026-11-02: con limitarS = true (armado del fuste) el Ø que quedaría a s > s_max se dispone a s_max en lugar de
+    // descartarse; sin ello, con áreas pequeñas (p. ej. la mínima nacional del intradós, 0,0008·A_c) no quedaba ninguna opción.
+    if(s_calc > s_max_mm && !limitarS) return;  // ese Ø queda demasiado disperso → descartar
     // redondear hacia abajo a múltiplo de 25 mm (práctica)
     let s = Math.floor(s_calc / 25) * 25;
     if(s < 75) s = 75;
@@ -1384,46 +1392,74 @@ function comprobar(I, E, P){
     // Tope práctico: 4% cuantía máxima CE 21 Anejo 19 §9.6.2 (evita peso de acero infinito)
     As_trasdos_req = 0.04 * b_fuste * (I.ea*1000);
   }
-  // Cuantías mínimas muro EHE-08 Art. 42.3.5
-  const As_min_v_geom_total = 0.0028 * b_fuste * (I.ea*1000);  // 0.28% total en ambas caras
-  const As_min_v_geom_cara = 0.0009 * b_fuste * (I.ea*1000);   // 0.09% en cada cara (asignación típica 2/3-1/3)
-  const As_trasdos_adoptar = Math.max(As_trasdos_req, As_min_v_geom_cara);
+  // FIX 2026-11-02: cuantías mínimas del fuste con los valores NACIONALES del CE 2021 Anejo 19. Antes: EHE-08 Art. 42.3.5,
+  // 0,09 % vertical y 0,10 % horizontal por cara, por debajo de lo exigido. Se usa el espesor del arranque e_a (el mayor).
+  //  · Vertical, cara traccionada (trasdós): muro en flexión fuera de su plano → reglas de losas (§9.6.1(1) → §9.3.1.1(1) →
+  //    §9.2.1.1(1), ec. 9.1): A_s,min = (W/z)·f_ctm,fl/f_yd con W = b·h²/6 y z = 0,8·h ⇒ b·h·f_ctm,fl/(4,8·f_yd),
+  //    f_ctm,fl = máx{(1,6 − h/1000)·f_ctm ; f_ctm} (§3.1.8); y §9.6.2(1): 0,002·A_c con el 60 % en la cara traccionada.
+  //  · Vertical, cara comprimida (intradós): la mitad de 0,002·A_c, es decir 0,001·A_c (§9.6.2(2): mitad en cada cara
+  //    cuando rige el mínimo); cubre también el 40 % de §9.6.2(1).
+  //  · Horizontal (§9.6.3(1)): 0,0032·A_c (B500S) / 0,004·A_c (B400S), repartida en las dos caras; 0,002·A_c con juntas
+  //    verticales de contracción a menos de 7,5 m; espesor eficaz máximo 50 cm. No se aplica la reducción por altura de
+  //    fuste superior a 2,5 m (lado seguro). Además, por las reglas de losas (§9.6.1(1) → §9.3.1.1(2)), la armadura
+  //    horizontal (secundaria) no será inferior al 20 % de la vertical principal del trasdós.
+  //  · f_yd del mínimo con γ_s = 1,15: la armadura mínima es una disposición constructiva, independiente de la situación
+  //    de proyecto (con γ_s = 1,0 de la situación accidental el mínimo bajaría un 13 %).
+  const e_fuste = Math.max(I.ea, I.ec)*1000;  // mm, espesor mayor del fuste (el optimizador puede combinar e_a < e_c)
+  const fyd_min = I.fyk/1.15;                   // MPa, f_yd de la situación persistente para la armadura mínima
+  const fctm_fuste = I.fck<=50 ? 0.30*Math.pow(I.fck, 2/3) : 2.12*Math.log(1+(I.fck+8)/10);
+  const fctm_fl_fuste = Math.max((1.6 - e_fuste/1000)*fctm_fuste, fctm_fuste);
+  const As_min_v_ec91 = b_fuste*e_fuste*fctm_fl_fuste/(4.8*fyd_min); // ec. 9.1
+  const As_min_v_geom_total = 0.002 * b_fuste * e_fuste;              // §9.6.2(1), suma de las dos caras
+  const As_min_v_trasdos = Math.max(As_min_v_ec91, 0.6*As_min_v_geom_total);
+  const As_min_v_intrados = 0.5*As_min_v_geom_total;                  // §9.6.2(2)
+  const As_trasdos_adoptar = Math.max(As_trasdos_req, As_min_v_trasdos);
 
-  // Armadura intradós (vertical) — geométrica mínima
-  const As_intrados_adoptar = As_min_v_geom_cara;
+  // Armadura intradós (vertical) — mínima de la cara comprimida (§9.6.2)
+  const As_intrados_adoptar = As_min_v_intrados;
 
-  // Armadura horizontal (en cada cara) — 0.10% mínimo geom. (EHE-08 Art. 42.3.5)
-  const As_h_min_cara = 0.0010 * b_fuste * (I.ea*1000);
+  // Armadura horizontal (en cada cara) — mínima §9.6.3
+  const rho_h_min = I.juntasH ? 0.002 : (I.fyk >= 500 ? 0.0032 : 0.004);
+  const As_h_min_9_6_3 = 0.5 * rho_h_min * b_fuste * Math.min(e_fuste, 500);   // §9.6.3(1), por cara
+  const As_h_min_cara = Math.max(As_h_min_9_6_3, 0.2*As_trasdos_adoptar);        // §9.3.1.1(2): ≥ 20 % de la principal
   const As_h_adoptar = As_h_min_cara;
 
   // Selección de Ø + separación trasdós (s_max ≤ 300 mm)
   const SMAX = 300;
   const cand_fuste = [10,12,16,20,25];
   const cand_espera = [16,20,25,32];
-  const sel_intra = seleccionaArmado(As_intrados_adoptar, cand_fuste, SMAX);
-  const sel_horiz = seleccionaArmado(As_h_adoptar, cand_fuste, SMAX);
+  const sel_intra = seleccionaArmado(As_intrados_adoptar, cand_fuste, SMAX, true);
+  const sel_horiz = seleccionaArmado(As_h_adoptar, cand_fuste, SMAX, true);
 
   // ───── MODO A: armadura base @ s + espera larga (Ø mayor) ─────
-  // Selección: base con Ø_base elegido, separación que cubra As_min_v_geom_cara; espera cubre déficit
+  // Selección: base con Ø_base elegido, separación que cubra A_s,min del trasdós (As_min_v_trasdos); espera cubre déficit
   const Dbase = I.DbaseFuste;
   const Ab_base = AREA_BARRA(Dbase);
   // s_base que cubre A_s,min,cara con Ø_base
-  let s_baseA = Math.min(SMAX, Math.floor((Ab_base*1000/As_min_v_geom_cara)/25)*25);
+  let s_baseA = Math.min(SMAX, Math.floor((Ab_base*1000/As_min_v_trasdos)/25)*25);
   if(s_baseA<75) s_baseA = 75;
   const As_baseA = Ab_base*1000/s_baseA;
-  // Espera cubre déficit (As_trasdos_adoptar − As_baseA), separación = s_baseA (intercalada con 1 espera entre cada barra base)
+  // FIX 2026-11-02: por encima del corte de las esperas solo quedan las barras base, que deben cubrir A_s,min del trasdós
+  const baseA_cubre_min = As_baseA >= As_min_v_trasdos - 1e-6;
+  // Espera cubre déficit (As_trasdos_adoptar − As_baseA), intercalada entre barras base: en cada hueco (s_e = s_b) o, para
+  // no sobrearmar cuando la base es densa, cada k huecos (s_e = k·s_b ≤ 2·s_max = 600 mm; la separación máxima de §9.3.1.1(3)
+  // la cumplen ya las barras base). FIX 2026-11-02: antes siempre k = 1.
   const deficitA = Math.max(0, As_trasdos_adoptar - As_baseA);
   let modoA_opciones = [];
   cand_espera.forEach(de=>{
-    if(de < Dbase) return;
+    if(de < Dbase || !baseA_cubre_min) return;
     const Ae = AREA_BARRA(de);
-    // espera @ s_baseA (entre barras base) → 1 espera por cada s_baseA
-    const As_espera = Ae*1000/s_baseA;
-    const As_total = As_baseA + As_espera;
-    if(As_total >= As_trasdos_adoptar && s_baseA <= SMAX){
-      modoA_opciones.push({Dbase:Dbase, s_base:s_baseA, As_base:As_baseA, Despera:de, s_espera:s_baseA, As_espera, As_total});
+    let elegido = null;
+    for(let k=1; k*s_baseA <= 2*SMAX; k++){
+      const As_espera = Ae*1000/(k*s_baseA);
+      const As_total = As_baseA + As_espera;
+      if(As_total >= As_trasdos_adoptar) elegido = {s_espera:k*s_baseA, As_espera, As_total};  // mayor k que aún cumple
+    }
+    if(elegido){
+      modoA_opciones.push({Dbase:Dbase, s_base:s_baseA, As_base:As_baseA, Despera:de, s_espera:elegido.s_espera, As_espera:elegido.As_espera, As_total:elegido.As_total});
     }
   });
+  modoA_opciones.sort((a,b)=>a.As_total - b.As_total);  // FIX 2026-11-02: recomendada = la de menos acero
 
   // ───── MODO B: base + barra forma espera larga intercalada (separaciones iguales) ─────
   // base @ s_b + espera larga @ s_b, alternadas → cada barra a s_b/2
@@ -1434,14 +1470,17 @@ function comprobar(I, E, P){
     // sep común s_c, cada Ø contribuye Ab/sc + Ae/sc en términos de A_s/m
     // A_s_total/m = (Ab + Ae)/sc → sc = (Ab + Ae)·1000 / A_s_req
     let s_c = Math.floor(((Ab_base + Ae)*1000 / As_trasdos_adoptar)/25)*25;
+    // FIX 2026-11-02: por encima del corte de las esperas solo quedan las barras base (a s_c): deben cubrir A_s,min del trasdós
+    s_c = Math.min(s_c, Math.floor((Ab_base*1000/As_min_v_trasdos)/25)*25);
     if(s_c < 75) s_c = 75;
-    if(s_c > SMAX) return;  // descartar si excede 300
+    if(s_c > SMAX) s_c = Math.floor(SMAX/25)*25;  // FIX 2026-11-02: limitar a s_max (antes se descartaba la opción)
     const As_total = (Ab_base + Ae)*1000/s_c;
-    if(As_total >= As_trasdos_adoptar){
+    if(As_total >= As_trasdos_adoptar && Ab_base*1000/s_c >= As_min_v_trasdos - 1e-6){
       // En realidad: una base + una espera cada s_c → vista como s/2 entre barras
       modoB_opciones.push({Dbase, Despera:de, s_comun:s_c, As_total});
     }
   });
+  modoB_opciones.sort((a,b)=>a.As_total - b.As_total);  // FIX 2026-11-02: recomendada = la de menos acero
 
   // ═══════════════════════════════════════════════════════════════
   // ESFUERZOS Y ARMADO DE LA ZAPATA (PUNTERA + TALÓN)
@@ -1575,7 +1614,8 @@ function comprobar(I, E, P){
     d_fuste, d_zap, fcd, fyd, fyd_c,
     // Armado fuste
     As_trasdos_req, As_trasdos_adoptar, As_intrados_adoptar, As_h_adoptar,
-    As_min_v_geom_total, As_min_v_geom_cara, As_h_min_cara,
+    As_min_v_geom_total, As_min_v_trasdos, As_min_v_intrados, As_min_v_ec91, fctm_fl_fuste, rho_h_min, As_h_min_cara,
+    As_h_min_9_6_3, fyd_min, baseA_cubre_min,
     sel_intra, sel_horiz, modoA_opciones, modoB_opciones, Dbase,
     // Esfuerzos zapata
     M_p_kNm, V_p_kN, M_p_d, V_p_d, M_t_kNm, V_t_kN, M_t_d, V_t_d,
@@ -2720,7 +2760,8 @@ function devSteps(I, E, P, C){
   h+=step('6.2', 'M_arranque ELU (·γ_F)', f1(C.M_arranque_d)+' kN·m/m','hl');
   h+=step('6.3', 'V_arranque ELU', f1(C.V_arranque_d)+' kN/m','hl');
   h+=step('6.4', 'A_s necesaria trasdós', f0(C.As_trasdos_req)+' mm²/m');
-  h+=step('6.5', 'A_s mín. geom. cara (0,09%·b·h)', f0(C.As_min_v_geom_cara)+' mm²/m');
+  h+=step('6.5', 'A_s,mín trasdós = máx{(W/z)·f_ctm,fl/f_yd ; 0,6·0,002·b·h} = máx{'+f0(C.As_min_v_ec91)+' ; '+f0(0.6*C.As_min_v_geom_total)+'} (Anejo 19 §9.2.1.1 ec. 9.1 con f_yd = f_yk/1,15, y §9.6.2)', f0(C.As_min_v_trasdos)+' mm²/m');
+  h+=step('6.5b', 'A_s,mín intradós = ½·0,002·b·h (§9.6.2(2)) · A_s,h,mín por cara = máx{½·'+(I.juntasH?'0,002':(I.fyk>=500?'0,0032':'0,004'))+'·b·mín(h; 500) ; 0,2·A_s,trasdós} (§9.6.3, §9.3.1.1(2))', f0(C.As_min_v_intrados)+' · '+f0(C.As_h_min_cara)+' mm²/m');
   h+=step('6.6', 'A_s adoptar trasdós', f0(C.As_trasdos_adoptar)+' mm²/m','fin');
   h+=step('6.7', 'V_Rd,c sin cercos', f1(C.V_Rd_fuste)+' kN/m', C.cort_fuste_ok?'fin':'err');
   h+=step('6.8', 'Cortante V_Ed ≤ V_Rd,c', C.cort_fuste_ok?'✓ CUMPLE (no cercos)':'✗ Requiere cercos', C.cort_fuste_ok?'fin':'err');
@@ -2775,13 +2816,13 @@ function tablaArmadoTrasdos(I, C){
   let h='<div class="modo-armado">';
   // MODO A
   h+='<div class="modo-card"><div class="modo-title">Modo A · Base + espera larga</div>';
-  h+='<div class="modo-desc">Armadura base (Ø'+I.DbaseFuste+') a la separación s_b cubriendo A_s,mín. Una espera más gruesa (alternada en el mismo s_b) cubre el déficit hasta A_s,req. La espera se prolonga sólo en la zona inferior del muro donde el momento es ≥ M_arranque/2.</div>';
-  h+='<table class="armado-tabla"><thead><tr><th>Base Ø</th><th>Espera Ø</th><th>s (mm)</th><th>A_s total</th></tr></thead><tbody>';
+  h+='<div class="modo-desc">Armadura base (Ø'+I.DbaseFuste+') a la separación s_b cubriendo A_s,mín. Una espera más gruesa, intercalada entre barras base (en cada hueco o cada k huecos: s_e = k·s_b ≤ 600 mm), cubre el déficit hasta A_s,req. La espera debe prolongarse por encima de la cota en la que la base sola resiste el momento de cálculo, al menos el decalaje d más la longitud de anclaje l_b,d (Anejo 19 §9.2.1.3); la herramienta no calcula esa longitud.</div>';
+  h+='<table class="armado-tabla"><thead><tr><th>Base Ø</th><th>Espera Ø</th><th>s_b / s_e (mm)</th><th>A_s total</th></tr></thead><tbody>';
   if(C.modoA_opciones.length===0){
-    h+='<tr><td colspan="4" class="no">Sin opciones válidas con s ≤ 300 mm. Aumentar Ø_base o reducir M_Ed.</td></tr>';
+    h+='<tr><td colspan="4" class="no">'+(C.baseA_cubre_min===false ? 'El Ø'+I.DbaseFuste+' base no alcanza A_s,mín del trasdós ('+f0(C.As_min_v_trasdos)+' mm²/m) ni a s = 75 mm: aumentar el Ø base.' : 'Sin opciones válidas con s ≤ 300 mm. Aumentar Ø_base o reducir M_Ed.')+'</td></tr>';
   } else {
     C.modoA_opciones.forEach((o,i)=>{
-      h+='<tr class="'+(i===0?'recom':'')+'"><td>Ø'+o.Dbase+'</td><td>Ø'+o.Despera+'</td><td>'+o.s_base+'</td><td>'+f0(o.As_total)+' mm²/m'+(i===0?' ✓':'')+'</td></tr>';
+      h+='<tr class="'+(i===0?'recom':'')+'"><td>Ø'+o.Dbase+'</td><td>Ø'+o.Despera+'</td><td>'+o.s_base+' / '+o.s_espera+'</td><td>'+f0(o.As_total)+' mm²/m'+(i===0?' ✓':'')+'</td></tr>';
     });
   }
   h+='</tbody></table></div>';
@@ -2790,14 +2831,14 @@ function tablaArmadoTrasdos(I, C){
   h+='<div class="modo-desc">Una barra base + una barra espera alternadas, ambas con la MISMA separación s_c (la separación visual entre barras consecutivas es s_c/2). Simplifica la disposición pero el solape de la espera larga sigue siendo necesario.</div>';
   h+='<table class="armado-tabla"><thead><tr><th>Base Ø</th><th>Espera Ø</th><th>s_c (mm)</th><th>A_s total</th></tr></thead><tbody>';
   if(C.modoB_opciones.length===0){
-    h+='<tr><td colspan="4" class="no">Sin opciones válidas con s ≤ 300 mm. Aumentar Ø_base o reducir M_Ed.</td></tr>';
+    h+='<tr><td colspan="4" class="no">'+(C.baseA_cubre_min===false ? 'El Ø'+I.DbaseFuste+' base no alcanza A_s,mín del trasdós ('+f0(C.As_min_v_trasdos)+' mm²/m) ni a s = 75 mm: aumentar el Ø base.' : 'Sin opciones válidas con s ≤ 300 mm. Aumentar Ø_base o reducir M_Ed.')+'</td></tr>';
   } else {
     C.modoB_opciones.forEach((o,i)=>{
       h+='<tr class="'+(i===0?'recom':'')+'"><td>Ø'+o.Dbase+'</td><td>Ø'+o.Despera+'</td><td>'+o.s_comun+'</td><td>'+f0(o.As_total)+' mm²/m'+(i===0?' ✓':'')+'</td></tr>';
     });
   }
   h+='</tbody></table></div></div>';
-  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px">A_s requerida = '+f0(C.As_trasdos_req)+' mm²/m · A_s,mín cara = '+f0(C.As_min_v_geom_cara)+' mm²/m · A_s ADOPTAR = <b style="color:var(--green)">'+f0(C.As_trasdos_adoptar)+' mm²/m</b>. Restricciones: s ≤ 300 mm (CE 21 Anejo 19 §9.3.1.1), Ø_base 10-25, Ø_espera 16-32.</div>';
+  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px">A_s requerida = '+f0(C.As_trasdos_req)+' mm²/m · A_s,mín trasdós = '+f0(C.As_min_v_trasdos)+' mm²/m · A_s ADOPTAR = <b style="color:var(--green)">'+f0(C.As_trasdos_adoptar)+' mm²/m</b>. Restricciones: s ≤ 300 mm (CE 21 Anejo 19 §9.3.1.1), Ø_base 10-25, Ø_espera 16-32.</div>';
   return h;
 }
 
@@ -2805,8 +2846,8 @@ function tablaArmadoTrasdos(I, C){
 function tablaArmadoIntradosHoriz(I, C){
   let h='<table class="armado-tabla"><thead><tr><th>Elemento</th><th>A_s req. mm²/m</th><th>Ø</th><th>s (mm)</th><th>A_s real mm²/m</th><th>Cuantía</th></tr></thead><tbody>';
   const rows = [
-    {lbl:'Intradós vertical (geom. mín.)', As:C.As_intrados_adoptar, sel:C.sel_intra},
-    {lbl:'Horizontal (cada cara, geom. mín.)', As:C.As_h_adoptar, sel:C.sel_horiz}
+    {lbl:'Intradós vertical (mín. §9.6.2)', As:C.As_intrados_adoptar, sel:C.sel_intra},
+    {lbl:'Horizontal (cada cara, mín. §9.6.3)', As:C.As_h_adoptar, sel:C.sel_horiz}
   ];
   rows.forEach(r=>{
     if(r.sel.length===0){
@@ -2818,7 +2859,7 @@ function tablaArmadoIntradosHoriz(I, C){
     }
   });
   h+='</tbody></table>';
-  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px">Cuantías mínimas geométricas en cada cara (EHE-08 Art. 42.3.5): vertical 0,09% · horizontal 0,10%. Separación s_max ≤ 300 mm.</div>';
+  h+='<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px">Cuantías mínimas (CE 2021 Anejo 19, valores nacionales): vertical intradós ½·0,002·A_c (§9.6.2(2)) · horizontal por cara máx{½·'+(I.juntasH?'0,002':(I.fyk>=500?'0,0032':'0,004'))+'·A_c con espesor eficaz ≤ 50 cm (§9.6.3'+(I.juntasH?', juntas de contracción &lt; 7,5 m':'')+') ; 20 % de la vertical del trasdós (§9.3.1.1(2))}. Separación s_max ≤ 300 mm.</div>';
   return h;
 }
 
@@ -2954,8 +2995,8 @@ function generarPDF(){
   html += desgloseComp('Comprobaci&oacute;n 4 &mdash; Flexi&oacute;n del fuste en arranque', C.As_trasdos_req<=C.As_trasdos_adoptar, [
     ['Fórmula', 'M<sub>Ed</sub> = γ<sub>F</sub>·(E<sub>aH</sub>·H<sub>m</sub>/3 + E<sub>q</sub>·H<sub>m</sub>/2 + …)<br>μ = M<sub>Ed</sub>/(b·d²·f<sub>cd</sub>) &middot; ω = 1 − √(1−2μ) &middot; A<sub>s</sub> = ω·b·d·f<sub>cd</sub>/f<sub>yd</sub>'],
     ['Sustitución', 'H<sub>m</sub> = '+f2(C.H_m)+' m &middot; M<sub>Ed</sub> = γ<sub>F</sub>·'+f1(C.M_arranque)+' = '+f1(C.M_arranque_d)+' kN·m/m<br>d = '+f0(I.ea*1000)+'−'+f0(I.r)+' = '+f0(C.d_fuste)+' mm &middot; f<sub>cd</sub> = '+f1(C.fcd)+' MPa &middot; f<sub>yd</sub> = '+f1(C.fyd)+' MPa'],
-    ['Resultado', 'A<sub>s,req</sub> = '+f0(C.As_trasdos_req)+' mm²/m &middot; A<sub>s,mín cara</sub> = '+f0(C.As_min_v_geom_cara)+' mm²/m → <b>A<sub>s</sub> adoptar = '+f0(C.As_trasdos_adoptar)+' mm²/m</b>'],
-    ['Normativa', 'CE 21 Anejo 19 §6.1 (flexión ELU) &middot; EHE-08 Art. 42.3.5 (cuantías: 0,09% en cada cara, 0,28% total) &middot; <b style="color:#0e7c3e">✓ Armadura calculada</b>']
+    ['Resultado', 'A<sub>s,req</sub> = '+f0(C.As_trasdos_req)+' mm²/m &middot; A<sub>s,mín trasdós</sub> = máx{'+f0(C.As_min_v_ec91)+' ; '+f0(0.6*C.As_min_v_geom_total)+'} = '+f0(C.As_min_v_trasdos)+' mm²/m → <b>A<sub>s</sub> adoptar = '+f0(C.As_trasdos_adoptar)+' mm²/m</b>'],
+    ['Normativa', 'CE 21 Anejo 19 §6.1 (flexión ELU) &middot; §9.2.1.1 ec. 9.1 y §9.6.2 (A<sub>s,mín</sub> trasdós = máx{(W/z)·f<sub>ctm,fl</sub>/f<sub>yd</sub> ; 0,6·0,002·A<sub>c</sub>}, f<sub>yd</sub> = f<sub>yk</sub>/1,15) &middot; '+((C.modoA_opciones.length||C.modoB_opciones.length)?'<b style="color:#0e7c3e">✓ Armadura calculada</b>':'<b style="color:#b00">⚠ Sin disposición válida con el Ø base elegido</b>')+'']
   ]);
 
   // --- Cortante fuste ---
@@ -3019,9 +3060,11 @@ function generarPDF(){
   const modoA = C.modoA_opciones.length>0 ? C.modoA_opciones[0] : null;
   const modoB = C.modoB_opciones.length>0 ? C.modoB_opciones[0] : null;
   if(modoA){
-    html+='<tr class="rec"><td>Fuste · trasdós (Modo A)</td><td>Ø'+modoA.Dbase+' + esp. Ø'+modoA.Despera+'</td><td>'+modoA.s_base+'</td><td>'+f0(modoA.As_total)+'</td><td>Base + espera intercalada (alterna)</td></tr>';
+    html+='<tr class="rec"><td>Fuste · trasdós (Modo A)</td><td>Ø'+modoA.Dbase+' + esp. Ø'+modoA.Despera+'</td><td>'+modoA.s_base+' / '+modoA.s_espera+'</td><td>'+f0(modoA.As_total)+'</td><td>Base + espera intercalada (alterna)</td></tr>';
   } else if(modoB){
     html+='<tr class="rec"><td>Fuste · trasdós (Modo B)</td><td>Ø'+modoB.Dbase+' + Ø'+modoB.Despera+'</td><td>'+modoB.s_comun+'</td><td>'+f0(modoB.As_total)+'</td><td>Base + espera alternada s=s</td></tr>';
+  } else {
+    html+='<tr class="rec"><td>Fuste · trasdós</td><td colspan="4" style="color:#b00">Sin disposición válida con Ø'+I.DbaseFuste+' base'+(C.baseA_cubre_min===false?' (no alcanza A<sub>s,mín</sub> = '+f0(C.As_min_v_trasdos)+' mm²/m)':'')+': aumentar el Ø base</td></tr>';
   }
   const selI = C.sel_intra.length>0?C.sel_intra[0]:null;
   if(selI) html+='<tr><td>Fuste · intradós</td><td>Ø'+selI.d+'</td><td>'+selI.s+'</td><td>'+f0(selI.As_real)+'</td><td>Cuantía mínima geométrica</td></tr>';
@@ -3040,7 +3083,8 @@ function generarPDF(){
   html+='<div class="ps"><div class="ps-t">Normativa aplicada</div>';
   html+='<div class="pnorm-pastel"><span class="pnorm-r">RD 470/2021</span><span class="pnorm-d">Código Estructural &middot; Hormigón armado</span></div>';
   html+='<div class="pnorm-pastel"><span class="pnorm-r">CE 21 Anejo 19 §6.1-6.2</span><span class="pnorm-d">ELU de agotamiento de secciones (flexión y cortante)</span></div>';
-  html+='<div class="pnorm-pastel"><span class="pnorm-r">EHE-08 Art. 42.3.5</span><span class="pnorm-d">Cuantías mínimas en muros (0,28% total; 0,09% por cara; s ≤ 300 mm)</span></div>';
+  html+='<div class="pnorm-pastel"><span class="pnorm-r">CE 21 Anejo 19 §9.6</span><span class="pnorm-d">Cuantías mínimas del fuste: vertical ec. 9.1 y 0,002·A<sub>c</sub> con el 60 % en la cara traccionada y la mitad en la comprimida (§9.2.1.1, §9.6.2); horizontal '+(I.juntasH?'0,002':(I.fyk>=500?'0,0032':'0,004'))+'·A<sub>c</sub> repartida en las dos caras'+(I.juntasH?', con juntas de contracción &lt; 7,5 m':'')+' (§9.6.3) y ≥ 20 % de la vertical (§9.3.1.1(2)); s ≤ 300 mm (§9.3.1.1)</span></div>';
+  html+='<div class="pnorm-pastel"><span class="pnorm-r">EHE-08 Art. 42.3.5</span><span class="pnorm-d">Cuantía mínima de la zapata (0,09 % por cara), criterio mantenido</span></div>';
   html+='<div class="pnorm-pastel"><span class="pnorm-r">CTE DB-SE-C §4.2-4.4</span><span class="pnorm-d">Cimientos &middot; Empujes &middot; Capacidad portante &middot; Estabilidad global</span></div>';
   html+='<div class="pnorm-pastel"><span class="pnorm-r">EC2:2004 §6.1-6.2</span><span class="pnorm-d">EN 1992-1-1 &middot; Estructuras de hormigón</span></div>';
   html+='<div class="pnorm-pastel"><span class="pnorm-r">EC7 §6.5</span><span class="pnorm-d">EN 1997-1 &middot; Cálculo geotécnico</span></div>';

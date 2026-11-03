@@ -17,7 +17,9 @@ Herramientas desarrolladas por Seguridad Estructural SL (ingeniería de estructu
 - [Calculadora gratis de ancho de fisura wk en hormigón armado](https://calculadoras.seguridadestructural.com/fisuracion-ancho-fisura/): Calcula el ancho de fisura wk de una sección rectangular de hormigón armado en servicio según el Código Estructural 2021 y EC2 7.3 y compáralo con wmax.
 - [Calculadora gratis de flechas en vigas de hormigón armado](https://calculadoras.seguridadestructural.com/flechas-viga-hormigon/): Calcula la flecha instantánea, diferida, activa y total de vigas biapoyadas, biempotradas y ménsulas de hormigón armado según Código Estructural 2021 y EC2 7.4.
 - [Calculadora gratis de longitud de anclaje y solape CE 2021](https://calculadoras.seguridadestructural.com/longitud-anclaje-solape/): Calcula la longitud de anclaje lb,net y de solape ls de barras corrugadas según el Código Estructural 2021 (Anejo 19, apartados 8.4 y 8.7): coeficientes alfa y PDF.
+- [Calculadora gratis de rasante en juntas de hormigón CE 2021](https://calculadoras.seguridadestructural.com/rasante-juntas-hormigon/): Comprueba el esfuerzo rasante vEdi frente a vRdi en juntas entre hormigones de distinta edad según CE 2021 (Anejo 19) y EC2 6.2.5, con armadura cruzante y PDF.
 - [Calculadora gratis de muro en ménsula de contención CE 2021](https://calculadoras.seguridadestructural.com/muro-mensula-contencion/): Calcula muros de contención en ménsula: vuelco, deslizamiento, hundimiento, armado de fuste y zapata y coste por metro según CE 2021 y CTE DB-SE-C. Con PDF.
+- [Calculadora gratis de muro de sótano de 1 a 3 niveles](https://calculadoras.seguridadestructural.com/muro-sotano/): Muro de sótano de 1 a 3 niveles: empuje al reposo, viga continua, armado ELU, fisuración ELS y zapata según CE 2021 (Anejo 19) y CTE DB-SE-C. PDF y CSV.
 
 ## Empresa
 

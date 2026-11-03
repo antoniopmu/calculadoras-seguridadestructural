@@ -393,7 +393,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-03 18:38) -->
+<!-- SEO generado por publish.py (2026-11-03 19:06) -->
 <meta name="description" content="Calcula muros de contención en ménsula: vuelco, deslizamiento, hundimiento, armado de fuste y zapata y coste por metro según CE 2021 y CTE DB-SE-C. Con PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-mensula-contencion/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -1422,55 +1422,72 @@ function estabilidadSit(I, E, P, sis){
   const FS_desliz = F_resist / Math.max(1e-6, H_emp);
   const lim_d = sis ? 1.1 : I.gD;
   const desliz_ok = FS_desliz >= lim_d - 1e-12;
-  // Excentricidad y tensiones bajo la zapata (axil total, sin restar la subpresión)
+  // Excentricidad y tensiones bajo la zapata (axil total, sin restar la subpresión).
+  // FIX 2026-11-03: combinaciones del peso de las sobrecargas sobre la zapata, del trasdós (q_t) y de la puntera (q_i), con y sin
+  // él, manteniendo siempre su empuje (CTE DB-SE-C §2.3.2.2: la parte favorable de una acción variable puede no estar, p. ej. una
+  // sobrecarga más allá del talón). El hundimiento se comprueba con la peor y la zapata con la envolvente de todas.
   const xc_centro = P.B/2;
-  let Mc_estab = 0;
-  W_list.forEach(([W, x]) => { Mc_estab += fv*W*(x - xc_centro); });
-  Mc_estab += fv*P.N*(P.xc_N - xc_centro)
-            + fv*(P.W_qt*(P.xc_qt - xc_centro) + P.W_qi*(P.xc_qi - xc_centro) + (P.W_qt_cuna||0)*((P.xc_qt_cuna||0) - xc_centro))
-            + E_aV*(x_aV - xc_centro);
   const Mc_volc = E_aH*E.y_a_e + E.E_q_e*E.y_q_e + E.E_w*E.y_w + dE*E.y_sismo + M_in - E_p*E.y_p;
-  const M_neto = Mc_volc - Mc_estab;
-  const e = M_neto / N_tot;
-  const e_abs = Math.abs(e);
-  const dentroDelNucleo = e_abs <= P.B/6;
-  let sigma_max, sigma_min, lz_compr;
-  // FIX 2026-11-02: si la resultante cae fuera de la base (|e| ≥ B/2) el muro vuelca: σ_max = ∞ y el hundimiento no cumple
-  // (antes la fórmula daba una σ_max negativa que pasaba la comprobación).
-  const fueraBase = !dentroDelNucleo && e_abs >= P.B/2 - 1e-9;
-  if(dentroDelNucleo){
-    sigma_max = (N_tot/P.B) * (1 + 6*e_abs/P.B);
-    sigma_min = (N_tot/P.B) * (1 - 6*e_abs/P.B);
-    lz_compr = P.B;
-  } else if(fueraBase){
-    lz_compr = 0; sigma_max = Infinity; sigma_min = 0;
-  } else {
-    const a = P.B/2 - e_abs;
-    lz_compr = 3*a;
-    sigma_max = (2*N_tot) / lz_compr;
-    sigma_min = 0;
-  }
-  let sigma_intra, sigma_tras;
-  if(e<0){ sigma_intra = sigma_min; sigma_tras = sigma_max; }
-  else   { sigma_intra = sigma_max; sigma_tras = sigma_min; }
-  // Hundimiento — σ_adm directo o Brinch-Hansen (en sismo, γ_R 2,0 en lugar de 3,0)
-  const fh = sis ? 3.0/2.0 : 1.0;
-  let hund_ok, FS_hund, BH=null, sigma_lim;
-  if(I.modeloCP === 'brinch'){
-    const B_ef = Math.max(0.1, P.B - 2*e_abs);
-    BH = calcCapacidadPortante(I, B_ef, N_tot, H_emp, M_neto);
-    sigma_lim = BH.q_neta / (I.gammaBH/fh) + BH.q;   // FIX 2026-11-03: con la sobrecarga efectiva (antes γ·D_f)
-    const sigma_eq = N_tot / B_ef;
-    FS_hund = fueraBase ? 0 : sigma_lim / sigma_eq;
-    hund_ok = !fueraBase && sigma_eq <= sigma_lim;
-  } else {
-    sigma_lim = I.sigmaAdm*fh;
-    FS_hund = sigma_lim / sigma_max;
-    hund_ok = sigma_max <= sigma_lim;
-  }
+  const fh = sis ? 3.0/2.0 : 1.0;   // hundimiento en sismo: γ_R 2,0 en lugar de 3,0
+  const tension = (cT, cI) => {
+    const conQ = cT && cI;
+    const N_tot = W_perm + fv*((cT ? P.W_qt + (P.W_qt_cuna||0) : 0) + (cI ? P.W_qi : 0)) + E_aV;
+    let Mc_estab = 0;
+    W_list.forEach(([W, x]) => { Mc_estab += fv*W*(x - xc_centro); });
+    Mc_estab += fv*P.N*(P.xc_N - xc_centro) + E_aV*(x_aV - xc_centro)
+              + fv*((cT ? P.W_qt*(P.xc_qt - xc_centro) + (P.W_qt_cuna||0)*((P.xc_qt_cuna||0) - xc_centro) : 0) + (cI ? P.W_qi*(P.xc_qi - xc_centro) : 0));
+    const M_neto = Mc_volc - Mc_estab;
+    const e = M_neto / N_tot;
+    const e_abs = Math.abs(e);
+    const dentroDelNucleo = e_abs <= P.B/6;
+    let sigma_max, sigma_min, lz_compr;
+    // FIX 2026-11-02: si la resultante cae fuera de la base (|e| ≥ B/2) el muro vuelca: σ_max = ∞ y el hundimiento no cumple
+    // (antes la fórmula daba una σ_max negativa que pasaba la comprobación).
+    const fueraBase = !dentroDelNucleo && e_abs >= P.B/2 - 1e-9;
+    if(dentroDelNucleo){
+      sigma_max = (N_tot/P.B) * (1 + 6*e_abs/P.B);
+      sigma_min = (N_tot/P.B) * (1 - 6*e_abs/P.B);
+      lz_compr = P.B;
+    } else if(fueraBase){
+      lz_compr = 0; sigma_max = Infinity; sigma_min = 0;
+    } else {
+      const a = P.B/2 - e_abs;
+      lz_compr = 3*a;
+      sigma_max = (2*N_tot) / lz_compr;
+      sigma_min = 0;
+    }
+    let sigma_intra, sigma_tras;
+    if(e<0){ sigma_intra = sigma_min; sigma_tras = sigma_max; }
+    else   { sigma_intra = sigma_max; sigma_tras = sigma_min; }
+    // Hundimiento — σ_adm directo o Brinch-Hansen
+    let hund_ok, FS_hund, BH=null, sigma_lim;
+    if(I.modeloCP === 'brinch'){
+      const B_ef = Math.max(0.1, P.B - 2*e_abs);
+      BH = calcCapacidadPortante(I, B_ef, N_tot, H_emp, M_neto);
+      sigma_lim = BH.q_neta / (I.gammaBH/fh) + BH.q;   // FIX 2026-11-03: con la sobrecarga efectiva (antes γ·D_f)
+      const sigma_eq = N_tot / B_ef;
+      FS_hund = fueraBase ? 0 : sigma_lim / sigma_eq;
+      hund_ok = !fueraBase && sigma_eq <= sigma_lim;
+    } else {
+      sigma_lim = I.sigmaAdm*fh;
+      FS_hund = sigma_lim / sigma_max;
+      hund_ok = sigma_max <= sigma_lim;
+    }
+    return {conQ, conQt: cT, conQi: cI, N_tot, M_neto, e, e_abs, dentroDelNucleo, fueraBase, sigma_max, sigma_min, lz_compr, sigma_intra, sigma_tras, BH, sigma_lim, FS_hund, hund_ok};
+  };
+  const hayQt = (P.W_qt + (P.W_qt_cuna||0)) > 1e-9, hayQi = P.W_qi > 1e-9;
+  const Ts = [tension(true, true)];
+  if(hayQt) Ts.push(tension(false, true));
+  if(hayQi) Ts.push(tension(true, false));
+  if(hayQt && hayQi) Ts.push(tension(false, false));
+  const Tq = Ts[0];
+  const T = Ts.reduce((m, x) => (x.FS_hund < m.FS_hund - 1e-12 ? x : m), Tq);   // la que rige el hundimiento
+  const hund_ok = Ts.every(x => x.hund_ok);
   return {sis, fv, M_W, M_Wq_fav, E_p, M_Ep, x_aV, E_aV, M_aV, M_estab, E_aH, U_sub, M_U, H_in, M_in, dE, M_volc, FS_vuelco, lim_v, vuelco_ok,
-          N_tot, H_emp, mu, N_desl, c_b, F_resist, FS_desliz, lim_d, desliz_ok,
-          M_neto, e, e_abs, dentroDelNucleo, fueraBase, sigma_max, sigma_min, lz_compr, sigma_intra, sigma_tras, fh, BH, sigma_lim, FS_hund, hund_ok};
+          H_emp, mu, N_desl, c_b, F_resist, FS_desliz, lim_d, desliz_ok, fh,
+          N_tot: T.N_tot, M_neto: T.M_neto, e: T.e, e_abs: T.e_abs, dentroDelNucleo: T.dentroDelNucleo, fueraBase: T.fueraBase,
+          sigma_max: T.sigma_max, sigma_min: T.sigma_min, lz_compr: T.lz_compr, sigma_intra: T.sigma_intra, sigma_tras: T.sigma_tras,
+          BH: T.BH, sigma_lim: T.sigma_lim, FS_hund: T.FS_hund, hund_ok, hundSinQ: T !== Tq, hundSinQt: !T.conQt, hundSinQi: !T.conQi, Ts};
 }
 
 function comprobar(I, E, P){
@@ -1480,7 +1497,7 @@ function comprobar(I, E, P){
   const S0 = estabilidadSit(I, E0, P, false);
   const S1 = I.sismo ? estabilidadSit(I, E, P, true) : null;
   const {M_W, M_Wq_fav, M_Ep, E_aV, M_aV, M_estab, E_aH, M_volc, FS_vuelco, N_tot, H_emp, mu, N_desl, c_b, F_resist, FS_desliz,
-         e, e_abs, dentroDelNucleo, fueraBase, sigma_max, sigma_min, lz_compr, sigma_intra, sigma_tras, BH, sigma_lim, FS_hund, U_sub, M_U} = S0;
+         e, e_abs, dentroDelNucleo, fueraBase, sigma_max, sigma_min, lz_compr, sigma_intra, sigma_tras, BH, sigma_lim, FS_hund, U_sub, M_U, hundSinQ, hundSinQt, hundSinQi} = S0;
   const vuelco_ok = S0.vuelco_ok && (!S1 || S1.vuelco_ok);
   const desliz_ok = S0.desliz_ok && (!S1 || S1.desliz_ok);
   const hund_ok = S0.hund_ok && (!S1 || S1.hund_ok);
@@ -1716,6 +1733,7 @@ function comprobar(I, E, P){
   const esfZapata = (S) => {
   const {dentroDelNucleo, sigma_intra, sigma_tras, sigma_max, lz_compr, e} = S;
   const fvS = S.fv || 1;   // FIX 2026-11-02: cargas de la misma situación que σ(x): pesos y sobrecargas ×(1 − k_v) con sismo
+  const qtS = S.conQt === false ? 0 : 1, qiS = S.conQi === false ? 0 : 1;   // FIX 2026-11-03: sin su peso, tampoco cargan la zapata
   function sigmaEn(x){
     if(dentroDelNucleo){
       return sigma_intra + (sigma_tras - sigma_intra) * (x/P.B);
@@ -1738,7 +1756,7 @@ function comprobar(I, E, P){
   // ───── Sección crítica PUNTERA: cara intradós del muro (x = Bp) ─────
   // Carga neta sobre puntera = reacción terreno σ(x) hacia arriba − peso zapata γ_h·e_z hacia abajo
   // − peso terreno sobre puntera γ·h_terr_p hacia abajo
-  const carga_neta_p = (xx) => sigmaEn(xx) - fvS*(gh*I.ez + gT_p*h_terr_p + I.qi);
+  const carga_neta_p = (xx) => sigmaEn(xx) - fvS*(gh*I.ez + gT_p*h_terr_p + qiS*I.qi);
   // Momento en cara del muro (x=Bp) de las cargas a la izquierda de la cara (entre 0 y Bp)
   // M_p = ∫_0^Bp carga_neta(x) · (Bp - x) dx
   let M_p_kNm=0, V_p_kN=0;
@@ -1768,7 +1786,7 @@ function comprobar(I, E, P){
   // FIX 2026-11-02: con trasdós virtual (Coulomb con talón) cargan además el talón la cuña de relleno inclinado por encima de
   // la coronación, γ·(x − x_coron)·tan β, y la componente vertical del empuje E_aV, puntual en x = B (antes, en la cara del muro).
   const tanB_t = E.trasdosVirtual ? Math.tan(I.beta) : 0;
-  const carga_neta_t = (xx) => fvS*(gT_t + I.qt + gh*I.ez + I.gamma*Math.max(0, xx - (I.Bp + I.ec))*tanB_t) - sigmaEn(xx);  // positiva: hacia abajo (genera M sup)
+  const carga_neta_t = (xx) => fvS*(gT_t + qtS*I.qt + gh*I.ez + I.gamma*Math.max(0, xx - (I.Bp + I.ec))*tanB_t) - sigmaEn(xx);  // positiva: hacia abajo (genera M sup)
   let M_t_kNm=0, V_t_kN=0;
   if(I.Bt > 0){
     const x_face = I.Bp + I.ea;
@@ -1799,7 +1817,9 @@ function comprobar(I, E, P){
   // situaciones con la resultante dentro de la base (si sale fuera, el muro vuelca y ya no cumple)
   // FIX 2026-11-02: cada situación con su coeficiente (persistente γ_F; extraordinaria 1,0, CTE DB-SE §4.2.2) y envolvente de
   // los valores de cálculo; los característicos que se devuelven son los de la situación que rige cada esfuerzo.
-  const Zs = [[S0, I.gF]].concat(S1 ? [[S1, 1.0]] : []).filter(([S]) => !S.fueraBase).map(([S, g]) => Object.assign(esfZapata(S), {g, sis: S.sis}));
+  // FIX 2026-11-03: en cada situación, todas las combinaciones del peso de las sobrecargas
+  const variantes = S => S.Ts.map(Tv => Object.assign({fv: S.fv, sis: S.sis, E_aV: S.E_aV, x_aV: S.x_aV, dE: S.dE}, Tv));
+  const Zs = [[S0, I.gF]].concat(S1 ? [[S1, 1.0]] : []).flatMap(([S, g]) => variantes(S).filter(Tv => !Tv.fueraBase).map(Tv => Object.assign(esfZapata(Tv), {g, sis: S.sis})));
   if(!Zs.length) Zs.push({M_p_kNm:0, V_p_kN:0, M_t_kNm:0, V_t_kN:0, g:I.gF, sis:false});
   const envZ = k => Zs.reduce((a, z) => z.g*Math.abs(z[k]) > a.g*Math.abs(a[k]) ? z : a);
   const zMp = envZ('M_p_kNm'), zVp = envZ('V_p_kN'), zMt = envZ('M_t_kNm'), zVt = envZ('V_t_kN');
@@ -1856,13 +1876,13 @@ function comprobar(I, E, P){
     M_estab, M_volc, M_Ep, M_W, M_Wq_fav, M_aV, FS_vuelco, vuelco_ok, U_sub, M_U, sis: S1,
     pers_ok: {v: S0.vuelco_ok, d: S0.desliz_ok, h: S0.hund_ok}, trasdosVirtual: E.trasdosVirtual, F_in_fuste, M_in_fuste,
     N_tot, N_desl, H_emp, E_aH, E_aV, mu, c_b, F_resist, FS_desliz, desliz_ok,
-    e, e_abs, dentroDelNucleo, fueraBase, sigma_max, sigma_min, sigma_intra, sigma_tras, lz_compr, FS_hund, hund_ok, sigma_lim, BH,
+    e, e_abs, dentroDelNucleo, fueraBase, sigma_max, sigma_min, sigma_intra, sigma_tras, lz_compr, FS_hund, hund_ok, sigma_lim, BH, hundSinQ, hundSinQt, hundSinQi,
     // Esfuerzos fuste
     H_m, E_aH_fuste, E_q_fuste, E_w_fuste, dE_sismo_fuste, M_arranque, V_arranque, M_arranque_d, V_arranque_d,
     M_arr_pers, V_arr_pers, M_arr_sis, V_arr_sis, fusteRigeSis, phiH_real,
     d_fuste, d_cort, d_zap, fcd, fyd, fyd_c,
     // Armado fuste
-    As_trasdos_req, As_trasdos_adoptar, As_intrados_adoptar, As_h_adoptar,
+    As_trasdos_req, As_trasdos_adoptar, As_intrados_adoptar, As_h_adoptar, trasdos_doble_arm,
     As_min_v_geom_total, As_min_v_trasdos, As_min_v_intrados, As_min_v_ec91, fctm_fl_fuste, rho_h_min, As_h_min_cara,
     As_h_min_9_6_3, fyd_min, baseA_cubre_min, fbd_fuste, a_l_fuste,
     sel_intra, sel_horiz, modoA_opciones, modoB_opciones, Dbase,
@@ -2055,7 +2075,10 @@ function optimizarEconomico(){
               if(E.trasdosVirtual && E.H_v <= I.ez + 1e-6) continue;   // relleno descendente por debajo de la zapata
               const P = calcPesos(I);
               const C = comprobar(I, E, P);
-              const cumple_estab = C.vuelco_ok && C.desliz_ok && C.hund_ok;
+              // FIX 2026-11-03: solo geometrías que cumplan todo: estabilidad, cortantes sin cercos (los cercos solo se miden para el
+              // coste, no se comprueban) y armado válido del trasdós sin doble armadura (antes solo la estabilidad)
+              const cumple_estab = C.vuelco_ok && C.desliz_ok && C.hund_ok && C.cort_fuste_ok && C.cort_p_ok && C.cort_t_ok
+                                   && !C.trasdos_doble_arm && (C.modoA_opciones.length > 0 || C.modoB_opciones.length > 0);
               if(!cumple_estab) continue;
               const Q = calcCuantiasConsumos(I, P, C);
               if(Q.C_total < mejorCoste){
@@ -2924,7 +2947,7 @@ function presionesSVG(I, P, C, forPDF){
     const hMinLoc = C.e<0 ? h_max : h_min;
     // Corrección: σ_max está en el lado opuesto a la excentricidad si e>0 (resultante hacia intradós) → max en trasdós
     // Vamos por convención: dibujar σ_max en el lado de menor presión... mejor mostrar ambos valores donde corresponde
-    svg+='<text x="'+(ox+sw-50)+'" y="'+(oy-h_max-8)+'" font-family="monospace" font-size="10" font-weight="600" fill="'+cPres+'">σ_max='+f0(C.sigma_max)+' kPa</text>';
+    svg+='<text x="'+(ox+sw-50)+'" y="'+(oy-h_max-8)+'" font-family="monospace" font-size="10" font-weight="600" fill="'+cPres+'">σ_max='+f0(C.sigma_max)+' kPa'+(C.hundSinQ?' (sin q)':'')+'</text>';
     svg+='<text x="'+(ox+5)+'" y="'+(oy-h_min-8)+'" font-family="monospace" font-size="10" fill="'+cPres+'">σ_min='+f0(C.sigma_min)+' kPa</text>';
   } else {
     // Triángulo (e fuera del núcleo)
@@ -2933,7 +2956,7 @@ function presionesSVG(I, P, C, forPDF){
     const x_inicio = ox + (P.B - lc) * sc_x;  // tramo de compresión empieza donde la presión deja de ser 0
     const h_max = C.sigma_max * scP;
     svg+='<polygon points="'+x_inicio+','+oy+' '+(ox+sw)+','+oy+' '+(ox+sw)+','+(oy-h_max)+'" fill="'+cWarn+'" fill-opacity="0.25" stroke="'+cWarn+'" stroke-width="1.5"/>';
-    svg+='<text x="'+(ox+sw-70)+'" y="'+(oy-h_max-8)+'" font-family="monospace" font-size="10" font-weight="600" fill="'+cWarn+'">σ_max='+f0(C.sigma_max)+' kPa</text>';
+    svg+='<text x="'+(ox+sw-70)+'" y="'+(oy-h_max-8)+'" font-family="monospace" font-size="10" font-weight="600" fill="'+cWarn+'">σ_max='+f0(C.sigma_max)+' kPa'+(C.hundSinQ?' (sin q)':'')+'</text>';
     svg+='<text x="'+x_inicio+'" y="'+(oy-15)+'" font-family="monospace" font-size="9" fill="'+cWarn+'">σ=0</text>';
     svg+='<text x="'+(ox+20)+'" y="'+(oy+18)+'" font-family="monospace" font-size="9" fill="'+cWarn+'">⚠ Excentricidad fuera del núcleo (B/6)</text>';
   }
@@ -2959,6 +2982,12 @@ function presionesSVG(I, P, C, forPDF){
   return svg;
 }
 function h_check(I,C,scP){ return C.fueraBase ? I.sigmaAdm*scP : Math.max(C.sigma_max,C.sigma_min)*scP; }
+
+// FIX 2026-11-03: texto de la combinación de sobrecargas que rige el hundimiento
+function txtSinQ(C){
+  if(C.hundSinQt && C.hundSinQi) return 'sin el peso de las sobrecargas';
+  return C.hundSinQt ? 'sin el peso de la sobrecarga del trasdós' : 'sin el peso de la sobrecarga de la puntera';
+}
 
 function devSteps(I, E, P, C){
   let h='';
@@ -2989,7 +3018,7 @@ function devSteps(I, E, P, C){
   if(P.W_qt>0) h+=step('2.6', 'W_q trasdós', f1(P.W_qt)+' kN/m');
   if(P.N>0) h+=step('2.7', 'N coronación', f1(P.N)+' kN/m');
   if(Math.abs(C.E_aV) > 1e-9) h+=step('2.8', 'Componente vertical del empuje (E_aV)', f1(C.E_aV)+' kN/m');
-  h+=step('2.X', 'ΣN total', f1(C.N_tot)+' kN/m','hl');
+  h+=step('2.X', 'ΣN total'+(C.hundSinQ ? ' ('+txtSinQ(C)+', la combinación que rige el hundimiento)' : ''), f1(C.N_tot)+' kN/m','hl');
   h+=step('2.Y', 'ΣH (horizontal)', f1(C.H_emp)+' kN/m','hl');
 
   h+=stepHdr('3 — COMPROBACIÓN AL VUELCO');
@@ -3020,6 +3049,7 @@ function devSteps(I, E, P, C){
   h+=step('5.1', 'Excentricidad e respecto centro', f3(C.e)+' m');
   h+=step('5.2', 'B/6 (núcleo central)', f3(P.B/6)+' m');
   h+=step('5.3', 'Estado', C.dentroDelNucleo?'Dentro núcleo':(C.fueraBase?'RESULTANTE FUERA DE LA BASE':'FUERA núcleo'), C.dentroDelNucleo?'hl':'warn');
+  if(C.hundSinQ) h+=step('5.0', 'Rige la combinación '+txtSinQ(C)+' (su empuje se mantiene, CTE DB-SE-C §2.3.2.2)', 'sin q');
   h+=step('5.4', 'σ_max bajo zapata', f0(C.sigma_max)+' kPa');
   h+=step('5.5', 'σ_min bajo zapata', f0(C.sigma_min)+' kPa');
   if(I.modeloCP==='brinch' && C.BH){
@@ -3035,7 +3065,7 @@ function devSteps(I, E, P, C){
     h+=step('5.7', 'FS_hund = σ_adm/σ_max', f2(C.FS_hund), C.pers_ok.h?'fin':'err');
   }
 
-  if(C.sis) h+=step('5.8', 'Sismo: σ_max = '+f0(C.sis.sigma_max)+' kPa'+(C.sis.fueraBase?' (resultante fuera de la base)':'')+' · límite '+(I.modeloCP==='brinch'?'q_adm con γ_BH·2/3':'1,5·σ_adm')+' (γ_R 2,0 frente a 3,0)', f2(C.sis.FS_hund), C.sis.hund_ok?'fin':'err');
+  if(C.sis) h+=step('5.8', 'Sismo: σ_max = '+f0(C.sis.sigma_max)+' kPa'+(C.sis.fueraBase?' (resultante fuera de la base)':'')+(C.sis.hundSinQ?' ('+txtSinQ(C.sis)+')':'')+' · límite '+(I.modeloCP==='brinch'?'q_adm con γ_BH·2/3':'1,5·σ_adm')+' (γ_R 2,0 frente a 3,0)', f2(C.sis.FS_hund), C.sis.hund_ok?'fin':'err');
 
   h+=stepHdr('6 — ESFUERZOS EN EL FUSTE (ARRANQUE)');
   h+=step('6.1', 'M_arranque característico'+(I.sismo?' (persistente · sísmica)':''), (I.sismo ? f1(C.M_arr_pers)+' · '+f1(C.M_arr_sis) : f1(C.M_arranque))+' kN·m/m');
@@ -3081,7 +3111,7 @@ function tablaResumen(I,E,P,C,Q){
     h+='<tr><td class="sk">FS Hundimiento (Brinch-Hansen)</td><td class="sv2 '+(C.pers_ok.h?'green':'red')+'">'+f2(C.FS_hund)+' ≥ '+f1(I.gammaBH)+(C.pers_ok.h?' ✓':' ✗')+'</td></tr>';
     h+='<tr><td class="sk">q_h capacidad última</td><td class="sv2">'+f0(C.BH.q_h)+' kPa</td></tr>';
   } else {
-    h+='<tr><td class="sk">σ_max bajo zapata</td><td class="sv2 '+(C.pers_ok.h?'green':'red')+'">'+f0(C.sigma_max)+' kPa ≤ '+f0(I.sigmaAdm)+' kPa'+(C.pers_ok.h?' ✓':' ✗')+'</td></tr>';
+    h+='<tr><td class="sk">σ_max bajo zapata'+(C.hundSinQ?' ('+txtSinQ(C)+')':'')+'</td><td class="sv2 '+(C.pers_ok.h?'green':'red')+'">'+f0(C.sigma_max)+' kPa ≤ '+f0(I.sigmaAdm)+' kPa'+(C.pers_ok.h?' ✓':' ✗')+'</td></tr>';
   }
   if(C.sis){
     h+='<tr><td class="sk">FS Vuelco (sismo)</td><td class="sv2 '+(C.sis.vuelco_ok?'green':'red')+'">'+f2(C.sis.FS_vuelco)+' ≥ 1.33'+(C.sis.vuelco_ok?' ✓':' ✗')+'</td></tr>';
@@ -3212,7 +3242,7 @@ function generarPDF(){
 
   // ───── Resultado destacado ─────
   html+='<div class="presult '+(allOk?'':'ko')+'"><div class="presult-vrd">'+(allOk?'✓ MURO CUMPLE':'✗ MURO NO CUMPLE')+'</div>';
-  html+='<div class="presult-d">FS_vuelco='+f2(C.FS_vuelco)+' · FS_desliz='+f2(C.FS_desliz)+' · FS_hund='+f2(C.FS_hund)+' · σ_max='+f0(C.sigma_max)+' kPa · Coste≈'+f1(Q.C_total)+' €/m</div></div>';
+  html+='<div class="presult-d">FS_vuelco='+f2(C.FS_vuelco)+' · FS_desliz='+f2(C.FS_desliz)+' · FS_hund='+f2(C.FS_hund)+' · σ_max='+f0(C.sigma_max)+' kPa'+(C.hundSinQ?' ('+txtSinQ(C)+')':'')+' · Coste≈'+f1(Q.C_total)+' €/m</div></div>';
 
   // ───── Geometría y materiales ─────
   html+='<div class="ps"><div class="ps-t">Geometr&iacute;a y materiales</div><table class="pt">';
@@ -3271,16 +3301,16 @@ function generarPDF(){
     html += desgloseComp('Comprobaci&oacute;n 3 &mdash; Hundimiento (Brinch-Hansen)', C.hund_ok, [
       ['Fórmula', 'q<sub>h</sub> = c\'·N<sub>c</sub>·s<sub>c</sub>·d<sub>c</sub>·i<sub>c</sub> + q·N<sub>q</sub>·s<sub>q</sub>·d<sub>q</sub>·i<sub>q</sub> + ½γ·B\'·N<sub>γ</sub>·s<sub>γ</sub>·d<sub>γ</sub>·i<sub>γ</sub><br>N<sub>q</sub>=e<sup>π·tan(φ)</sup>·tan²(45°+φ/2) &middot; N<sub>c</sub>=(N<sub>q</sub>−1)·cot(φ) &middot; N<sub>γ</sub>=1,5·(N<sub>q</sub>−1)·tan(φ)<br>i<sub>q</sub>=(1−0,7·tg δ)³ &middot; i<sub>γ</sub>=(1−tg δ)³ &middot; i<sub>c</sub>=(i<sub>q</sub>·N<sub>q</sub>−1)/(N<sub>q</sub>−1) &middot; d<sub>c</sub>=1+0,34·arctg(D/B\') &middot; d<sub>q</sub>=1+2·tg φ·(1−sen φ)²·arctg(D/B\')'],
       ['Sustitución', 'N<sub>c</sub>='+f2(C.BH.Nc)+' · N<sub>q</sub>='+f2(C.BH.Nq)+' · N<sub>γ</sub>='+f2(C.BH.Ngamma)+'<br>B\'='+f3(C.BH.B_ef)+' m · d<sub>c</sub>='+f3(C.BH.dc)+' d<sub>q</sub>='+f3(C.BH.dq)+'<br>i<sub>c</sub>='+f3(C.BH.ic)+' i<sub>q</sub>='+f3(C.BH.iq)+' i<sub>γ</sub>='+f3(C.BH.ig)],
-      ['Resultado', 'q<sub>h</sub> = <b>'+f0(C.BH.q_h)+' kPa</b> → q<sub>adm</sub> = (q<sub>h</sub>−q)/γ<sub>BH</sub>+q = '+f0(C.sigma_lim)+' kPa<br>FS<sub>h</sub> = '+f2(C.FS_hund)],
-      ...(C.sis ? [['Sismo', 'Situación extraordinaria (γ<sub>BH</sub>·2/3): FS<sub>h</sub> = <b>'+f2(C.sis.FS_hund)+'</b> '+(C.sis.hund_ok?'✓':'✗')]] : []),
+      ['Resultado', 'q<sub>h</sub> = <b>'+f0(C.BH.q_h)+' kPa</b> → q<sub>adm</sub> = (q<sub>h</sub>−q)/γ<sub>BH</sub>+q = '+f0(C.sigma_lim)+' kPa<br>FS<sub>h</sub> = '+f2(C.FS_hund)+(C.hundSinQ?'<br>Rige la combinación '+txtSinQ(C)+'; su empuje se mantiene (CTE DB-SE-C §2.3.2.2)':'')],
+      ...(C.sis ? [['Sismo', 'Situación extraordinaria (γ<sub>BH</sub>·2/3'+(C.sis.hundSinQ?'; '+txtSinQ(C.sis):'')+'): FS<sub>h</sub> = <b>'+f2(C.sis.FS_hund)+'</b> '+(C.sis.hund_ok?'✓':'✗')]] : []),
       ['Normativa', 'CTE DB-SE-C §4.3.1 y Anejo F.1.1.3: γ<sub>BH</sub> ≥ '+f1(I.gammaBH)+' &middot; '+(C.hund_ok?'<b style="color:#0e7c3e">✓ CUMPLE</b>':'<b style="color:#bd3838">✗ NO CUMPLE</b>')]
     ]);
   } else {
     html += desgloseComp('Comprobaci&oacute;n 3 &mdash; Hundimiento (σ_adm directo)', C.hund_ok, [
-      ['Fórmula', 'σ<sub>max</sub> = (ΣN/B)·(1 + 6|e|/B)  (dentro núcleo)<br>σ<sub>max</sub> = 2·ΣN/(3·a)  (fuera núcleo, a=B/2−|e|)'],
+      ['Fórmula', 'σ<sub>max</sub> = (ΣN/B)·(1 + 6|e|/B)  (dentro núcleo)<br>σ<sub>max</sub> = 2·ΣN/(3·a)  (fuera núcleo, a=B/2−|e|)'+(C.hundSinQ?'<br>Rige la combinación '+txtSinQ(C)+'; su empuje se mantiene (CTE DB-SE-C §2.3.2.2)':'')],
       ['Sustitución', 'e = M<sub>neto</sub>/ΣN = '+f3(C.e)+' m · |e|/(B/6) = '+f2(C.e_abs/(P.B/6))+'<br>'+(C.dentroDelNucleo?'σ<sub>max</sub> = ('+f1(C.N_tot)+'/'+f2(P.B)+')·(1 + 6·'+f3(C.e_abs)+'/'+f2(P.B)+')':(C.fueraBase?'Resultante fuera de la base (|e| ≥ B/2 = '+f3(P.B/2)+' m): σ<sub>max</sub> = ∞':'σ<sub>max</sub> = 2·'+f1(C.N_tot)+'/(3·'+f3(P.B/2-C.e_abs)+')'))],
       ['Resultado', 'σ<sub>max</sub> = <b>'+f0(C.sigma_max)+' kPa</b> '+(C.sigma_max <= I.sigmaAdm ? '≤' : '>')+' σ<sub>adm</sub> = '+f0(I.sigmaAdm)+' kPa<br>FS<sub>h</sub> = '+f2(C.FS_hund)],
-      ...(C.sis ? [['Sismo', 'Situación extraordinaria: '+(C.sis.fueraBase ? 'resultante fuera de la base (σ<sub>max</sub> = ∞)' : 'σ<sub>max</sub> = '+f0(C.sis.sigma_max)+' kPa '+(C.sis.hund_ok?'≤':'>')+' 1,5·σ<sub>adm</sub> = '+f0(C.sis.sigma_lim)+' kPa')+' '+(C.sis.hund_ok?'✓':'✗')]] : []),
+      ...(C.sis ? [['Sismo', 'Situación extraordinaria'+(C.sis.hundSinQ?' ('+txtSinQ(C.sis)+')':'')+': '+(C.sis.fueraBase ? 'resultante fuera de la base (σ<sub>max</sub> = ∞)' : 'σ<sub>max</sub> = '+f0(C.sis.sigma_max)+' kPa '+(C.sis.hund_ok?'≤':'>')+' 1,5·σ<sub>adm</sub> = '+f0(C.sis.sigma_lim)+' kPa')+' '+(C.sis.hund_ok?'✓':'✗')]] : []),
       ['Normativa', 'CTE DB-SE-C §4.2.1: σ<sub>max</sub> ≤ σ<sub>adm</sub> &middot; '+(C.hund_ok?'<b style="color:#0e7c3e">✓ CUMPLE</b>':'<b style="color:#bd3838">✗ NO CUMPLE</b>')]
     ]);
   }

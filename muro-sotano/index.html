@@ -340,7 +340,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-04 09:52) -->
+<!-- SEO generado por publish.py (2026-11-04 18:05) -->
 <meta name="description" content="Muro de sótano de 1 a 3 niveles: empuje al reposo, viga continua, armado ELU, fisuración ELS y zapata según CE 2021 (Anejo 19) y CTE DB-SE-C. PDF y CSV.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-sotano/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -554,11 +554,11 @@ window.SE_SITE={slug:'muro-sotano',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic',
   </div>
 
   <!-- 6 - SISMO NCSE-02 -->
-  <div class="sec-title"><span class="sec-num">6</span>Sismo (no incluido en la versión web)
+  <div class="sec-title"><span class="sec-num">6</span>Sismo NCSE-02 / EC8-5
+    <span class="tip" title="Acción sísmica según NCSE-02 (España):&#10;1. Seleccionar PROVINCIA → asigna a_b (aceleración básica de la capital, Anejo 1).&#10;2. Si el municipio específico tiene a_b distinto del valor de la capital, ajustar manualmente (consultar Anejo 1 NCSE-02 con tabla completa de municipios).&#10;3. K = coef. contribución (1.0 estándar). ρ = coef. importancia (1.0 normal, 1.3 especial, 1.5 prefiere).&#10;4. Tipo suelo I-IV según naturaleza geotécnica.&#10;5. La calculadora obtiene a_c, S, k_h = a_c (sin reducir) y k_v = 0,5·k_h. El muro de sótano atado por los forjados es un muro rígido (EC8-5 §7.3.2.1 y anejo E.9), con cualquier modelo de empuje estático: empuje estático al reposo e incremento uniforme Δp = k_h·γ·H más la inercia del muro (con talud, Mononobe-Okabe si da más). El vuelo en ménsula, con Mononobe-Okabe.&#10;6. Se comprueban la situación persistente sin sismo y la sísmica (extraordinaria): γ = 1,0 en ELU y, en la zapata, σ_adm ×1,5, FS ≥ 1,1 al deslizamiento y ≥ 1,33 al vuelco (CTE DB-SE-C tabla 2.1), con las inercias de zapata y tierras del talón, los pesos ×(1 − k_v) con los dos signos de k_v y el pasivo sísmico. El sismo no entra en la fisuración.&#10;7. Con nivel freático se supone terreno poco permeable (el agua se mueve con él). Con relleno muy permeable (k > 5·10⁻⁴ m/s) habría que añadir la presión hidrodinámica del agua (EC8-5 §7.3.2.3).">?</span>
   </div>
-  <div class="info-line">La versión web gratuita no incluye la acción sísmica. En un muro de sótano atado por los forjados, el empuje sísmico debe calcularse como muro rígido (Eurocódigo 8-5, anejo E.9). Si la obra está en zona sísmica, consúltanos.</div>
-  <div class="toggle-row" style="display:none">
-    <input type="checkbox" id="inSismo" disabled>
+  <div class="toggle-row">
+    <input type="checkbox" id="inSismo">
     <label for="inSismo">Acción sísmica activa</label>
   </div>
   <div id="rowSismo" style="display:none">
@@ -939,7 +939,7 @@ window.SE_SITE={slug:'muro-sotano',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic',
   </div>
 </section>
 <footer>
-  <div>© 2026 Seguridad Estructural SL · CE 21 / EC2 / CTE DB-SE-C</div>
+  <div>© 2026 Seguridad Estructural SL · CE 21 / EC2 / CTE DB-SE-C / NCSE-02</div>
   <div><a href="https://www.seguridadestructural.com" target="_blank">www.seguridadestructural.com</a></div>
 </footer>
 
@@ -1108,7 +1108,7 @@ function setupEvents(){
   });
   $('inNF').addEventListener('change', () => $('rowNF').style.display = $('inNF').checked ? '' : 'none');
   $('inSismo').addEventListener('change', () => {
-    $('rowSismo').style.display = 'none';
+    $('rowSismo').style.display = $('inSismo').checked ? '' : 'none';
     if($('inSismo').checked) actualizarSismo();
   });
   $('inRamas').addEventListener('change', () => $('rowRamas').style.display = $('inRamas').checked ? '' : 'none');
@@ -1182,7 +1182,7 @@ function recolectar(){
   const qs = gv('inQs');
   const NFactivo = $('inNF').checked;
   const z_NF = NFactivo ? gv('inZnf') : 99;
-  const sismoActivo = false;  // versión web: sin sismo
+  const sismoActivo = $('inSismo').checked;
   const kh = sismoActivo ? gv('inKh') : 0;
   const kv = sismoActivo ? gv('inKv') : 0;
 
@@ -2243,7 +2243,7 @@ function renderResultados(R){
   // === 3 ESQUEMAS SVG SEPARADOS estilo muro_mensula (Geometría / Cargas / Esfuerzos) ===
   html += '<div class="three-esq">';
   html += '<div class="esq-card"><div class="esq-head"><span class="esq-t">▤ 1 · Geometría</span><span class="esq-sub">Muro, forjados y cimentación</span></div><div class="esq-body"><div class="esq-svg-wrap">'+drawGeometria(I, E, S, 700, 460, false)+'</div></div></div>';
-  html += '<div class="esq-card"><div class="esq-head"><span class="esq-t">▤ 2 · Cargas</span><span class="esq-sub">Empuje del terreno, sobrecarga, NF y puntuales</span></div><div class="esq-body"><div class="esq-svg-wrap">'+drawCargas(I, E, S, 700, 460, false)+'</div></div></div>';
+  html += '<div class="esq-card"><div class="esq-head"><span class="esq-t">▤ 2 · Cargas</span><span class="esq-sub">Empuje del terreno, sobrecarga, NF, puntuales, sismo</span></div><div class="esq-body"><div class="esq-svg-wrap">'+drawCargas(I, E, S, 700, 460, false)+'</div></div></div>';
   html += '<div class="esq-card"><div class="esq-head"><span class="esq-t">▤ 3 · Esfuerzos M, V</span><span class="esq-sub">Diagramas a lo largo de la altura</span></div><div class="esq-body"><div class="esq-svg-wrap">'+drawDiagramas(I, S, 700, 440, false)+'</div></div></div>';
   html += '<div class="esq-card"><div class="esq-head"><span class="esq-t">▤ 4 · Sección horizontal: armado</span><span class="esq-sub">Trasdós + intradós, vertical + horizontal</span></div><div class="esq-body"><div class="esq-svg-wrap">'+drawArmadura(I, A, 700, 240, false)+'</div></div></div>';
   html += '</div>';
@@ -2313,8 +2313,7 @@ function renderResultados(R){
   html += '<strong>CE 2021</strong> · Art. 45 → Anejo 19: §3.1.6 / §3.1.8 resistencias · §6.1 flexión · §6.2.2 / §6.2.3 cortante · §7.3.4 fisuración · §8.4 anclaje · §9.2.1.1 (ec. 9.1) / §9.6 cuantías en muros · Art. 27.2 w_max · Art. 44 recubrimientos<br>';
   html += '<strong>EC2 (EN 1992-1-1)</strong> · §6.2 cortante · §7.3 fisuración · §9.6 muros<br>';
   html += '<strong>CTE DB-SE-C</strong> · cap. 4 cimentaciones directas · cap. 6 elementos de contención (6.2.4 reposo, 6.2.5 empujes, 6.3.3.3.5 muros de sótano) · tabla 2.1 coeficientes<br>';
-  html += '<strong>Sismo</strong> · no incluido en la versión web (muro rígido: EC8-5, anejo E.9)<br>';
-  if(I.sismoActivo) html += '<strong>EC8-5 §7.3.2 y anejo E.9</strong> · muro de sótano rígido: incremento sísmico uniforme k_h·γ·H, inercias y k_v; Mononobe-Okabe solo en el vuelo<br>';   // FIX 2026-11-04
+  html += '<strong>NCSE-02 / EC8-5</strong> · sismo, si se activa: acción sísmica de la NCSE-02; muro de sótano rígido de EC8-5 (§7.3.2.1 y anejo E.9) con inercias y k_v; Mononobe-Okabe en el vuelo<br>';   // FIX 2026-11-04
   html += '</div></div>';
 
   $('panelOut').innerHTML = html;
@@ -3108,14 +3107,13 @@ function generarPDF(){
   h += '<div class="pnorm"><span class="pnorm-r">EC2 §7.3</span><span class="pnorm-d">EN 1992-1-1 — fisuración</span></div>';
   h += '<div class="pnorm"><span class="pnorm-r">EC2 §9.6</span><span class="pnorm-d">EN 1992-1-1 — disposiciones constructivas en muros</span></div>';
   h += '<div class="pnorm"><span class="pnorm-r">CTE DB-SE-C</span><span class="pnorm-d">cap. 4 cimentaciones directas · cap. 6 elementos de contención (6.2.4 reposo · 6.2.5 empujes · 6.3.3.3.5 muros de sótano) · tabla 2.1 coeficientes de seguridad</span></div>';
-  h += '<div class="pnorm"><span class="pnorm-r">Sismo</span><span class="pnorm-d">No incluido en la versión web (muro rígido: EC8-5, anejo E.9)</span></div>';
-  if(I.sismoActivo) h += '<div class="pnorm"><span class="pnorm-r">EC8-5 §7.3.2 y anejo E.9</span><span class="pnorm-d">Muro de sótano rígido: incremento sísmico uniforme k_h·γ·H, inercias y k_v; Mononobe-Okabe solo en el vuelo</span></div>';   // FIX 2026-11-04
+  h += '<div class="pnorm"><span class="pnorm-r">NCSE-02 / EC8-5</span><span class="pnorm-d">Sismo, si se activa: acción sísmica de la NCSE-02; muro de sótano rígido de EC8-5 (§7.3.2.1 y anejo E.9) con inercias y k_v; Mononobe-Okabe en el vuelo</span></div>';   // FIX 2026-11-04
   h += '</div>';
 
   // Disclaimer legal
   h += '<div class="paviso">';
   h += '<div class="paviso-t">⚠ AVISO LEGAL — Validación profesional obligatoria</div>';
-  h += '<p>Este documento es el resultado de una <strong>calculadora orientativa</strong> desarrollada por <a href="https://www.seguridadestructural.com" target="_blank">Seguridad Estructural SL</a>. Aplica los criterios del <strong>Código Estructural (RD 470/2021, "CE 21")</strong>, el <strong>Eurocódigo 2 (EN 1992-1-1)</strong> y el <strong>CTE DB-SE-C</strong>, con un modelo de viga continua matricial sobre apoyos rígidos. El resultado debe ser <strong>revisado, validado y firmado por un técnico cualificado</strong> (Ingeniero de Caminos, Canales y Puertos · Arquitecto Superior · Ingeniero Industrial con competencias) antes de su empleo en proyecto, ejecución o cualquier uso técnico oficial. Los modelos simplificados (Rankine/Coulomb, Mononobe-Okabe, viga continua sobre apoyos rígidos sin interacción suelo-estructura, σ_adm por defecto de 200 kPa) pueden no ser aplicables a casos singulares (terrenos blandos, NF agresivos, suelos expansivos, cargas dinámicas no contempladas, geometrías irregulares). <strong>Seguridad Estructural SL queda exenta de toda responsabilidad técnica</strong> derivada del uso directo, indirecto o erróneo de los datos aquí mostrados. Visite <a href="https://www.seguridadestructural.com" target="_blank">www.seguridadestructural.com</a> para asesoramiento profesional.</p>';
+  h += '<p>Este documento es el resultado de una <strong>calculadora orientativa</strong> desarrollada por <a href="https://www.seguridadestructural.com" target="_blank">Seguridad Estructural SL</a>. Aplica los criterios del <strong>Código Estructural (RD 470/2021, "CE 21")</strong>, el <strong>Eurocódigo 2 (EN 1992-1-1)</strong>, el <strong>CTE DB-SE-C</strong> y la <strong>NCSE-02</strong>, con un modelo de viga continua matricial sobre apoyos rígidos. El resultado debe ser <strong>revisado, validado y firmado por un técnico cualificado</strong> (Ingeniero de Caminos, Canales y Puertos · Arquitecto Superior · Ingeniero Industrial con competencias) antes de su empleo en proyecto, ejecución o cualquier uso técnico oficial. Los modelos simplificados (Rankine/Coulomb, Mononobe-Okabe, viga continua sobre apoyos rígidos sin interacción suelo-estructura, σ_adm por defecto de 200 kPa) pueden no ser aplicables a casos singulares (terrenos blandos, NF agresivos, suelos expansivos, cargas dinámicas no contempladas, geometrías irregulares). <strong>Seguridad Estructural SL queda exenta de toda responsabilidad técnica</strong> derivada del uso directo, indirecto o erróneo de los datos aquí mostrados. Visite <a href="https://www.seguridadestructural.com" target="_blank">www.seguridadestructural.com</a> para asesoramiento profesional.</p>';
   h += '</div>';
 
   // Pie
@@ -3899,7 +3897,7 @@ function cargarProyecto(file){
       }
       // 5. Visibilidad de filas condicionales
       $('rowNF').style.display = $('inNF').checked ? '' : 'none';
-      $('rowSismo').style.display = 'none';
+      $('rowSismo').style.display = $('inSismo').checked ? '' : 'none';
       $('rowVueloSup').style.display = $('inVueloSup').checked ? '' : 'none';
       $('rowRamas').style.display = $('inRamas').checked ? '' : 'none';
       if($('inModelo')){

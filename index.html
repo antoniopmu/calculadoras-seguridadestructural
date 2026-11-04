@@ -117,6 +117,12 @@ footer a{color:var(--text2);}
 .se-gate-btn:disabled{opacity:.6;cursor:wait;}
 .se-gate-legal{font-size:11px!important;color:#8a92a3!important;margin:.8rem 0 0!important;line-height:1.4;}
 .se-gate-x{position:absolute;top:10px;right:12px;background:transparent;border:none;color:#8a92a3;font-size:26px;line-height:1;cursor:pointer;padding:4px 8px;}
+.se-gate-chk.opt{color:#e8ebf2!important;}
+.se-gate-quick,.se-gate-ok{display:none;}
+.se-gate.quick .se-gate-quick,.se-gate.sent .se-gate-ok{display:block;}
+.se-gate.quick .se-gate-full,.se-gate.sent form,.se-gate.sent .se-gate-intro{display:none!important;}
+.se-gate-ok .se-gate-btn{margin-top:.4rem;}
+.se-gate-link{background:none;border:none;color:#7ab6ff;text-decoration:underline;cursor:pointer;font-size:13px;padding:0;margin:0 0 .8rem;font-family:var(--sans,system-ui,sans-serif);}
 @media print{.seo-info,.se-consent,.se-gate{display:none!important;}}
 /* accesibilidad (Lighthouse): contraste >= 4.5:1 del texto blanco sobre los botones principales */
 .btn-calc,.seo-btn,.se-consent button.pri,.se-gate-btn{background:#2b63d9;}
@@ -199,38 +205,73 @@ window.SE_SITE={slug:'_portada',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic',lea
     banner.querySelector('[data-c=no]').addEventListener('click',function(){deny();hideBanner();});
   }
   window.seConsentReset=function(){try{localStorage.removeItem(LS_C);}catch(e){}showBanner();};
-  /* puerta de email para el PDF */
-  var modal=document.getElementById('se-gate'); var pending=null;
-  function gateActive(){return !!(S.leadEndpoint)&&!ls(LS_L);}
-  function isPdfBtn(t){return !!S.gatePdf&&/pdf/i.test(t)&&!/imprimir|cerrar|guardar/i.test(t);}
-  function isCsvBtn(t){return !!S.gateCsv&&/csv/i.test(t);}
-  function openGate(btn){pending=btn;if(modal){modal.classList.add('show');var e=modal.querySelector('input[type=email]');if(e)setTimeout(function(){e.focus();},50);}}
+  /* puerta de email: el informe PDF lo genera el servidor de SE y se envía por email (v2, 2026-11-03).
+     Si el envío falla, el usuario no se queda sin su PDF: se abre la vista de impresión de siempre. */
+  var modal=document.getElementById('se-gate'), LS_P='se_lead_perfil', quick=null;
+  function stored(){var e=ls(LS_L);if(!e||e.indexOf('@')<0)return null;var p={};try{p=JSON.parse(ls(LS_P)||'{}')||{};}catch(x){}return {email:e,nombre:p.nombre||'',perfil:p.perfil||''};}
+  function gateOn(){return !!S.leadEndpoint&&!!S.gatePdf&&!window.__SE_RENDER;}
+  function isPdfBtn(t){return /pdf/i.test(t)&&!/imprimir|cerrar|guardar/i.test(t);}
+  function isCsvBtn(t){return /csv/i.test(t);}
+  function hasReport(){var c=document.getElementById('pdf-content')||document.getElementById('parea');return !!c&&(c.innerText||'').trim().length>80;}
+  function closeReport(){try{if(typeof cerrarPDF==='function')cerrarPDF();}catch(x){}}
+  function collectInputs(){var o={},n=0;[].forEach.call(document.querySelectorAll('input,select,textarea'),function(el){
+    if(n>=280||el.closest('#se-gate,#se-consent,#parea'))return;var t=(el.type||'').toLowerCase(),k,v;
+    if(/^(button|submit|reset|file|password|image)$/.test(t))return;
+    if(t==='radio'){if(!el.checked||!(el.name||el.id))return;k='radio:'+(el.name||el.id);v=el.value||el.id;}
+    else{if(el.id)k='#'+el.id;else if(el.name)k='name:'+el.name;else return;v=(t==='checkbox')?el.checked:String(el.value||'').slice(0,200);}
+    if(!(k in o)){o[k]=v;n++;}});return o;}
+  function setMode(m){modal.classList.remove('sent','quick');if(m)modal.classList.add(m);}
+  function showMail(e){[].forEach.call(modal.querySelectorAll('.se-gate-mail'),function(x){x.textContent=e;});}
+  function openGate(){if(!modal)return;quick=stored();modal.querySelector('.se-gate-err').textContent='';setMode(quick?'quick':'');if(quick)showMail(quick.email);
+    modal.classList.add('show');var f=modal.querySelector(quick?'button[type=submit]':'input[type=email]');if(f)setTimeout(function(){f.focus();},50);}
   function closeGate(){if(modal)modal.classList.remove('show');}
+  function fallbackPdf(){try{if(typeof generarPDF==='function')generarPDF();}catch(x){}}
   if(modal){
-    modal.querySelector('[data-g=close]').addEventListener('click',function(){closeGate();pending=null;});
-    modal.addEventListener('click',function(e){if(e.target===modal){closeGate();pending=null;}});
+    [].forEach.call(modal.querySelectorAll('[data-g=close]'),function(b){b.addEventListener('click',closeGate);});
+    modal.addEventListener('click',function(e){if(e.target===modal)closeGate();});
+    modal.querySelector('[data-g=other]').addEventListener('click',function(){quick=null;setMode('');var e=modal.querySelector('input[type=email]');if(e)e.focus();});
     modal.querySelector('form').addEventListener('submit',function(e){
       e.preventDefault();
-      var f=e.target,email=(f.email.value||'').trim(),nombre=(f.nombre.value||'').trim(),perfil=f.perfil.value,ok=f.consent.checked,err=modal.querySelector('.se-gate-err');
-      if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)){err.textContent='Indica un email válido.';return;}
-      if(!ok){err.textContent='Debes aceptar la política de privacidad para continuar.';return;}
+      var f=e.target,err=modal.querySelector('.se-gate-err'),q=quick;
+      var email=q?q.email:(f.email.value||'').trim(),nombre=q?q.nombre:(f.nombre.value||'').trim(),perfil=q?q.perfil:f.perfil.value;
+      if(!q){
+        if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)){err.textContent='Indica un email válido.';return;}
+        if(!perfil){err.textContent='Indica tu perfil.';return;}
+        if(!f.consent.checked){err.textContent='Para enviarte el informe tienes que aceptar la política de privacidad.';return;}
+      }
       err.textContent='';var sb=f.querySelector('button[type=submit]');sb.disabled=true;sb.textContent='Enviando…';
-      var payload={email:email,nombre:nombre,perfil:perfil,calculadora:S.slug,url:location.href,fecha:new Date().toISOString(),consentimiento:true,origen:'calculadoras-se'};
-      function done(){ls(LS_L,email);push({event:'lead_pdf',calculadora:S.slug,perfil:perfil});closeGate();sb.disabled=false;sb.textContent='Continuar al PDF';var b=pending;pending=null;if(b)setTimeout(function(){b.click();},30);}
-      fetch(S.leadEndpoint,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(){done();}).catch(function(){done();});
+      var com=!q&&!!f.comercial.checked;
+      var payload={email:email,nombre:nombre,perfil:perfil,calculadora:S.slug,url:location.href,fecha:new Date().toISOString(),consentimiento:true,origen:'calculadoras-se',accion:'pdf',inputs:collectInputs()};
+      if(!q)payload.consentimiento_comercial=com;
+      function reset(){sb.disabled=false;sb.textContent='Enviar el informe a mi email';}
+      fetch(S.leadEndpoint,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        .then(function(r){return r.json().catch(function(){return {ok:false};});})
+        .then(function(j){
+          reset();
+          if(j&&j.ok&&j.pdf==='queued'){ls(LS_L,email);ls(LS_P,JSON.stringify({nombre:nombre,perfil:perfil}));push({event:'lead_pdf',calculadora:S.slug,perfil:perfil,comercial:com});showMail(email);setMode('sent');}
+          else if(j&&j.pdf==='limit'){err.textContent='Has pedido muchos informes hoy. Vuelve a intentarlo mañana o escríbenos a ingenieria@seguridadestructural.com.';}
+          else{closeGate();fallbackPdf();}
+        })
+        .catch(function(){reset();closeGate();fallbackPdf();});
     });
   }
   /* captura de clics: puerta + eventos de uso */
   document.addEventListener('click',function(e){
+    if(window.__SE_RENDER) return;
     var b=e.target.closest('button,a'); if(!b) return;
     var t=(b.textContent||'').replace(/\s+/g,' ').trim();
     if(b.tagName==='BUTTON'){
       var inOverlay=!!b.closest('#parea,.pdf-toolbar,#se-gate,#se-consent');
-      if(!inOverlay&&gateActive()&&(isPdfBtn(t)||isCsvBtn(t))){e.preventDefault();e.stopImmediatePropagation();openGate(b);return;}
+      if(!inOverlay&&gateOn()&&isPdfBtn(t)){
+        e.preventDefault();e.stopImmediatePropagation();
+        /* ¿hay resultado? generarPDF() monta el informe (o avisa «Primero realiza el cálculo») y se cierra sin llegar a pintarse */
+        if(typeof generarPDF==='function'){try{generarPDF();}catch(x){}var ok=hasReport();closeReport();if(!ok)return;}
+        push({event:'exportar_pdf',calculadora:S.slug});openGate();return;
+      }
       if(inOverlay) return;
       if(/calcular/i.test(t))push({event:'calcular',calculadora:S.slug});
-      else if(/pdf/i.test(t))push({event:'exportar_pdf',calculadora:S.slug});
-      else if(/csv/i.test(t))push({event:'exportar_csv',calculadora:S.slug});
+      else if(isPdfBtn(t))push({event:'exportar_pdf',calculadora:S.slug});
+      else if(isCsvBtn(t))push({event:'exportar_csv',calculadora:S.slug});
       else if(/optimiz/i.test(t))push({event:'optimizar',calculadora:S.slug});
     } else if(b.tagName==='A'&&b.href&&/seguridadestructural\.com$/.test(b.hostname)&&!/^calculadoras\./.test(b.hostname)){
       push({event:'clic_web_principal',calculadora:S.slug,destino:b.href,cta:b.getAttribute('data-cta')||''});

@@ -315,7 +315,7 @@ footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-04 08:33) -->
+<!-- SEO generado por publish.py (2026-11-04 09:52) -->
 <meta name="description" content="Calcula la longitud de anclaje lb,net y de solape ls de barras corrugadas según el Código Estructural 2021 (Anejo 19, apartados 8.4 y 8.7): coeficientes alfa y PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/longitud-anclaje-solape/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -1885,7 +1885,7 @@ document.addEventListener('DOMContentLoaded', init);
       else if(isPdfBtn(t))push({event:'exportar_pdf',calculadora:S.slug});
       else if(isCsvBtn(t))push({event:'exportar_csv',calculadora:S.slug});
       else if(/optimiz/i.test(t))push({event:'optimizar',calculadora:S.slug});
-    } else if(b.tagName==='A'&&b.href&&/seguridadestructural\.com$/.test(b.hostname)&&!/^calculadoras\./.test(b.hostname)){
+    } else if(b.tagName==='A'&&b.href&&/seguridadestructural\.com$/.test(b.hostname)&&!/^calculadoras\./.test(b.hostname)&&!/^\/calculadoras(\/|$)/.test(b.pathname)){
       push({event:'clic_web_principal',calculadora:S.slug,destino:b.href,cta:b.getAttribute('data-cta')||''});
     }
   },true);

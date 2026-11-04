@@ -340,7 +340,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-04 08:33) -->
+<!-- SEO generado por publish.py (2026-11-04 09:52) -->
 <meta name="description" content="Muro de sótano de 1 a 3 niveles: empuje al reposo, viga continua, armado ELU, fisuración ELS y zapata según CE 2021 (Anejo 19) y CTE DB-SE-C. PDF y CSV.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-sotano/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -649,11 +649,11 @@ window.SE_SITE={slug:'muro-sotano',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic',
       </div>
     </div>
     <div class="grid2">
-      <div class="field" title="Coeficiente sísmico horizontal k_h calculado de NCSE-02: k_h = S·ρ·a_b. Editable si se prefiere valor manual.">
+      <div class="field" title="Coeficiente sísmico horizontal k_h calculado de NCSE-02: k_h = S·ρ·a_b. Editable si se prefiere valor manual. Se usa sin reducir (r = 1) en el muro rígido de EC8-5 anejo E.9: Δp = k_h·γ·H, y para las inercias k_h·W.">
         <label for="inKh">k<sub>h</sub> (calculado)</label>
         <div class="field-row"><input type="number" id="inKh" step="0.01" value="0.10" min="0" max="0.40"><span class="unit">—</span></div>
       </div>
-      <div class="field" title="Coeficiente sísmico vertical (NCSE-02 admite ±2/3·k_h o ±1/2·k_h según norma). 0 conservador.">
+      <div class="field" title="Coeficiente sísmico vertical k_v, positivo hacia arriba. EC8-5 §7.3.2.2: ±0,5·k_h si la aceleración vertical supera 0,6 veces la horizontal (NCSE-02 la toma 0,7); si no, ±0,33·k_h. Se rellena con 0,5·k_h al elegir la provincia. Los pesos y las cargas verticales de la zapata se multiplican por (1 − k_v) y se comprueban los dos signos; con 0 no se comprueba. No interviene en el empuje del muro rígido (E.9); sí en el Mononobe-Okabe del vuelo y en el pasivo del tacón.">
         <label for="inKv">k<sub>v</sub></label>
         <div class="field-row"><input type="number" id="inKv" step="0.01" value="0" min="-0.30" max="0.30"><span class="unit">—</span></div>
       </div>
@@ -1272,6 +1272,11 @@ function coulombKa(phi, delta, alfa, beta){
   const k = num / (Math.sin(a)*Math.sin(a)*Math.sin(a-d) * Math.pow(1 + Math.sqrt(Math.max(0,Math.sin(phi_r+d)*Math.sin(phi_r-b)/(Math.sin(a-d)*Math.sin(a+b)))), 2));
   return k;
 }
+function kpeMO(phi, kh, kv){
+  // FIX 2026-11-04: pasivo sísmico de Mononobe-Okabe (EC8-5 anejo E, δ = 0), paramento vertical y terreno horizontal delante
+  const p = phi*Math.PI/180, th = Math.atan(kh/(1 - kv));
+  return Math.cos(p - th)**2 / (Math.cos(th)**2 * (1 - Math.sqrt(Math.sin(p)*Math.max(0, Math.sin(p - th))/Math.cos(th)))**2);
+}
 function mononobeOkabe(phi, delta, alfa, beta, kh, kv){
   // EC8-5 §E.3 - K_AE para empuje sísmico activo (cohesion=0)
   const phi_r = phi*Math.PI/180, d = delta*Math.PI/180, a = alfa*Math.PI/180, b = beta*Math.PI/180;
@@ -1310,8 +1315,31 @@ function calcEmpujes(I){
   const sqKa = Math.sqrt(Ka);
   const gamma_w = 10; // kN/m³
   const h0 = (I.vueloSup && I.h_v > 0) ? I.h_v : 0; // terreno por encima del forjado 1 (vuelo superior)
+  // FIX 2026-11-04: el muro de sótano atado por los forjados es una estructura rígida (EC8-5 §7.3.2.1): no se desplaza lo
+  // bastante para movilizar el estado activo, del que parte Mononobe-Okabe, que así se queda corto. Con cualquier modelo de
+  // empuje estático se usa el muro rígido de EC8-5 anejo E.9: ΔP_d = α·S·γ·H² a media altura ⇒ presión uniforme
+  // Δp = k_h·γ·H, con k_h = a_c/g sin reducir (r = 1) y H la altura total de terreno contenido (H + h_v si hay vuelo); k_v no
+  // interviene. Se suma la inercia del propio muro, k_h·25·e. Con nivel freático se toma el γ total (terreno poco permeable:
+  // el agua se mueve con él), sin presión hidrodinámica de agua libre. El vuelo trabaja en ménsula y puede deformarse: en él
+  // sigue Mononobe-Okabe, con la resultante a media altura (incremento uniforme, EC8-5 §7.3.2.3), más su inercia.
+  const rigidoE9 = !!I.sismoActivo;
+  const Ht = I.H + h0;
+  // E.9 supone paramento vertical y terreno horizontal; con talud o trasdós inclinado (Coulomb) Mononobe-Okabe puede dar más:
+  // se toma el mayor de los dos, como presión uniforme (resultante a media altura)
+  const p_MO = rigidoE9 ? 0.5*dKae*I.gamma*Ht : 0;
+  const p_E9 = rigidoE9 ? Math.max(I.kh*I.gamma*Ht, p_MO) : 0;
+  const moRige = rigidoE9 && p_MO > I.kh*I.gamma*Ht;
+  const cotasE = [0];
+  for(let i=0;i<I.h.length;i++) cotasE.push(cotasE[i] + I.h[i]);
+  const espesorEn = z => {   // espesor del tramo en la profundidad z (en un forjado, el del tramo superior)
+    for(let i=0;i<I.h.length;i++){ if(z <= cotasE[i+1] + 1e-9) return I.e_tramo[i]; }
+    return I.e_tramo[I.e_tramo.length-1];
+  };
   const presBruta = sigmaV => (I.modelo === 'reposo') ? Ka*sigmaV : Ka*sigmaV - 2*I.c*sqKa;
   const presTerreno = sigmaV => Math.max(presBruta(sigmaV), 0.25*sigmaV);
+  // FIX 2026-11-04: en la situación sísmica el muro rígido está al reposo (EC8-5 §7.3.2.1): el empuje estático no baja de
+  // K_0·σ'v aunque se haya elegido un modelo activo; en la situación persistente sigue el modelo elegido
+  const presEstatica = sigmaV => I.sismoActivo ? Math.max(presTerreno(sigmaV), K0*sigmaV) : presTerreno(sigmaV);
   function q(z){
     // tensión vertical efectiva σ_v'(z); z desde el forjado 1 (coronación del muro calculado)
     let sigmaV;
@@ -1320,12 +1348,12 @@ function calcEmpujes(I){
     } else {
       sigmaV = I.gamma*(z + h0) + I.qs;
     }
-    const e_a = presTerreno(sigmaV);
+    const e_a = presEstatica(sigmaV);
     // presión hidrostática (si NF activo y z > z_NF)
     let u = 0;
     if(I.NFactivo && z > I.z_NF) u = gamma_w*(z - I.z_NF);
-    // incremento sísmico (lineal desde la superficie del terreno; se aplica al peso de tierras)
-    const dE_sis = dKae * I.gamma * (z + h0);
+    // incremento sísmico: muro rígido (EC8-5 E.9, uniforme) más la inercia del muro
+    const dE_sis = rigidoE9 ? p_E9 + I.kh*25*espesorEn(z) : 0;
     return {e_a, u, dE_sis, q_total: e_a + u + dE_sis};
   }
 
@@ -1350,17 +1378,19 @@ function calcEmpujes(I){
   const K_vuelo = Ka_act;
   const presVuelo = sigmaV => Math.max(K_vuelo*sigmaV - 2*I.c*Math.sqrt(K_vuelo), 0.25*sigmaV);
   let H_vuelo = 0, M_vuelo = 0;
+  // FIX 2026-11-04: en el vuelo, incremento de Mononobe-Okabe uniforme (½·ΔK_AE·γ·h_v, resultante a media altura) e inercia
+  const pVueloSis = I.sismoActivo ? 0.5*dKae*I.gamma*h0 + I.kh*25*I.e_v : 0;
   if(h0 > 0){
     const nv = 200, dsv = h0/nv;
     for(let i=0;i<nv;i++){
       const s = (i+0.5)*dsv;
-      const p = presVuelo(I.gamma*s + I.qs) + dKae*I.gamma*s;
+      const p = presVuelo(I.gamma*s + I.qs) + pVueloSis;
       H_vuelo += p*dsv;
       M_vuelo += p*dsv*(h0 - s);
     }
   }
 
-  return {Ka, K_AE, dKae, Ka_act, K0, K_sel, q, H_emp, M_pie, z_resultante, h0, H_vuelo, M_vuelo, K_vuelo, minAplicado};
+  return {Ka, K_AE, dKae, Ka_act, K0, K_sel, q, H_emp, M_pie, z_resultante, h0, H_vuelo, M_vuelo, K_vuelo, minAplicado, rigidoE9, p_E9, pVueloSis, p_MO, moRige};
 }
 
 /* ===== Solver viga continua (método matricial rigidez) =====
@@ -1692,7 +1722,7 @@ function vRdc(d_mm, rho_l, fck, gc, b_mm){
 function calcArmadura(I, S){
   const fck=I.fck, fyk=I.fyk, fcd=I.fcd, fyd=I.fyd;
   const b = I.b*1000; // mm
-  const gammaE = 1.5; // mayoración ELU sobre empuje (conservador; CTE DB-SE-C 2.4.1(4) admite el formato del DB-SE)
+  const gammaE = GAMMA_E; // mayoración ELU sobre empuje (conservador; CTE DB-SE-C 2.4.1(4) admite el formato del DB-SE)
   // FIX 2026-11-02 (verificación contra el texto oficial del Anejo 19, valores nacionales):
   const fctm_c = (fck <= 50) ? 0.30*Math.pow(fck, 2/3) : 2.12*Math.log(1+(fck+8)/10);
   const fctd_c = 0.7*fctm_c/I.gc;                     // α_ct = 1,00 (Anejo 19 §3.1.6(2))
@@ -1901,6 +1931,13 @@ function calcFisuracion(I, S, A, S_G){
   // FIX 2026-11-02 (auditoría): combinación cuasipermanente correcta M_qp = M_G + ψ2·M_Q (el empuje de tierras y agua es
   // permanente al 100 %; solo la sobrecarga se afecta de ψ2). Se comprueba el vano (intradós) y los apoyos (trasdós) con el
   // canto útil, el recubrimiento a la armadura longitudinal (r + φ_h), el espesor y el diámetro de CADA tramo.
+  // FIX 2026-11-04: el sismo es una acción accidental y no entra en la combinación cuasipermanente: si llega un análisis con
+  // sismo, se rehace sin él
+  if(I.sismoActivo){
+    I = Object.assign({}, I, {sismoActivo: false, kh: 0, kv: 0});
+    S = solverViga(I, calcEmpujes(I)) || S;
+    S_G = null;
+  }
   if(!S_G){
     const I_G = Object.assign({}, I, {qs: 0});
     S_G = solverViga(I_G, calcEmpujes(I_G)) || S;
@@ -1959,6 +1996,14 @@ function calcFisuracion(I, S, A, S_G){
 }
 
 function calcZapata(I, S, E){
+  // FIX 2026-11-04: situación sísmica (extraordinaria). Coeficientes del CTE DB-SE-C tabla 2.1: hundimiento γ_R 2,0 en lugar
+  // de 3,0 (σ_adm ×1,5), deslizamiento 1,1 en lugar de 1,5 y vuelco con γ_E 1,2 / 0,9 (FS ≥ 1,33) en lugar de 1,8 / 0,9.
+  // Acciones (EC8-5 §7.3.2.2): inercias k_h·W de la zapata, las tierras del talón y el tacón (la del muro ya llega en H_zap
+  // desde el análisis), pesos y cargas verticales ×(1 − k_v) y pasivo del tacón con K_PE. calcSituaciones la calcula con los
+  // dos signos de k_v.
+  const sis = !!I.sismoActivo;
+  const f_sig = sis ? 1.5 : 1.0, FSd_min = sis ? 1.1 : 1.5, FSv_min = sis ? 1.2/0.9 : 2.0;
+  const fv = sis ? 1 - I.kv : 1, kh_s = sis ? I.kh : 0;
   const R_inf = S.reacciones[S.reacciones.length-1];
   const H_zap = Math.abs(R_inf.R);
   const M_zap = Math.abs(S.M_zapata_emp);
@@ -1973,17 +2018,19 @@ function calcZapata(I, S, E){
   if(I.isLosa){
     const N_muro_ELS = I.Ngk + I.Nqk;
     const N_muro_ELU = 1.35*I.Ngk + 1.5*I.Nqk;
-    const N_total = N_muro_ELS + W_muro;
+    const N_total = fv*(N_muro_ELS + W_muro);
     // σ_max estimado: peso de la franja influencia (B=1m por defecto, anchura típica), conservador
     // En losa, σ se determina por análisis de losa global. Asumimos σ_avg = N_total / 1 m² ≤ σ_adm.
     const sigma_max = N_total / 1.0;
-    const ratio_sigma = sigma_max / I.sigma_adm;
+    const ratio_sigma = sigma_max / (f_sig*I.sigma_adm);
     return {
       isLosa: true, H_zap, M_zap, N_muro_ELS, N_muro_ELU, W_muro, W_zap:0, W_tierras_talon:0,
       N_total, e_x:0, dentroNucleo:true, sigma_max, sigma_min:sigma_max,
       sigma_adm: I.sigma_adm, ratio_sigma, ok_sigma: ratio_sigma <= 1,
       F_friccion: 0, FS_desliz: 99, ok_desliz: true,
-      M_estab: 0, M_vuelco: 0, FS_vuelco: 99, ok_vuelco: true
+      M_estab: 0, M_vuelco: 0, FS_vuelco: 99, ok_vuelco: true,
+      sis, sigma_lim: f_sig*I.sigma_adm, FSd_min, FSv_min, eta_desliz: 0, eta_vuelco: 0, fv, H_iner: 0, M_iner: 0, H_desl: H_zap,
+      kv: sis ? I.kv : 0
     };
   }
 
@@ -1993,13 +2040,18 @@ function calcZapata(I, S, E){
   const W_tierras_talon = I.Bt * I.gamma * H_tierras;
   const W_tacon = I.isTacon ? (I.h_t * I.b_t * gamma_h) : 0;
   const W_q_talon = I.qs * I.Bt; // sobrecarga de superficie sobre el talón (acción variable)
+  // FIX 2026-11-04: con sismo, inercias hacia la puntera de la zapata (a media altura), del tacón (bajo la base) y de las tierras
+  // del talón. Estas forman parte del relleno que empuja el muro atado: su inercia llega a la zapata como cortante en la cara
+  // superior del talón (brazo h_z); su vuelco lo recoge el muro con el empuje E.9, que llega en M_zap.
+  const H_iner = kh_s*(W_zap + W_tierras_talon + W_tacon);
+  const M_iner = kh_s*(W_zap*I.h_z/2 + W_tierras_talon*I.h_z - W_tacon*I.h_t/2);
 
   const N_muro_ELS = I.Ngk + I.Nqk;
   const N_muro_ELU = 1.35*I.Ngk + 1.5*I.Nqk;
   // FIX 2026-11-02 (auditoría): las acciones variables verticales (N_Qk y sobrecarga sobre el talón) son desfavorables para el
   // hundimiento pero favorables para deslizamiento y vuelco, donde se toman con γ = 0 (CTE DB-SE-C 2.3.2).
-  const N_total = N_muro_ELS + W_muro + W_zap + W_tierras_talon + W_tacon + W_q_talon; // con variables (hundimiento)
-  const N_estab = I.Ngk + W_muro + W_zap + W_tierras_talon + W_tacon;                 // sin variables (estabilidad)
+  const N_total = fv*(N_muro_ELS + W_muro + W_zap + W_tierras_talon + W_tacon + W_q_talon); // con variables (hundimiento)
+  const N_estab = fv*(I.Ngk + W_muro + W_zap + W_tierras_talon + W_tacon);                 // sin variables (estabilidad)
 
   // Excentricidad respecto al centro de la zapata (positiva hacia el talón)
   const x_eje_muro = I.Bp + I.e_muro/2;
@@ -2025,13 +2077,13 @@ function calcZapata(I, S, E){
     }
     return {e_x: e, sigma_max: smax, sigma_min: smin, dentroNucleo: nucleo};
   }
-  const M_con = (N_muro_ELS + W_muro)*e_horiz_muro + (W_tierras_talon + W_q_talon)*e_horiz_talon - M_vigaC - M_zap - H_zap*I.h_z;
-  const M_sin = (I.Ngk + W_muro)*e_horiz_muro + W_tierras_talon*e_horiz_talon - M_vigaC - M_zap - H_zap*I.h_z;
+  const M_con = fv*((N_muro_ELS + W_muro)*e_horiz_muro + (W_tierras_talon + W_q_talon)*e_horiz_talon) - M_vigaC - M_zap - H_zap*I.h_z - M_iner;
+  const M_sin = fv*((I.Ngk + W_muro)*e_horiz_muro + W_tierras_talon*e_horiz_talon) - M_vigaC - M_zap - H_zap*I.h_z - M_iner;
   const T_con = tensiones(N_total, M_con), T_sin = tensiones(N_estab, M_sin);
   const T = (T_sin.sigma_max > T_con.sigma_max) ? T_sin : T_con; // se toma la situación más desfavorable
   const caso_sigma = (T === T_sin) ? 'sin acciones variables verticales' : 'con acciones variables';
   const e_x = T.e_x, sigma_max = T.sigma_max, sigma_min = T.sigma_min, dentroNucleo = T.dentroNucleo;
-  const ratio_sigma = sigma_max / I.sigma_adm;
+  const ratio_sigma = sigma_max / (f_sig*I.sigma_adm);
   const ok_sigma = ratio_sigma <= 1.0;
 
   // Deslizamiento: rozamiento base tan(2φ'/3) con N sin acciones variables + pasivo del tacón (desde la solera del sótano)
@@ -2040,42 +2092,80 @@ function calcZapata(I, S, E){
   let F_pasivo = 0;
   if(I.isTacon){
     const Kp = Math.pow(Math.tan(Math.PI/4 + I.phi*Math.PI/360), 2);
-    const sigma_pas_avg = Kp * I.gamma * (I.h_z + I.h_t/2);
+    const Kp_s = sis ? kpeMO(I.phi, I.kh, I.kv) : Kp;   // FIX 2026-11-04: con sismo, K_PE
+    const sigma_pas_avg = Kp_s * I.gamma * fv * (I.h_z + I.h_t/2);
     F_pasivo = sigma_pas_avg * I.h_t;
     F_friccion += F_pasivo;
   }
-  const FS_desliz = (H_zap>0) ? F_friccion/H_zap : 99;
-  const ok_desliz = FS_desliz >= 1.5;
+  const H_desl = H_zap + H_iner;
+  const FS_desliz = (H_desl>0) ? F_friccion/H_desl : 99;
+  const ok_desliz = FS_desliz >= FSd_min;
 
   // Vuelco respecto a la arista de la puntera (x = 0). Estabilizador: pesos permanentes por su brazo; desestabilizador:
   // M_zap + H_zap·h_z. Criterio CTE DB-SE-C tabla 2.1 (γ_E = 1.8 desestab. / 0.9 estab.) ⇒ FS ≥ 2.0.
-  const M_estab = (I.Ngk + W_muro)*x_eje_muro + W_zap*x_centro + W_tierras_talon*x_talon + W_tacon*x_centro;
-  const M_vuelco = M_zap + H_zap*I.h_z;
+  const M_estab = fv*((I.Ngk + W_muro)*x_eje_muro + W_zap*x_centro + W_tierras_talon*x_talon + W_tacon*x_centro);
+  const M_vuelco = M_zap + H_zap*I.h_z + M_iner;
   const FS_vuelco = (M_vuelco>0) ? M_estab/M_vuelco : 99;
-  const ok_vuelco = FS_vuelco >= 2.0;
+  const ok_vuelco = FS_vuelco >= FSv_min;
 
   return {
     isLosa: false, H_zap, M_zap, N_muro_ELS, N_muro_ELU,
     W_muro, W_zap, W_tierras_talon, W_tacon, W_q_talon, N_total, N_estab,
     e_x, dentroNucleo, sigma_max, sigma_min, sigma_adm: I.sigma_adm, ratio_sigma, ok_sigma, caso_sigma,
     F_friccion, F_pasivo, FS_desliz, ok_desliz,
-    M_estab, M_vuelco, FS_vuelco, ok_vuelco
+    M_estab, M_vuelco, FS_vuelco, ok_vuelco,
+    sis, sigma_lim: f_sig*I.sigma_adm, FSd_min, FSv_min, eta_desliz: FSd_min/FS_desliz, eta_vuelco: FSv_min/FS_vuelco,
+    fv, H_iner, M_iner, H_desl, kv: sis ? I.kv : 0
   };
+}
+
+/* ===== Situaciones persistente y sísmica (FIX 2026-11-04) =====
+   Con sismo se comprueban las dos situaciones (CTE DB-SE-C tabla 2.1; CE / EC0 §6.4.3.4):
+   · persistente, sin sismo: empuje ×1,5 en ELU, fisuración, y zapata con σ_adm, FS 1,5 (deslizamiento) y 2,0 (vuelco);
+   · sísmica (extraordinaria): empuje con el incremento sísmico y la inercia del muro, γ = 1,0 en ELU; zapata con σ_adm ×1,5,
+     FS 1,1 y 1,2/0,9, inercias, pesos ×(1 − k_v) con los dos signos de k_v y pasivo K_PE; empuje estático al reposo.
+   El muro se arma con la envolvente de las dos, sección a sección. Del lado de la seguridad, en la situación sísmica se
+   mantienen la sobrecarga completa (en lugar de ψ2·q) y los γ_c / γ_s de la persistente. */
+const GAMMA_E = 1.5;   // mayoración ELU del empuje en situación persistente (la usa calcArmadura)
+function envolventeELU(S_p, S_s){
+  // esfuerzos «equivalentes sin mayorar»: máx(1,5·persistente ; 1,0·sísmica)/1,5, para que calcArmadura siga mayorando ×1,5
+  const k = 1/GAMMA_E;
+  const tramos = S_p.tramos.map((t, i) => { const u = S_s.tramos[i]; return Object.assign({}, t, {
+    Mapoyo_sup: Math.max(t.Mapoyo_sup, k*u.Mapoyo_sup), Mapoyo_inf: Math.max(t.Mapoyo_inf, k*u.Mapoyo_inf),
+    Mapoyo_abs: Math.max(t.Mapoyo_abs, k*u.Mapoyo_abs), M_vano_abs: Math.max(t.M_vano_abs, k*u.M_vano_abs),
+    Vmax_abs: Math.max(t.Vmax_abs, k*u.Vmax_abs)}); });
+  // ley de momentos de tracción en el trasdós (M > 0), para la longitud del refuerzo de arranque; misma malla en los dos análisis
+  const grid = S_p.grid.map((p, i) => Object.assign({}, p, {M: Math.max(p.M, k*S_s.grid[i].M)}));
+  return Object.assign({}, S_p, {tramos, grid, M_vuelo: Math.max(S_p.M_vuelo, k*S_s.M_vuelo), V_vuelo: Math.max(S_p.V_vuelo, k*S_s.V_vuelo)});
+}
+function calcSituaciones(I){
+  const E = calcEmpujes(I);
+  const S = solverViga(I, E);
+  if(!S) return null;
+  const sis = I.sismoActivo;
+  const I_ns = sis ? Object.assign({}, I, {sismoActivo: false, kh: 0, kv: 0}) : I;
+  const E_ns = sis ? calcEmpujes(I_ns) : E;
+  const S_ns = sis ? (solverViga(I_ns, E_ns) || S) : S;
+  // FIX 2026-11-02: análisis solo con acciones permanentes (sin sobrecarga) para la combinación cuasipermanente de fisuración
+  const I_G = Object.assign({}, I_ns, {qs: 0});
+  const S_G = solverViga(I_G, calcEmpujes(I_G)) || S_ns;
+  const A = calcArmadura(I, sis ? envolventeELU(S_ns, S) : S);
+  const F = calcFisuracion(I_ns, S_ns, A, S_G);
+  const Z = calcZapata(I, S, E);                          // situación sísmica si hay sismo; si no, la persistente
+  // la componente vertical actúa hacia arriba o hacia abajo, la más desfavorable (EC8-5 §7.3.2.2): también con −k_v
+  const Zm = (sis && I.kv) ? calcZapata(Object.assign({}, I, {kv: -I.kv}), S, E) : null;
+  const Zp = sis ? calcZapata(I_ns, S_ns, E_ns) : null;   // con sismo, también la persistente sin sismo
+  return {E, S, E_ns, S_ns, S_G, A, F, Z, Zm, Zp};
 }
 
 /* ===== Orquestador ===== */
 function calcular(){
   const I = recolectar();
   if(!I) return;
-  const E = calcEmpujes(I);
-  const S = solverViga(I, E);
-  if(!S){ setWarn('Error en el solver matricial'); return; }
-  // FIX 2026-11-02: análisis solo con acciones permanentes (sin sobrecarga) para la combinación cuasipermanente de fisuración
-  const I_G = Object.assign({}, I, {qs: 0});
-  const S_G = solverViga(I_G, calcEmpujes(I_G)) || S;
-  const A = calcArmadura(I, S);
-  const F = calcFisuracion(I, S, A, S_G);
-  const Z = calcZapata(I, S, E);
+  // FIX 2026-11-04: situaciones persistente y sísmica (ELU con la envolvente, fisuración sin sismo, zapata en las dos)
+  const SIT = calcSituaciones(I);
+  if(!SIT){ setWarn('Error en el solver matricial'); return; }
+  const {E, S, A, F, Z, Zm, Zp} = SIT;
 
   const TA = (A.vuelo ? [A.vuelo] : []).concat(A.tramos);   // vuelo superior (si existe) + tramos
   const TF = (F.vuelo ? [F.vuelo] : []).concat(F.tramosF);
@@ -2089,12 +2179,18 @@ function calcular(){
     if(t.As_ref > 0 && !t.esVuelo) comps.push({n:'Longitud del refuerzo de arranque '+nomT(t)+' (necesaria '+f2(t.L_req_ref)+' m, dispuesta '+f2(t.L_ref)+' m)', r:t.ratio_Lref});
   }
   for(const f of TF) comps.push({n:'Fisuración '+nomT(f)+' (w_k = '+f3(f.w_k)+' mm, w_max = '+I.wmax+' mm)', r:f.ratio});
-  if(!Z.isLosa){
-    comps.push({n:'Tensión en el terreno (σ_max = '+f1(Z.sigma_max)+' kPa, σ_adm = '+Z.sigma_adm+' kPa)', r:Z.ratio_sigma});
-    comps.push({n:'Deslizamiento (FS = '+f2(Z.FS_desliz)+', mínimo 1.5)', r:1/Z.FS_desliz/0.667});
-    comps.push({n:'Vuelco (FS = '+f2(Z.FS_vuelco)+', mínimo 2.0)', r:1/Z.FS_vuelco/0.5});
-  } else {
-    comps.push({n:'Tensión media en la losa (σ = '+f1(Z.sigma_max)+' kPa, σ_adm = '+Z.sigma_adm+' kPa)', r:Z.ratio_sigma});
+  // FIX 2026-11-04: con sismo, la zapata en las dos situaciones, cada una con sus mínimos (CTE DB-SE-C tabla 2.1).
+  // η del deslizamiento = FS_min/FS (antes 1/FS/0,667, que no coincidía con el «cumple» entre FS 1,4993 y 1,5)
+  const sitZ = !Zp ? [[Z, '']] : [[Z, ' en situación sísmica'+(Zm ? ' (k_v = '+f3(I.kv)+')' : '')]]
+    .concat(Zm ? [[Zm, ' en situación sísmica (k_v = '+f3(-I.kv)+')']] : [], [[Zp, ' sin sismo (situación persistente)']]);
+  for(const [Zx, suf] of sitZ){
+    if(!Zx.isLosa){
+      comps.push({n:'Tensión en el terreno'+suf+' (σ_max = '+f1(Zx.sigma_max)+' kPa, σ_adm = '+Zx.sigma_adm+' kPa'+(Zx.sis ? ' ×1,5' : '')+')', r:Zx.ratio_sigma});
+      comps.push({n:'Deslizamiento'+suf+' (FS = '+f2(Zx.FS_desliz)+', mínimo '+(Zx.sis ? '1.1' : '1.5')+')', r:Zx.eta_desliz});
+      comps.push({n:'Vuelco'+suf+' (FS = '+f2(Zx.FS_vuelco)+', mínimo '+(Zx.sis ? '1.33' : '2.0')+')', r:Zx.eta_vuelco});
+    } else {
+      comps.push({n:'Tensión media en la losa'+suf+' (σ = '+f1(Zx.sigma_max)+' kPa, σ_adm = '+Zx.sigma_adm+' kPa'+(Zx.sis ? ' ×1,5' : '')+')', r:Zx.ratio_sigma});
+    }
   }
   const extra = [];
   if(!A.ok_rho_max) extra.push('Cuantía vertical máxima (ρ_v = '+f2(A.rho_total*100)+' % > 4 %)');
@@ -2106,7 +2202,7 @@ function calcular(){
   const gobierna = det ? det.n + ' — η = ' + f3(det.r) : '';
   const okGlobal = fallos.length === 0;
 
-  RES = {I, E, S, A, F, Z, ratioMax, okGlobal, fallos, gobierna};
+  RES = {I, E, S, A, F, Z, Zm, Zp, ratioMax, okGlobal, fallos, gobierna};
   $('btnPdf').disabled = false;
   $('btnCsv').disabled = false;
   $('btnSaveV1').disabled = false;
@@ -2131,7 +2227,7 @@ function renderResultados(R){
   html += '<div class="res-main">';
   html += '<div><div class="res-lbl">Verificación global ELU + ELS</div>';
   html += '<div class="res-val '+okCol+'">'+(R.okGlobal?'CUMPLE':'NO CUMPLE')+'</div>';
-  html += '<div style="margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--text2)">Ratio máx η = <span class="'+ratioCls+'" style="font-weight:600">'+f3(R.ratioMax)+'</span> · '+I.niveles+' nivel'+(I.niveles>1?'es':'')+' · H = '+f2(I.H)+' m · '+(I.modelo==='reposo'?'K_0':'K_a')+' = '+f3(E.Ka)+(I.sismoActivo?' · K_AE = '+f3(E.K_AE):'')+'</div>'
+  html += '<div style="margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--text2)">Ratio máx η = <span class="'+ratioCls+'" style="font-weight:600">'+f3(R.ratioMax)+'</span> · '+I.niveles+' nivel'+(I.niveles>1?'es':'')+' · H = '+f2(I.H)+' m · '+(I.modelo==='reposo'?'K_0':'K_a')+' = '+f3(E.Ka)+(I.sismoActivo?' · sismo: Δp = '+f1(E.p_E9)+' kPa (EC8-5 E.9)'+(E.h0 > 0 ? ' · vuelo K_AE = '+f3(E.K_AE) : ''):'')+'</div>'
     +(R.fallos && R.fallos.length ? '<div style="margin-top:8px;font-size:12px;line-height:1.55"><span class="red" style="font-weight:600">No cumple ('+R.fallos.length+'):</span><br>'+R.fallos.map(x => '· '+x).join('<br>')+'</div>'
       : '<div style="margin-top:8px;font-size:12px"><span class="green" style="font-weight:600">Comprobación determinante:</span> '+(R.gobierna||'—')+'</div>')
     +'</div>';
@@ -2154,15 +2250,16 @@ function renderResultados(R){
 
   // === TABLA RESUMEN POR TRAMOS ===
   html += '<div class="card"><div class="card-pad"><div class="card-title">Verificación por tramos</div>';
-  html += '<table class="sum-tbl"><thead><tr><th>Tramo</th><th>M_max</th><th>V_max</th><th>A_s,req</th><th>η_flex</th><th>η_cort</th><th>w_k</th></tr></thead><tbody>';
+  html += '<table class="sum-tbl"><thead><tr><th>Tramo</th><th>'+(I.sismoActivo ? 'M_Ed' : 'M_max')+'</th><th>'+(I.sismoActivo ? 'V_Ed' : 'V_max')+'</th><th>A_s,req</th><th>η_flex</th><th>η_cort</th><th>w_k</th></tr></thead><tbody>';
   for(let i=0;i<TA.length;i++){
     const t = TA[i], f = TF[i];
     const cls_f = t.ok_As ? 'green' : 'red';
     const cls_v = t.ok_V ? 'green' : 'red';
     const cls_w = f.ok ? 'green' : 'red';
     html += '<tr><td class="sk">'+(t.esVuelo?'Vuelo ':'')+f1(t.iniZ)+'-'+f1(t.finZ)+' m</td>';
-    html += '<td class="sv2">'+f1(t.M_max_abs/1.5)+' kN·m</td>';
-    html += '<td class="sv2">'+f1(t.V_Ed/1.5)+' kN</td>';
+    // FIX 2026-11-04: con sismo, los esfuerzos de cálculo de la envolvente (÷1,5 no corresponde a ningún esfuerzo real)
+    html += '<td class="sv2">'+f1(I.sismoActivo ? t.M_max_abs : t.M_max_abs/1.5)+' kN·m</td>';
+    html += '<td class="sv2">'+f1(I.sismoActivo ? t.V_Ed : t.V_Ed/1.5)+' kN</td>';
     html += '<td class="sv2">'+f0(t.As_req_total)+' mm²/m</td>';
     html += '<td class="'+cls_f+'">'+f3(t.ratio_As)+'</td>';
     html += '<td class="'+cls_v+'">'+f3(t.ratio_V)+'</td>';
@@ -2171,21 +2268,38 @@ function renderResultados(R){
   html += '</tbody></table></div></div>';
 
   // === TABLA ESTABILIDAD ZAPATA ===
-  html += '<div class="card"><div class="card-pad"><div class="card-title">Estabilidad de la zapata</div>';
+  html += '<div class="card"><div class="card-pad"><div class="card-title">Estabilidad de la zapata'+(R.Zp ? ' — con sismo y sin sismo' : '')+'</div>';
   html += '<table class="sum-tbl"><tbody>';
   html += '<tr><td class="sk">Reacción H zapata</td><td class="sv2">'+f1(Z.H_zap)+' kN/m</td></tr>';
+  if(Z.sis && !Z.isLosa) html += '<tr><td class="sk">Sismo: inercias de zapata y tierras del talón</td><td class="sv2">'+f1(Z.H_iner)+' kN/m · pesos ×(1 − k_v) = ×'+f3(Z.fv)+'</td></tr>';   // FIX 2026-11-04
   html += '<tr><td class="sk">M base muro</td><td class="sv2">'+f1(Z.M_zap)+' kN·m/m</td></tr>';
   html += '<tr><td class="sk">N total vertical</td><td class="sv2">'+f1(Z.N_total)+' kN/m</td></tr>';
   if(!Z.isLosa) html += '<tr><td class="sk">N estabilizador (sin acciones variables)</td><td class="sv2">'+f1(Z.N_estab)+' kN/m</td></tr>';
-  html += '<tr><td class="sk">σ máx terreno</td><td class="'+(Z.ok_sigma?'green':'red')+'">'+f1(Z.sigma_max)+' kPa (η='+f2(Z.ratio_sigma)+', σ_adm='+Z.sigma_adm+' kPa'+(Z.caso_sigma?', '+Z.caso_sigma:'')+')</td></tr>';
-  html += '<tr><td class="sk">FS deslizamiento</td><td class="'+(Z.ok_desliz?'green':'red')+'">'+f2(Z.FS_desliz)+' (≥1.5)</td></tr>';
-  html += '<tr><td class="sk">FS vuelco</td><td class="'+(Z.ok_vuelco?'green':'red')+'">'+f2(Z.FS_vuelco)+' (≥2.0 · CTE DB-SE-C tabla 2.1)</td></tr>';
+  html += '<tr><td class="sk">σ máx terreno</td><td class="'+(Z.ok_sigma?'green':'red')+'">'+f1(Z.sigma_max)+' kPa (η='+f2(Z.ratio_sigma)+', σ_adm='+Z.sigma_adm+' kPa'+(Z.sis?' ×1,5, sismo':'')+(Z.caso_sigma?', '+Z.caso_sigma:'')+')</td></tr>';
+  html += '<tr><td class="sk">FS deslizamiento</td><td class="'+(Z.ok_desliz?'green':'red')+'">'+f2(Z.FS_desliz)+' (≥'+(Z.sis?'1.1, sismo':'1.5')+')</td></tr>';
+  html += '<tr><td class="sk">FS vuelco</td><td class="'+(Z.ok_vuelco?'green':'red')+'">'+f2(Z.FS_vuelco)+' (≥'+(Z.sis?'1.33, sismo':'2.0')+' · CTE DB-SE-C tabla 2.1)</td></tr>';
   html += '<tr><td class="sk">Excentricidad e_x</td><td class="sv2">'+f3(Z.e_x)+' m ('+(Z.dentroNucleo?'dentro núcleo central':'fuera núcleo - distribución triangular')+')</td></tr>';
+  if(R.Zm){   // FIX 2026-11-04: situación sísmica con el otro signo de k_v
+    const P = R.Zm, kvT = 'Sismo con k_v = '+f3(P.kv)+': ';
+    html += '<tr><td class="sk">'+kvT+'σ máx terreno</td><td class="'+(P.ok_sigma?'green':'red')+'">'+f1(P.sigma_max)+' kPa (η='+f2(P.ratio_sigma)+', σ_adm='+P.sigma_adm+' kPa ×1,5)</td></tr>';
+    if(!P.isLosa){
+      html += '<tr><td class="sk">'+kvT+'FS deslizamiento</td><td class="'+(P.ok_desliz?'green':'red')+'">'+f2(P.FS_desliz)+' (≥1.1)</td></tr>';
+      html += '<tr><td class="sk">'+kvT+'FS vuelco</td><td class="'+(P.ok_vuelco?'green':'red')+'">'+f2(P.FS_vuelco)+' (≥1.33)</td></tr>';
+    }
+  }
+  if(R.Zp){   // FIX 2026-11-04: situación persistente sin sismo
+    const P = R.Zp;
+    html += '<tr><td class="sk">Sin sismo: σ máx terreno</td><td class="'+(P.ok_sigma?'green':'red')+'">'+f1(P.sigma_max)+' kPa (η='+f2(P.ratio_sigma)+', σ_adm='+P.sigma_adm+' kPa'+(P.caso_sigma?', '+P.caso_sigma:'')+')</td></tr>';
+    if(!P.isLosa){
+      html += '<tr><td class="sk">Sin sismo: FS deslizamiento</td><td class="'+(P.ok_desliz?'green':'red')+'">'+f2(P.FS_desliz)+' (≥1.5)</td></tr>';
+      html += '<tr><td class="sk">Sin sismo: FS vuelco</td><td class="'+(P.ok_vuelco?'green':'red')+'">'+f2(P.FS_vuelco)+' (≥2.0)</td></tr>';
+    }
+  }
   html += '</tbody></table></div></div>';
 
   // === DESARROLLO DE CÁLCULO ===
   html += '<div class="card"><div class="dev-header"><span>#</span><span>Cálculo</span><span style="text-align:right">Valor</span></div>';
-  html += devSteps(I, E, S, A, F, Z);
+  html += devSteps(I, E, S, A, F, Z, R.Zp, R.Zm);
   html += '</div>';
 
   // === MEDICIÓN Y CUANTÍAS ===
@@ -2200,6 +2314,7 @@ function renderResultados(R){
   html += '<strong>EC2 (EN 1992-1-1)</strong> · §6.2 cortante · §7.3 fisuración · §9.6 muros<br>';
   html += '<strong>CTE DB-SE-C</strong> · cap. 4 cimentaciones directas · cap. 6 elementos de contención (6.2.4 reposo, 6.2.5 empujes, 6.3.3.3.5 muros de sótano) · tabla 2.1 coeficientes<br>';
   html += '<strong>Sismo</strong> · no incluido en la versión web (muro rígido: EC8-5, anejo E.9)<br>';
+  if(I.sismoActivo) html += '<strong>EC8-5 §7.3.2 y anejo E.9</strong> · muro de sótano rígido: incremento sísmico uniforme k_h·γ·H, inercias y k_v; Mononobe-Okabe solo en el vuelo<br>';   // FIX 2026-11-04
   html += '</div></div>';
 
   $('panelOut').innerHTML = html;
@@ -2209,7 +2324,7 @@ function gauge(label, val, sub){
   return '<div class="gauge-card"><div class="gauge-label">'+label+'</div><div class="gauge-val">'+val+'</div><div class="gauge-sub">'+sub+'</div></div>';
 }
 
-function devSteps(I, E, S, A, F, Z){
+function devSteps(I, E, S, A, F, Z, Zp, Zm){
   let h = '';
   const step = (n,d,v,cls) => '<div class="step"><span class="sn">'+n+'</span><span class="sd">'+d+'</span><span class="sv '+(cls||'')+'">'+v+'</span></div>';
   const hdr = t => '<div class="step hdr"><span></span><span class="sd" style="color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:9.5px">'+t+'</span><span></span></div>';
@@ -2219,13 +2334,15 @@ function devSteps(I, E, S, A, F, Z){
   if(I.modelo==='reposo') h += step('2','K_0 reposo = 1 − sen φ\' (CTE DB-SE-C 6.2.4; sin reducción por cohesión)', f3(E.Ka));
   else if(I.modelo==='rankine') h += step('2','K_a Rankine = tan²(45°-φ/2)', f3(E.Ka));
   if(I.modelo==='coulomb') h += step('2b','K_a Coulomb (δ='+I.delta+'°, β='+I.beta+'°, α='+I.alfa+'°)', f3(E.Ka));
-  if(I.sismoActivo) h += step('2c','K_AE Mononobe-Okabe (kh='+I.kh+', kv='+I.kv+')', f3(E.K_AE));
+  // FIX 2026-11-04: muro rígido (EC8-5 §7.3.2.1 y anejo E.9) con cualquier modelo estático; Mononobe-Okabe solo en el vuelo
+  // o si con talud da más
+  if(I.sismoActivo) h += step('2c','Sismo: muro de sótano atado por los forjados = muro rígido (EC8-5 §7.3.2.1 y anejo E.9): Δp = '+(E.moRige ? 'máx(k_h·γ·H ; ½·ΔK_AE·γ·H): con el talud rige Mononobe-Okabe, ½ · '+f3(E.dKae)+' · '+I.gamma+' · '+f2(I.H + E.h0) : 'k_h·γ·H = '+I.kh+' · '+I.gamma+' · '+f2(I.H + E.h0))+', uniforme en toda la altura, más la inercia del muro k_h·25·e = '+I.e_tramo.map(e => f2(I.kh*25*e)).join(' / ')+' kPa'+(I.modelo !== 'reposo' ? ' · con el modelo activo elegido, en la situación sísmica el empuje estático se toma al reposo (K_0 = '+f3(E.K0)+')' : '')+(E.h0 > 0 ? ' · vuelo en ménsula: Mononobe-Okabe (K_AE = '+f3(E.K_AE)+'), incremento uniforme ½·ΔK_AE·γ·h_v con la resultante a media altura, más su inercia: '+f2(E.pVueloSis)+' kPa' : '')+' · situación sísmica (extraordinaria): γ = 1,0 en ELU y coeficientes de la zapata del CTE DB-SE-C tabla 2.1; el muro se arma con la envolvente de esta situación y de la persistente sin sismo; no entra en la fisuración', f1(E.p_E9)+' kPa');
   if(E.minAplicado) h += step('2d','Presión mínima 0,25·σ\'_v aplicada en parte de la altura (CTE DB-SE-C 6.2.5)', 'sí', 'wrn');
   if(I.vueloSup) h += step('2e','Vuelo superior: terreno hasta su coronación (+'+f2(I.h_v)+' m) · empuje ACTIVO sobre el vuelo (ménsula, K_a = '+f3(E.K_vuelo)+') '+f1(E.H_vuelo)+' kN/m (al forjado 1) · M en su arranque', f2(E.M_vuelo)+' kN·m/m');
   h += step('3','E_a total (integral q(z)·dz)', f1(E.H_emp)+' kN/m');
   h += step('4','z resultante (desde techo)', f2(E.z_resultante)+' m');
 
-  h += hdr('Esfuerzos en el muro (sin mayorar)');
+  h += hdr('Esfuerzos en el muro (sin mayorar'+(I.sismoActivo ? ', con sismo' : '')+')');
   const Mvano_g = Math.max(...S.tramos.map(t=>t.M_vano_abs));
   const Mapoyo_g = Math.max(...S.tramos.map(t=>t.Mapoyo_abs));
   h += step('5','|M_max| en vano (cara intradós traccionada)', f1(Mvano_g)+' kN·m/m', 'hl');
@@ -2243,7 +2360,7 @@ function devSteps(I, E, S, A, F, Z){
   h += step('10','f_yd = f_yk/γ_s = '+I.fyk+'/'+I.gs, f1(I.fyd)+' MPa');
   h += step('11','Canto útil cara trasdós d_t', f0(I.e_muro*1000 - I.r_t - I.phi_h - I.phi_v/2)+' mm');
 
-  h += hdr('Armadura por tramos (ELU mayorado γ_E=1.5)');
+  h += hdr('Armadura por tramos (ELU '+(I.sismoActivo ? 'envolvente: máx(1,5·sin sismo ; 1,0·con sismo)' : 'mayorado γ_E=1.5')+')');
   for(let i=0;i<A.tramos.length;i++){
     const t=A.tramos[i];
     const n = (i+1)+'.0';
@@ -2269,7 +2386,7 @@ function devSteps(I, E, S, A, F, Z){
   h += step('C','ρ_v total máx = '+f3(A.rho_total*100)+'% ≤ 4.00% (§9.6.2(1))', A.ok_rho_max?'OK':'NO', A.ok_rho_max?'fin':'err');
   h += step('D','Separación vertical ≤ mín(3e; 400) = '+f0(A.s_max_norm)+' mm (§9.6.2(3)) · horizontal ≤ 400 mm (§9.6.3(2))', (A.ok_sep_v&&A.ok_sep_h)?'OK':'NO', (A.ok_sep_v&&A.ok_sep_h)?'fin':'err');
 
-  h += hdr('Fisuración ELS (CE 2021 Anejo 19 §7.3.4 / EC2 §7.3.4 · M_qp = M_G + ψ·M_Q)');
+  h += hdr('Fisuración ELS (CE 2021 Anejo 19 §7.3.4 / EC2 §7.3.4 · M_qp = M_G + ψ·M_Q'+(I.sismoActivo ? ' · sin el sismo, acción accidental' : '')+')');
   for(let i=0;i<F.tramosF.length;i++){
     const f=F.tramosF[i];
     h += step('F'+(i+1), 'Tramo '+f1(f.iniZ)+'-'+f1(f.finZ)+' m · '+f.zona+' · M_qp='+f1(f.M_ELS)+' · σ_s='+f0(f.sigma_s)+' MPa · s_r,max='+f0(f.s_rmax)+' mm', 'w_k='+f3(f.w_k)+' mm', f.ok?'fin':'err');
@@ -2277,16 +2394,33 @@ function devSteps(I, E, S, A, F, Z){
 
   if(F.vuelo){ const f=F.vuelo; h += step('FV','Vuelo · '+f.zona+' · M_qp='+f1(f.M_ELS)+' · σ_s='+f0(f.sigma_s)+' MPa · s_r,max='+f0(f.s_rmax)+' mm', 'w_k='+f3(f.w_k)+' mm', f.ok?'fin':'err'); }
 
-  h += hdr('Cimentación: estabilidad y tensiones');
+  h += hdr('Cimentación: estabilidad y tensiones'+(Z.sis ? ' — situación sísmica (extraordinaria, CTE DB-SE-C tabla 2.1)' : ''));
   h += step('Z1','Peso muro = e·γ_h·H = '+f2(I.e_muro)+'·25·'+f2(I.H), f1(Z.W_muro)+' kN/m');
   h += step('Z2','Peso zapata = B_z·h_z·γ_h', f1(Z.W_zap)+' kN/m');
   h += step('Z3','Peso tierras sobre talón', f1(Z.W_tierras_talon)+' kN/m');
   h += step('Z4','N_total servicio (con acciones variables: hundimiento)', f1(Z.N_total)+' kN/m', 'hl');
   if(!Z.isLosa) h += step('Z4b','N estabilizador (sin N_Qk ni sobrecarga sobre el talón; CTE DB-SE-C 2.3.2)', f1(Z.N_estab)+' kN/m');
+  if(Z.sis && !Z.isLosa) h += step('Z4c','Sismo: inercias k_h·(W_zap + W_tierras talón + W_tacón) hacia la puntera; la de las tierras del talón, como cortante en su cara superior (brazo h_z), porque su vuelco lo recoge el muro atado; la del muro llega en H_zap · pesos y cargas ×(1 − k_v) = ×'+f3(Z.fv)+(Zm ? ' (y con el otro signo de k_v, más abajo)' : '')+(I.isTacon ? ' · pasivo del tacón con K_PE' : ''), f1(Z.H_iner)+' kN/m');   // FIX 2026-11-04
   h += step('Z5','Excentricidad e_x', f3(Z.e_x)+' m'+(Z.dentroNucleo?' (núcleo central)':' (fuera núcleo)'));
-  h += step('Z6','σ_max = '+f1(Z.sigma_max)+' kPa ('+(Z.caso_sigma||'—')+') · σ_adm = '+Z.sigma_adm+' kPa', 'η='+f2(Z.ratio_sigma), Z.ok_sigma?'fin':'err');
-  h += step('Z7','FS deslizamiento = (tan(2φ/3)·N_estab + E_p,tacón)/H ≥ 1.5', f2(Z.FS_desliz), Z.ok_desliz?'fin':'err');
-  h += step('Z8','FS vuelco = M_estab/(M_zap + H_zap·h_z) ≥ 2.0 (CTE DB-SE-C tabla 2.1)', f2(Z.FS_vuelco), Z.ok_vuelco?'fin':'err');
+  h += step('Z6','σ_max = '+f1(Z.sigma_max)+' kPa ('+(Z.caso_sigma||'—')+') · σ_adm = '+Z.sigma_adm+' kPa'+(Z.sis ? ' ×1,5 (γ_R 2,0 en lugar de 3,0)' : ''), 'η='+f2(Z.ratio_sigma), Z.ok_sigma?'fin':'err');
+  h += step('Z7','FS deslizamiento = (tan(2φ/3)·N_estab + E_p,tacón)/'+(Z.sis ? '(H + inercias) ≥ 1.1' : 'H ≥ 1.5'), f2(Z.FS_desliz), Z.ok_desliz?'fin':'err');
+  h += step('Z8','FS vuelco = M_estab/(M_zap + H_zap·h_z'+(Z.sis ? ' + M_inercias) ≥ 1.2/0.9 = 1.33' : ') ≥ 2.0')+' (CTE DB-SE-C tabla 2.1)', f2(Z.FS_vuelco), Z.ok_vuelco?'fin':'err');
+  if(Zm){   // FIX 2026-11-04: situación sísmica con el otro signo de k_v
+    h += hdr('Cimentación con sismo y k_v = '+f3(Zm.kv)+' (componente vertical con el otro signo, EC8-5 §7.3.2.2)');
+    h += step('Z6m','σ_max = '+f1(Zm.sigma_max)+' kPa · σ_adm = '+Zm.sigma_adm+' kPa ×1,5 · pesos ×'+f3(Zm.fv), 'η='+f2(Zm.ratio_sigma), Zm.ok_sigma?'fin':'err');
+    if(!Zm.isLosa){
+      h += step('Z7m','FS deslizamiento ≥ 1.1', f2(Zm.FS_desliz), Zm.ok_desliz?'fin':'err');
+      h += step('Z8m','FS vuelco ≥ 1.2/0.9 = 1.33', f2(Zm.FS_vuelco), Zm.ok_vuelco?'fin':'err');
+    }
+  }
+  if(Zp){   // FIX 2026-11-04: situación persistente sin sismo
+    h += hdr('Cimentación sin sismo (situación persistente)');
+    h += step('Z6p','σ_max = '+f1(Zp.sigma_max)+' kPa ('+(Zp.caso_sigma||'—')+') · σ_adm = '+Zp.sigma_adm+' kPa', 'η='+f2(Zp.ratio_sigma), Zp.ok_sigma?'fin':'err');
+    if(!Zp.isLosa){
+      h += step('Z7p','FS deslizamiento ≥ 1.5', f2(Zp.FS_desliz), Zp.ok_desliz?'fin':'err');
+      h += step('Z8p','FS vuelco ≥ 2.0', f2(Zp.FS_vuelco), Zp.ok_vuelco?'fin':'err');
+    }
+  }
 
   return h;
 }
@@ -2588,17 +2722,19 @@ function drawCargas(I, E, S, W, H, forPDF){
   }
 
   // INCREMENTO SÍSMICO (si activo)
-  if(I.sismoActivo && E.dKae > 0){
-    const dE_max = E.dKae * I.gamma * I.H;
-    for(let i=0;i<5;i++){
+  if(I.sismoActivo){
+    // FIX 2026-11-04: flechas con el incremento sísmico de q(z): uniforme (EC8-5 E.9) más la inercia del muro
+    const dEs = [0,1,2,3,4].map(i => E.q((i+0.5)/5*I.H).dE_sis);
+    const dE_max = Math.max(...dEs);
+    for(let i=0;i<5 && dE_max > 0;i++){
       const t = (i+0.5)/5;
       const z = t*I.H;
       const y = y_forj1 + z*scaleY;
-      const dE_here = E.dKae * I.gamma * z;
+      const dE_here = dEs[i];
       const longArr = 4 + 20*(dE_here/dE_max);
       s += '<line x1="'+(xMuro+5+longArr+50)+'" y1="'+y+'" x2="'+(xMuro+5+50)+'" y2="'+y+'" stroke="'+stroke_sismo+'" stroke-width="1" marker-end="url(#arrL_'+(forPDF?'P':'')+')" opacity="0.7" stroke-dasharray="1.5,1"/>';
     }
-    s += '<text x="'+(xMuro+60+25)+'" y="'+(y_forj1+I.H/2*scaleY)+'" font-family="Consolas,monospace" font-size="9" fill="'+stroke_sismo+'">+Sismo</text>';
+    if(dE_max > 0) s += '<text x="'+(xMuro+60+25)+'" y="'+(y_forj1+I.H/2*scaleY)+'" font-family="Consolas,monospace" font-size="9" fill="'+stroke_sismo+'">+Sismo (E.9)</text>';
   }
 
   // Título
@@ -2836,7 +2972,7 @@ function generarPDF(){
   h += '<div class="psvg">'+drawGeometria(I, E, S, 500, 400, true)+'</div></div>';
   h += '<div class="ps"><div class="ps-t">3 · Cargas aplicadas</div>';
   h += '<div class="psvg">'+drawCargas(I, E, S, 500, 380, true)+'</div></div>';
-  h += '<div class="ps"><div class="ps-t">4 · Diagramas de esfuerzos M y V</div>';
+  h += '<div class="ps"><div class="ps-t">4 · Diagramas de esfuerzos M y V'+(I.sismoActivo ? ' (con sismo, sin mayorar)' : '')+'</div>';
   h += '<div class="psvg">'+drawDiagramas(I, S, 500, 360, true)+'</div></div>';
 
   // 4. Empuje
@@ -2844,8 +2980,12 @@ function generarPDF(){
   h += '<div class="pc"><div class="pc-h"><span><span class="pc-n">4.1</span>Coeficiente '+(I.modelo==='reposo'?'K_0 (reposo)':'K_a (activo)')+'</span><span class="pc-a">'+(I.modelo==='reposo'?'CTE DB-SE-C 6.2.4':'Rankine / Coulomb')+'</span></div>';
   h += '<div class="pc-f">'+(I.modelo==='reposo'?'K_0 = 1 − sen φ\'':'K_a = '+(I.modelo==='coulomb'?'cos²(α+φ) / [sin²α · sin(α−δ) · (1 + √[sin(φ+δ)·sin(φ−β)/(sin(α−δ)·sin(α+β))])²]':'tan²(45° − φ/2)'))+' = '+f3(E.Ka)+'</div></div>';
   if(I.sismoActivo){
-    h += '<div class="pc"><div class="pc-h"><span><span class="pc-n">4.2</span>Coef. sísmico K_AE (Mononobe-Okabe)</span><span class="pc-a">NCSE-02 / EC8-5</span></div>';
-    h += '<div class="pc-f">K_AE = '+f3(E.K_AE)+' · ΔK_AE = '+f3(E.dKae)+'</div></div>';
+    // FIX 2026-11-04: muro rígido (EC8-5 §7.3.2.1 y anejo E.9), con cualquier modelo de empuje estático
+    h += '<div class="pc"><div class="pc-h"><span><span class="pc-n">4.2</span>Incremento sísmico, muro rígido atado por los forjados (uniforme)</span><span class="pc-a">EC8-5 anejo E.9</span></div>';
+    h += '<div class="pc-f">Δp = '+(E.moRige ? 'máx(k_h·γ·H ; ½·ΔK_AE·γ·H) = ½ · '+f3(E.dKae)+' · '+I.gamma+' · '+f2(I.H + E.h0)+' (con el talud rige Mononobe-Okabe)' : 'k_h·γ·H = '+I.kh+' · '+I.gamma+' · '+f2(I.H + E.h0))+' = '+f1(E.p_E9)+' kPa en toda la altura atada (H incluye el vuelo) · inercia del muro k_h·25·e = '+I.e_tramo.map(e => f2(I.kh*25*e)).join(' / ')+' kPa'+(I.modelo !== 'reposo' ? ' · empuje estático al reposo en esta situación (K_0 = '+f3(E.K0)+')' : '')+'</div>';
+    if(E.h0 > 0) h += '<div class="pc-f">Vuelo en ménsula: Mononobe-Okabe, K_AE = '+f3(E.K_AE)+' · ΔK_AE = '+f3(E.dKae)+' · incremento uniforme ½·ΔK_AE·γ·h_v (resultante a media altura, EC8-5 §7.3.2.3) más su inercia = '+f2(E.pVueloSis)+' kPa</div>';
+    h += '<div class="pc-f">k_h = a_c/g sin reducir (r = 1). Con nivel freático se supone terreno poco permeable (γ total, sin presión hidrodinámica de agua libre).</div></div>';
+    h += '<div class="pc"><div class="pc-f">Sismo · situación sísmica (extraordinaria): γ = 1,0 en ELU y coeficientes de la zapata del CTE DB-SE-C tabla 2.1; el muro se arma con la envolvente de esta situación y de la persistente sin sismo; no entra en la fisuración.</div></div>';
   }
   h += '<div class="pc"><div class="pc-h"><span><span class="pc-n">4.3</span>Empuje total resultante</span><span class="pc-a">Integración numérica q(z)dz</span></div>';
   h += '<div class="pc-f">E_a = ∫_0^H q(z)·dz · q(z) = K_a·σ_v − 2·c·√K_a + u(z) + ΔE_sismo(z)\n   = '+f1(E.H_emp)+' kN/m</div>';
@@ -2853,7 +2993,7 @@ function generarPDF(){
   h += '</div>';
 
   // 5. Esfuerzos en el muro
-  h += '<div class="ps"><div class="ps-t">5 · Esfuerzos en el muro (modelo: viga continua matricial)</div>';
+  h += '<div class="ps"><div class="ps-t">5 · Esfuerzos en el muro (modelo: viga continua matricial'+(I.sismoActivo ? '; con sismo, sin mayorar' : '')+')</div>';
   h += '<table class="pt"><thead><tr><th>Tramo (z)</th><th>M_max,vano</th><th>M_max,apoyo</th><th>V_max</th></tr></thead><tbody>';
   for(const t of S.tramos){
     h += '<tr><td>'+f2(t.iniZ)+' → '+f2(t.finZ)+' m</td><td>'+f1(t.M_vano_abs)+' kN·m/m</td><td>'+f1(t.Mapoyo_abs)+' kN·m/m</td><td>'+f1(t.Vmax_abs)+' kN/m</td></tr>';
@@ -2861,7 +3001,7 @@ function generarPDF(){
   h += '</tbody></table></div>';
 
   // 6. Comprobación flexión
-  h += '<div class="ps"><div class="ps-t">6 · Comprobación a flexión (ELU)</div>';
+  h += '<div class="ps"><div class="ps-t">6 · Comprobación a flexión (ELU'+(I.sismoActivo ? ': envolvente de 1,5·sin sismo y 1,0·con sismo' : '')+')</div>';
   const TAp = (A.vuelo ? [A.vuelo] : []).concat(A.tramos);
   for(let i=0;i<TAp.length;i++){
     const t = TAp[i];
@@ -2886,7 +3026,7 @@ function generarPDF(){
   h += '</tbody></table></div>';
 
   // 8. Fisuración
-  h += '<div class="ps"><div class="ps-t">8 · Fisuración ELS (CE 2021 Anejo 19 §7.3.4 / EC2 §7.3.4 · cuasipermanente M_G + ψ·M_Q)</div>';
+  h += '<div class="ps"><div class="ps-t">8 · Fisuración ELS (CE 2021 Anejo 19 §7.3.4 / EC2 §7.3.4 · cuasipermanente M_G + ψ·M_Q'+(I.sismoActivo ? ' · sin el sismo, acción accidental' : '')+')</div>';
   h += '<table class="pt"><thead><tr><th>Tramo</th><th>σ_s</th><th>s_r,max</th><th>w_k</th><th>w_max</th><th>η</th></tr></thead><tbody>';
   for(const f of (F.vuelo ? [F.vuelo] : []).concat(F.tramosF)){
     h += '<tr><td>'+(f.esVuelo?'Vuelo ':'')+f2(f.iniZ)+' → '+f2(f.finZ)+' m</td><td>'+f0(f.sigma_s)+' MPa</td><td>'+f0(f.s_rmax)+' mm</td><td>'+f3(f.w_k)+' mm</td><td>'+I.wmax+' mm</td><td style="color:'+(f.ok?'#0e7c3e':'#bd3838')+';font-weight:600">'+f3(f.ratio)+(f.ok?' OK':' NO')+'</td></tr>';
@@ -2894,10 +3034,11 @@ function generarPDF(){
   h += '</tbody></table></div>';
 
   // 9. Estabilidad zapata
-  h += '<div class="ps"><div class="ps-t">9 · Estabilidad de la zapata</div>';
+  h += '<div class="ps"><div class="ps-t">9 · Estabilidad de la zapata'+(Z.sis ? ' — situación sísmica (extraordinaria, CTE DB-SE-C tabla 2.1)' : '')+'</div>';
   h += '<div class="pdesg">';
   h += '<div class="pdesg-h">Reacciones y cargas en zapata <span class="pdesg-st ok">SERVICIO</span></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">H zapata</div><div class="pdesg-v">'+f1(Z.H_zap)+' kN/m (transmitido por base muro)</div></div>';
+  if(Z.sis && !Z.isLosa) h += '<div class="pdesg-row"><div class="pdesg-k">Inercias (sismo)</div><div class="pdesg-v">k_h·(W_zap + W_tierras talón + W_tacón) = '+f1(Z.H_iner)+' kN/m · momento '+f1(Z.M_iner)+' kN·m/m (tierras del talón con brazo h_z: su vuelco lo recoge el muro atado) · pesos ×(1 − k_v) = ×'+f3(Z.fv)+(I.isTacon ? ' · pasivo con K_PE' : '')+'</div></div>';   // FIX 2026-11-04
   h += '<div class="pdesg-row"><div class="pdesg-k">M base muro</div><div class="pdesg-v">'+f1(Z.M_zap)+' kN·m/m</div></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">Peso muro</div><div class="pdesg-v">'+f1(Z.W_muro)+' kN/m (e·25·H)</div></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">Peso zapata</div><div class="pdesg-v">'+f1(Z.W_zap)+' kN/m</div></div>';
@@ -2908,20 +3049,42 @@ function generarPDF(){
   h += '</div>';
   h += '<div class="pdesg">';
   h += '<div class="pdesg-h">Tensiones bajo zapata <span class="pdesg-st '+(Z.ok_sigma?'ok':'ko')+'">'+(Z.ok_sigma?'CUMPLE':'NO CUMPLE')+'</span></div>';
-  h += '<div class="pdesg-row"><div class="pdesg-k">σ_max</div><div class="pdesg-v '+(Z.ok_sigma?'ok':'ko')+'">'+f1(Z.sigma_max)+' kPa · σ_adm = '+Z.sigma_adm+' kPa · η = '+f2(Z.ratio_sigma)+'</div></div>';
+  h += '<div class="pdesg-row"><div class="pdesg-k">σ_max</div><div class="pdesg-v '+(Z.ok_sigma?'ok':'ko')+'">'+f1(Z.sigma_max)+' kPa · σ_adm = '+Z.sigma_adm+' kPa'+(Z.sis ? ' ×1,5' : '')+' · η = '+f2(Z.ratio_sigma)+'</div></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">σ_min</div><div class="pdesg-v">'+f1(Z.sigma_min)+' kPa</div></div>';
   h += '</div>';
   h += '<div class="pdesg">';
-  h += '<div class="pdesg-h">Deslizamiento <span class="pdesg-st '+(Z.ok_desliz?'ok':'ko')+'">'+(Z.ok_desliz?'FS ≥ 1.5':'FS < 1.5')+'</span></div>';
+  h += '<div class="pdesg-h">Deslizamiento <span class="pdesg-st '+(Z.ok_desliz?'ok':'ko')+'">'+(Z.ok_desliz?'FS ≥ ':'FS < ')+(Z.sis?'1.1':'1.5')+'</span></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">F_fricción</div><div class="pdesg-v">tan(2φ/3)·N = '+f1(Z.F_friccion)+' kN/m</div></div>';
-  h += '<div class="pdesg-row"><div class="pdesg-k">FS</div><div class="pdesg-v '+(Z.ok_desliz?'ok':'ko')+'">FS = (tan(2φ/3)·N_estab + E_p,tacón) / H = '+f2(Z.FS_desliz)+'</div></div>';
+  h += '<div class="pdesg-row"><div class="pdesg-k">FS</div><div class="pdesg-v '+(Z.ok_desliz?'ok':'ko')+'">FS = (tan(2φ/3)·N_estab + E_p,tacón) / '+(Z.sis ? '(H + inercias)' : 'H')+' = '+f2(Z.FS_desliz)+'</div></div>';
   h += '</div>';
   h += '<div class="pdesg">';
-  h += '<div class="pdesg-h">Vuelco <span class="pdesg-st '+(Z.ok_vuelco?'ok':'ko')+'">'+(Z.ok_vuelco?'FS ≥ 2.0':'FS < 2.0')+'</span></div>';
+  h += '<div class="pdesg-h">Vuelco <span class="pdesg-st '+(Z.ok_vuelco?'ok':'ko')+'">'+(Z.ok_vuelco?'FS ≥ ':'FS < ')+(Z.sis?'1.33':'2.0')+'</span></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">M_estab</div><div class="pdesg-v">N·(B/2−e) = '+f1(Z.M_estab)+' kN·m/m</div></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">M_vuelco</div><div class="pdesg-v">'+f1(Z.M_vuelco)+' kN·m/m</div></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">FS</div><div class="pdesg-v '+(Z.ok_vuelco?'ok':'ko')+'">FS = '+f2(Z.FS_vuelco)+'</div></div>';
   h += '</div>';
+  if(RES.Zm){   // FIX 2026-11-04: situación sísmica con el otro signo de k_v
+    const P = RES.Zm, okP = P.ok_sigma && P.ok_desliz && P.ok_vuelco;
+    h += '<div class="pdesg">';
+    h += '<div class="pdesg-h">Con sismo y k_v = '+f3(P.kv)+' <span class="pdesg-st '+(okP?'ok':'ko')+'">'+(okP?'CUMPLE':'NO CUMPLE')+'</span></div>';
+    h += '<div class="pdesg-row"><div class="pdesg-k">σ_max</div><div class="pdesg-v '+(P.ok_sigma?'ok':'ko')+'">'+f1(P.sigma_max)+' kPa · σ_adm = '+P.sigma_adm+' kPa ×1,5 · η = '+f2(P.ratio_sigma)+'</div></div>';
+    if(!P.isLosa){
+      h += '<div class="pdesg-row"><div class="pdesg-k">FS deslizamiento</div><div class="pdesg-v '+(P.ok_desliz?'ok':'ko')+'">'+f2(P.FS_desliz)+' (≥ 1.1)</div></div>';
+      h += '<div class="pdesg-row"><div class="pdesg-k">FS vuelco</div><div class="pdesg-v '+(P.ok_vuelco?'ok':'ko')+'">'+f2(P.FS_vuelco)+' (≥ 1.33)</div></div>';
+    }
+    h += '</div>';
+  }
+  if(RES.Zp){   // FIX 2026-11-04: situación persistente sin sismo
+    const P = RES.Zp, okP = P.ok_sigma && P.ok_desliz && P.ok_vuelco;
+    h += '<div class="pdesg">';
+    h += '<div class="pdesg-h">Sin sismo (situación persistente) <span class="pdesg-st '+(okP?'ok':'ko')+'">'+(okP?'CUMPLE':'NO CUMPLE')+'</span></div>';
+    h += '<div class="pdesg-row"><div class="pdesg-k">σ_max</div><div class="pdesg-v '+(P.ok_sigma?'ok':'ko')+'">'+f1(P.sigma_max)+' kPa · σ_adm = '+P.sigma_adm+' kPa · η = '+f2(P.ratio_sigma)+'</div></div>';
+    if(!P.isLosa){
+      h += '<div class="pdesg-row"><div class="pdesg-k">FS deslizamiento</div><div class="pdesg-v '+(P.ok_desliz?'ok':'ko')+'">'+f2(P.FS_desliz)+' (≥ 1.5)</div></div>';
+      h += '<div class="pdesg-row"><div class="pdesg-k">FS vuelco</div><div class="pdesg-v '+(P.ok_vuelco?'ok':'ko')+'">'+f2(P.FS_vuelco)+' (≥ 2.0)</div></div>';
+    }
+    h += '</div>';
+  }
   h += '</div>';
 
   // 10. Armadura
@@ -2946,6 +3109,7 @@ function generarPDF(){
   h += '<div class="pnorm"><span class="pnorm-r">EC2 §9.6</span><span class="pnorm-d">EN 1992-1-1 — disposiciones constructivas en muros</span></div>';
   h += '<div class="pnorm"><span class="pnorm-r">CTE DB-SE-C</span><span class="pnorm-d">cap. 4 cimentaciones directas · cap. 6 elementos de contención (6.2.4 reposo · 6.2.5 empujes · 6.3.3.3.5 muros de sótano) · tabla 2.1 coeficientes de seguridad</span></div>';
   h += '<div class="pnorm"><span class="pnorm-r">Sismo</span><span class="pnorm-d">No incluido en la versión web (muro rígido: EC8-5, anejo E.9)</span></div>';
+  if(I.sismoActivo) h += '<div class="pnorm"><span class="pnorm-r">EC8-5 §7.3.2 y anejo E.9</span><span class="pnorm-d">Muro de sótano rígido: incremento sísmico uniforme k_h·γ·H, inercias y k_v; Mononobe-Okabe solo en el vuelo</span></div>';   // FIX 2026-11-04
   h += '</div>';
 
   // Disclaimer legal
@@ -3001,7 +3165,8 @@ function exportarCSV(){
   rows.push([]);
   rows.push(['# EMPUJE']);
   rows.push(['K_a', f3(E.Ka)]);
-  if(I.sismoActivo) rows.push(['K_AE', f3(E.K_AE)]);
+  if(I.sismoActivo) rows.push(['Δp sísmico uniforme, muro rígido EC8-5 E.9 (kPa)', f1(E.p_E9)]);   // FIX 2026-11-04
+  if(I.sismoActivo && E.h0 > 0) rows.push(['K_AE vuelo (Mononobe-Okabe)', f3(E.K_AE)]);
   rows.push(['E_a total (kN/m)', f1(E.H_emp)]);
   rows.push(['z resultante (m)', f2(E.z_resultante)]);
   rows.push([]);
@@ -3035,6 +3200,15 @@ function exportarCSV(){
   rows.push(['η tensión', f2(Z.ratio_sigma)]);
   rows.push(['FS deslizamiento', f2(Z.FS_desliz)]);
   rows.push(['FS vuelco', f2(Z.FS_vuelco)]);
+  if(RES.Zp){   // FIX 2026-11-04: la zapata de arriba es la situación sísmica; debajo, la persistente sin sismo
+    rows.push(['Situación de la zapata (filas anteriores)', 'sísmica: σ_adm ×1,5 · FS ≥ 1,1 deslizamiento · FS ≥ 1,33 vuelco']);
+    if(!Z.isLosa){ rows.push(['Sismo: inercias zapata y tierras del talón (kN/m)', f1(Z.H_iner)]); rows.push(['Sismo: factor de pesos (1 − k_v)', f3(Z.fv)]); }
+    if(RES.Zm){ const P = RES.Zm, t = 'Sismo con k_v = '+f3(P.kv)+': '; rows.push([t+'σ_max (kPa)', f1(P.sigma_max)]); rows.push([t+'FS deslizamiento', f2(P.FS_desliz)]); rows.push([t+'FS vuelco', f2(P.FS_vuelco)]); }
+    rows.push(['Sin sismo: σ_max (kPa)', f1(RES.Zp.sigma_max)]);
+    rows.push(['Sin sismo: η tensión', f2(RES.Zp.ratio_sigma)]);
+    rows.push(['Sin sismo: FS deslizamiento', f2(RES.Zp.FS_desliz)]);
+    rows.push(['Sin sismo: FS vuelco', f2(RES.Zp.FS_vuelco)]);
+  }
   rows.push([]);
   rows.push(['# RESULTADO GLOBAL']);
   rows.push(['η_max', f3(RES.ratioMax)]);
@@ -3390,14 +3564,14 @@ function optimizar(){
         }
         I.phi_v = phi; I.s_v = sep; I.As_v = As_v_new;
         try {
-          const E = calcEmpujes(I);
-          const S = solverViga(I, E);
-          if(!S){ fallidas.push({e_mm,phi,sep,motivo:'solver'}); continue; }
-          const A = calcArmadura(I, S);
-          const F = calcFisuracion(I, S, A);
-          const Z = calcZapata(I, S, E);
+          // FIX 2026-11-04: las mismas situaciones que el cálculo principal (con sismo, también la persistente sin sismo)
+          const SIT = calcSituaciones(I);
+          if(!SIT){ fallidas.push({e_mm,phi,sep,motivo:'solver'}); continue; }
+          const {A, F, Z, Zm, Zp} = SIT;
+          const Zall = [Z].concat(Zm ? [Zm] : [], Zp ? [Zp] : []);
+          const okS = Zall.every(z => z.ok_sigma), okD = Zall.every(z => z.ok_desliz), okV = Zall.every(z => z.ok_vuelco);
           const okGlobal = A.tramos.every(t=>t.ok_As && t.ok_V) && A.ok_h && A.ok_rho_max
-                        && F.tramosF.every(t=>t.ok) && Z.ok_sigma && Z.ok_desliz && Z.ok_vuelco
+                        && F.tramosF.every(t=>t.ok) && okS && okD && okV
                         && A.ok_phi_min && (!A.vuelo || (A.vuelo.ok_As && A.vuelo.ok_V)) && (!F.vuelo || F.vuelo.ok)
                         && A.tramos.every(t=>t.ok_Lref !== false) && A.ok_sep_v && A.ok_sep_h;
           if(!okGlobal){
@@ -3405,9 +3579,9 @@ function optimizar(){
             if(!A.tramos.every(t=>t.ok_As)) motivo += 'flex ';
             if(!A.tramos.every(t=>t.ok_V)) motivo += 'cortante ';
             if(!F.tramosF.every(t=>t.ok)) motivo += 'fisur ';
-            if(!Z.ok_sigma) motivo += 'σ_terr ';
-            if(!Z.ok_desliz) motivo += 'desliz ';
-            if(!Z.ok_vuelco) motivo += 'vuelco ';
+            if(!okS) motivo += 'σ_terr ';
+            if(!okD) motivo += 'desliz ';
+            if(!okV) motivo += 'vuelco ';
             if(!A.ok_h) motivo += 'horizontal ';   // FIX 2026-11-02: también la armadura horizontal mínima (regla del 20 %)
             if(!motivo) motivo = 'otras comprobaciones ';
             fallidas.push({e_mm,phi,sep,Bz,motivo:motivo.trim()});
@@ -3421,7 +3595,10 @@ function optimizar(){
               ...A.tramos.map(t=>t.ratio_V),
               ...F.tramosF.map(t=>t.ratio),
               ...(A.vuelo ? [A.vuelo.ratio_As, A.vuelo.ratio_V] : []), ...(F.vuelo ? [F.vuelo.ratio] : []),
-              Z.ratio_sigma
+              // FIX 2026-11-04: las mismas comprobaciones que la η global del cálculo principal (antes faltaban la armadura
+              // horizontal, el refuerzo de arranque, el deslizamiento, el vuelco y la situación sin sismo)
+              ...A.tramos.map(t=>t.ratio_h), ...A.tramos.filter(t=>t.As_ref > 0).map(t=>t.ratio_Lref), ...(A.vuelo ? [A.vuelo.ratio_h] : []),
+              ...Zall.flatMap(Zx => Zx.isLosa ? [Zx.ratio_sigma] : [Zx.ratio_sigma, Zx.eta_desliz, Zx.eta_vuelco])
             ];
             const etaMax = Math.max(...ratios.filter(r=>isFinite(r)));
             mejor = {
@@ -3459,7 +3636,7 @@ function clonarInputs(I){
     ambZap:I.ambZap, ambMuro:I.ambMuro, r_zap_lat:I.r_zap_lat, r_zap_inf:I.r_zap_inf,
     r_zap_sup:I.r_zap_sup, r_t:I.r_t, r_i:I.r_i,
     armadura_tramos:I.armadura_tramos, ramasActivas:I.ramasActivas, ramas:I.ramas,
-    wmax:I.wmax, psi2:I.psi2,
+    wmax:I.wmax, psi2:I.psi2, juntasH:I.juntasH,   // FIX 2026-11-04: antes el optimizador ignoraba las juntas
     phi_v:I.phi_v, s_v:I.s_v, phi_h:I.phi_h, s_h:I.s_h,
     As_v:I.As_v, As_h:I.As_h, d_eff:I.d_eff
   }));
@@ -3786,8 +3963,11 @@ function actualizarSismo(){
   // k_h ≈ a_c (en g, hacia horizontal). NCSE-02 admite k_h = a_c · g / g = a_c (adim)
   const kh_calc = a_c;
   if($('inKh')) $('inKh').value = kh_calc.toFixed(3);
+  // FIX 2026-11-04: k_v = 0,5·k_h (EC8-5 §7.3.2.2, con la componente vertical mayor de 0,6 veces la horizontal; NCSE-02 la
+  // toma 0,7); la zapata se comprueba con los dos signos
+  if($('inKv')) $('inKv').value = (0.5*kh_calc).toFixed(3);
   // info
-  if($('infoSismo')) $('infoSismo').innerHTML = 'a_b='+a_b_use.toFixed(3)+'g · S='+S_amp.toFixed(2)+' · a_c='+a_c.toFixed(3)+'g · k_h='+kh_calc.toFixed(3);
+  if($('infoSismo')) $('infoSismo').innerHTML = 'a_b='+a_b_use.toFixed(3)+'g · S='+S_amp.toFixed(2)+' · a_c='+a_c.toFixed(3)+'g · k_h='+kh_calc.toFixed(3)+' · k_v=±'+(0.5*kh_calc).toFixed(3);
 }
 
 /* ============================================================
@@ -3944,7 +4124,7 @@ setupTipoCim();
       else if(isPdfBtn(t))push({event:'exportar_pdf',calculadora:S.slug});
       else if(isCsvBtn(t))push({event:'exportar_csv',calculadora:S.slug});
       else if(/optimiz/i.test(t))push({event:'optimizar',calculadora:S.slug});
-    } else if(b.tagName==='A'&&b.href&&/seguridadestructural\.com$/.test(b.hostname)&&!/^calculadoras\./.test(b.hostname)){
+    } else if(b.tagName==='A'&&b.href&&/seguridadestructural\.com$/.test(b.hostname)&&!/^calculadoras\./.test(b.hostname)&&!/^\/calculadoras(\/|$)/.test(b.pathname)){
       push({event:'clic_web_principal',calculadora:S.slug,destino:b.href,cta:b.getAttribute('data-cta')||''});
     }
   },true);

@@ -277,7 +277,7 @@ window.SE_SITE={slug:'_privacidad',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic',
       else if(isPdfBtn(t))push({event:'exportar_pdf',calculadora:S.slug});
       else if(isCsvBtn(t))push({event:'exportar_csv',calculadora:S.slug});
       else if(/optimiz/i.test(t))push({event:'optimizar',calculadora:S.slug});
-    } else if(b.tagName==='A'&&b.href&&/seguridadestructural\.com$/.test(b.hostname)&&!/^calculadoras\./.test(b.hostname)){
+    } else if(b.tagName==='A'&&b.href&&/seguridadestructural\.com$/.test(b.hostname)&&!/^calculadoras\./.test(b.hostname)&&!/^\/calculadoras(\/|$)/.test(b.pathname)){
       push({event:'clic_web_principal',calculadora:S.slug,destino:b.href,cta:b.getAttribute('data-cta')||''});
     }
   },true);

@@ -230,7 +230,7 @@ footer{padding:14px 22px;background:var(--bg2);border-top:1px solid var(--border
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-04 08:33) -->
+<!-- SEO generado por publish.py (2026-11-04 09:52) -->
 <meta name="description" content="Comprueba el esfuerzo rasante vEdi frente a vRdi en juntas entre hormigones de distinta edad según CE 2021 (Anejo 19) y EC2 6.2.5, con armadura cruzante y PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/rasante-juntas-hormigon/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -1224,7 +1224,7 @@ setSys('solo');
       else if(isPdfBtn(t))push({event:'exportar_pdf',calculadora:S.slug});
       else if(isCsvBtn(t))push({event:'exportar_csv',calculadora:S.slug});
       else if(/optimiz/i.test(t))push({event:'optimizar',calculadora:S.slug});
-    } else if(b.tagName==='A'&&b.href&&/seguridadestructural\.com$/.test(b.hostname)&&!/^calculadoras\./.test(b.hostname)){
+    } else if(b.tagName==='A'&&b.href&&/seguridadestructural\.com$/.test(b.hostname)&&!/^calculadoras\./.test(b.hostname)&&!/^\/calculadoras(\/|$)/.test(b.pathname)){
       push({event:'clic_web_principal',calculadora:S.slug,destino:b.href,cta:b.getAttribute('data-cta')||''});
     }
   },true);

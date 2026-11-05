@@ -340,7 +340,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-05 11:27) -->
+<!-- SEO generado por publish.py (2026-11-05 11:36) -->
 <meta name="description" content="Muro de sótano de 1 a 3 niveles: empuje al reposo, viga continua, armado ELU, fisuración ELS, zapata y sismo según CE 2021 (Anejo 19) y CTE DB-SE-C. PDF y CSV.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-sotano/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -3682,9 +3682,9 @@ function comprobacionesOpt(SIT, I){
     sigma:      {ok: Zall.every(z => z.ok_sigma), eta: zS.ratio_sigma, dato: () => 'σ = '+f0(zS.sigma_max)+' kPa (admisible '+f0(zS.sigma_lim)+' kPa)'+sit(zS)},
     desliz:     {ok: Zall.every(z => z.ok_desliz), eta: zD.eta_desliz, dato: () => (zD.solera ? 'solera: N_Ed = '+f0(zD.SOL.N_sol_Ed)+' kN/m (N_Rd = '+f0(zD.SOL.N_sol_Rd)+' kN/m)' : 'FS = '+f2(zD.FS_desliz)+' (mínimo '+f2(zD.FSd_min)+')')+sit(zD)},
     vuelco:     {ok: Zall.every(z => z.ok_vuelco), eta: zV.eta_vuelco, dato: () => 'FS = '+f2(zV.FS_vuelco)+' (mínimo '+f2(zV.FSv_min)+')'+sit(zV)},
-    armado:     {ok: A.ok_rho_max && A.ok_sep_v && A.ok_sep_h && A.ok_phi_min, eta: 0,
+    armado:     {ok: A.ok_rho_max && A.ok_sep_v && A.ok_sep_h && A.ok_phi_min && !Z.solera_traccion, eta: 0,   // FIX 2026-11-05: también la solera a tracción
                  dato: () => [!A.ok_rho_max && 'cuantía vertical > 4 %', !(A.ok_sep_v && A.ok_sep_h) && 'separación de barras',
-                              !A.ok_phi_min && 'Ø vertical < 12 mm a una cara'].filter(Boolean).join(', ')}
+                              !A.ok_phi_min && 'Ø vertical < 12 mm a una cara', Z.solera_traccion && 'la reacción tira del muro hacia el terreno: la solera no la recoge'].filter(Boolean).join(', ')}
   };
   for(const k in C) if(!C[k].ok && !(C[k].eta > 1)) C[k].eta = Infinity;   // lo que no cumple cuenta con η > 1
   return C;
@@ -3840,7 +3840,9 @@ function renderOptimizadorResultado(opt){
   const confZap = c => 'espesor '+c.e_mm+' mm'+(I0.isLosa ? '' : ', B zapata '+f2(c.Bz)+' m, talón '+f2(c.Bt)+' m');
   const confK = (k, c) => ({sigma: 1, desliz: 1, vuelco: 1, geometria: 1})[k] ? confZap(c) : confMuro(c);   // lo que influye en cada una
   const eta = x => 'η = '+(isFinite(x) ? f2(x) : '∞');
-  const consejo = k => (k === 'sigma' && I0.isLosa) ? 'revisa la tensión admisible del terreno (Sec. 3) o las cargas sobre el muro (Sec. 7)' : OPT_COMP[k].c;
+  const consejo = k => (k === 'sigma' && I0.isLosa) ? 'revisa la tensión admisible del terreno (Sec. 3) o las cargas sobre el muro (Sec. 7)'
+    : (k === 'desliz' && I0.solera) ? 'aumenta el espesor o la f_ck de la solera (Sec. 3)'   // FIX 2026-11-05: con solera, el criterio es su compresión
+    : OPT_COMP[k].c;
   if(!opt.mejor){
     // FIX 2026-11-04: se explica qué lo impide (antes solo códigos como «horizontal» o «desliz»)
     const r = opt.rango;

@@ -340,7 +340,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-05 10:53) -->
+<!-- SEO generado por publish.py (2026-11-05 11:27) -->
 <meta name="description" content="Muro de sótano de 1 a 3 niveles: empuje al reposo, viga continua, armado ELU, fisuración ELS, zapata y sismo según CE 2021 (Anejo 19) y CTE DB-SE-C. PDF y CSV.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-sotano/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -485,6 +485,18 @@ window.SE_SITE={slug:'muro-sotano',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic',
         <div class="field"><label for="inHt">Altura tacón h<sub>t</sub></label><div class="field-row"><input type="number" id="inHt" step="0.05" value="0.30" min="0.10"><span class="unit">m</span></div></div>
         <div class="field"><label for="inBtac">Ancho tacón b<sub>t</sub></label><div class="field-row"><input type="number" id="inBtac" step="0.05" value="0.30" min="0.10"><span class="unit">m</span></div></div>
       </div>
+    </div>
+    <!-- FIX 2026-11-05: zapata arriostrada por la solera -->
+    <div class="toggle-row">
+      <input type="checkbox" id="inSolera">
+      <label for="inSolera" title="La solera del sótano, hormigonada contra el muro y continua hasta el muro opuesto (o anclada a él), trabaja como puntal: recibe la reacción horizontal de la base del muro en la cara superior de la zapata. El deslizamiento se comprueba como compresión de la solera, sin contar el rozamiento de la zapata, y esa reacción deja de volcar la zapata. La tensión del terreno se calcula con la envolvente de los dos caminos de la reacción (por la solera y por rozamiento). Actívelo solo si la solera: se hormigona directamente contra el muro (sin junta perimetral compresible, sin canaleta de drenaje en el encuentro ni lámina nodular por el intradós); apoya en el terreno en toda su superficie (no vale un forjado sanitario); es continua hasta el muro opuesto, sin juntas de dilatación, fosos ni rampas en la línea del empuje, o va anclada a zapatas interiores; y el sótano está cerrado por ambos lados (en un sótano abierto por un lado la solera no puede llevar el empuje al terreno por rozamiento). Si se rellena antes de hormigonar la solera, en esa fase la zapata debe resistir por rozamiento. Con muros opuestos de distinta altura, o con sismo, el desequilibrio entre los dos empujes lo resiste el cajón del sótano, que esta calculadora no comprueba.">Zapata arriostrada por la solera del sótano</label>
+    </div>
+    <div id="rowSolera" style="display:none">
+      <div class="grid2">
+        <div class="field" title="Espesor de la solera que apoya contra el muro. Típico: 150-200 mm."><label for="inEsol">Espesor solera e<sub>s</sub></label><div class="field-row"><input type="number" id="inEsol" step="10" value="150" min="100" max="500"><span class="unit">mm</span></div></div>
+        <div class="field" title="Resistencia del hormigón de la solera (en masa o armada). Se comprueba su compresión como hormigón en masa: f_cd,pl = 0,8·f_ck/γ_c (CE 2021 Anejo 19 §12.3.1)."><label for="inFckSol">f<sub>ck</sub> solera</label><div class="field-row"><input type="number" id="inFckSol" step="5" value="20" min="15" max="50"><span class="unit">MPa</span></div></div>
+      </div>
+      <div class="info-line">La solera recibe la reacción horizontal de la base del muro (con sismo, también las inercias de la zapata y de las tierras del talón); no se cuenta el rozamiento de la zapata. Solo vale con la solera hormigonada directamente contra el muro (sin junta compresible, canaleta ni lámina nodular en el encuentro), apoyada en el terreno, continua hasta el muro opuesto (o anclada) y con el sótano cerrado por ambos lados. Si se rellena antes de hormigonar la solera, en esa fase la zapata debe resistir por rozamiento.</div>
     </div>
   </div>
   <div id="rowCimLosa" style="display:none">
@@ -918,9 +930,9 @@ window.SE_SITE={slug:'muro-sotano',gtm:'GTM-KTK4N7T',ga4:'',consentMode:'basic',
     </article>
     <article class="seo-card">
       <h2 id="como-usar">Cómo usar la calculadora</h2>
-      <ol><li>Elige el número de sótanos (1, 2 o 3), la tipología a una o dos caras, las alturas de cada tramo y el vuelo superior si existe. Por defecto el muro es una viga continua (α = 0 en los forjados intermedios), con cierta restricción en coronación y empotrado en la cimentación.</li><li>Define el espesor del muro por tramo, el tipo de cimentación (zapata centrada, excéntrica, con tacón o losa), sus dimensiones y la tensión admisible del terreno.</li><li>Introduce el terreno (γ, φ&#x27; y c&#x27;), el modelo de empuje (al reposo por defecto, o activo de Rankine o de Coulomb con δ, β y α), la sobrecarga en superficie, el nivel freático y, si procede, la acción sísmica (provincia, tipo de suelo y coeficientes de la NCSE-02).</li><li>Añade las cargas: axiles permanente y variable totales de los forjados que apoyan en el muro, momentos en coronación y en forjados intermedios, y momento de viga centradora en la base.</li><li>Selecciona los materiales y la clase de exposición, que asigna recubrimientos orientativos y la wmax de la tabla 27.2. Propón la armadura de cada tramo: Ø y separación vertical, Ø y separación horizontal, y refuerzo de arranque con su longitud.</li><li>Pulsa CALCULAR. La calculadora muestra el aprovechamiento de cada comprobación y, si alguna no cumple, indica cuál. Usa OPTIMIZAR para buscar el espesor y la armadura más económicos, compara variantes y exporta PDF, CSV o el proyecto en JSON.</li></ol>
+      <ol><li>Elige el número de sótanos (1, 2 o 3), la tipología a una o dos caras, las alturas de cada tramo y el vuelo superior si existe. Por defecto el muro es una viga continua (α = 0 en los forjados intermedios), con cierta restricción en coronación y empotrado en la cimentación.</li><li>Define el espesor del muro por tramo, el tipo de cimentación (zapata centrada, excéntrica, con tacón o losa), sus dimensiones y la tensión admisible del terreno. Si la solera del sótano se hormigona contra el muro y es continua hasta el muro opuesto (o va anclada), marca «Zapata arriostrada por la solera»: la solera recibe la reacción horizontal de la base y el deslizamiento se comprueba como compresión de la solera.</li><li>Introduce el terreno (γ, φ&#x27; y c&#x27;), el modelo de empuje (al reposo por defecto, o activo de Rankine o de Coulomb con δ, β y α), la sobrecarga en superficie, el nivel freático y, si procede, la acción sísmica (provincia, tipo de suelo y coeficientes de la NCSE-02).</li><li>Añade las cargas: axiles permanente y variable totales de los forjados que apoyan en el muro, momentos en coronación y en forjados intermedios, y momento de viga centradora en la base.</li><li>Selecciona los materiales y la clase de exposición, que asigna recubrimientos orientativos y la wmax de la tabla 27.2. Propón la armadura de cada tramo: Ø y separación vertical, Ø y separación horizontal, y refuerzo de arranque con su longitud.</li><li>Pulsa CALCULAR. La calculadora muestra el aprovechamiento de cada comprobación y, si alguna no cumple, indica cuál. Usa OPTIMIZAR para buscar el espesor y la armadura más económicos, compara variantes y exporta PDF, CSV o el proyecto en JSON.</li></ol>
       <h3>Hipótesis y limitaciones</h3>
-      <ul><li>El muro se modela como viga continua vertical por metro de ancho, con apoyos indesplazables en cada forjado y rigidez de cada tramo proporcional al cubo de su espesor. La restricción al giro en coronación, forjados intermedios y cimentación se introduce con el coeficiente α (resorte rotacional).</li><li>La presión del terreno es K0·σ&#x27;v al reposo (sin reducción por cohesión) o Ka·σ&#x27;v − 2·c&#x27;·√Ka en estado activo, nunca inferior a 0,25·σ&#x27;v. Se suman la presión hidrostática bajo el nivel freático y, con sismo, el incremento sísmico de muro rígido. La sobrecarga en superficie se incluye en σ&#x27;v, y las tierras situadas junto al vuelo superior cargan también el muro inferior.</li><li>Los esfuerzos del empuje se mayoran con γE = 1,5 en ELU, conforme al formato del DB-SE que admite el CTE DB-SE-C (apartado 2.4.1). En fisuración, el empuje de tierras y agua se toma como permanente y la sobrecarga con el coeficiente ψ elegido.</li><li>La zapata se comprueba con la reacción horizontal y el momento de empotramiento en la base, rozamiento base-terreno tan(2φ&#x27;/3), empuje pasivo solo sobre el tacón y sin acciones variables favorables en deslizamiento y vuelco. Con losa de cimentación solo se estima la tensión media. El armado de la zapata no se dimensiona: la medición usa una cuantía estimada.</li><li>La altura total queda limitada a 12 m y cada tramo a entre 2,20 y 5,00 m. Con sismo, el muro atado por los forjados se calcula como muro rígido (Eurocódigo 8-5, apartado 7.3.2.1 y anejo E.9): incremento uniforme Δp = kh·γ·H más la inercia del propio muro, con kv en los dos sentidos; si hay talud se toma Mononobe-Okabe cuando da más. La situación persistente y la sísmica se comprueban por separado (CTE DB-SE-C, tabla 2.1).</li><li>Los resultados son orientativos y deben ser revisados y validados por un técnico competente, con el estudio geotécnico del emplazamiento, antes de su aplicación en proyecto.</li></ul>
+      <ul><li>El muro se modela como viga continua vertical por metro de ancho, con apoyos indesplazables en cada forjado y rigidez de cada tramo proporcional al cubo de su espesor. La restricción al giro en coronación, forjados intermedios y cimentación se introduce con el coeficiente α (resorte rotacional).</li><li>La presión del terreno es K0·σ&#x27;v al reposo (sin reducción por cohesión) o Ka·σ&#x27;v − 2·c&#x27;·√Ka en estado activo, nunca inferior a 0,25·σ&#x27;v. Se suman la presión hidrostática bajo el nivel freático y, con sismo, el incremento sísmico de muro rígido. La sobrecarga en superficie se incluye en σ&#x27;v, y las tierras situadas junto al vuelo superior cargan también el muro inferior.</li><li>Los esfuerzos del empuje se mayoran con γE = 1,5 en ELU, conforme al formato del DB-SE que admite el CTE DB-SE-C (apartado 2.4.1). En fisuración, el empuje de tierras y agua se toma como permanente y la sobrecarga con el coeficiente ψ elegido.</li><li>La zapata se comprueba con la reacción horizontal y el momento de empotramiento en la base, rozamiento base-terreno tan(2φ&#x27;/3), empuje pasivo solo sobre el tacón y sin acciones variables favorables en deslizamiento y vuelco. Con la zapata arriostrada por la solera, esta recibe la reacción horizontal en la cara superior de la zapata: se comprueba su compresión como hormigón en masa (fcd,pl = 0,8·fck/γc, Anejo 19 §12.3.1), no se cuenta el rozamiento y esa reacción deja de volcar la zapata. Con losa de cimentación solo se estima la tensión media. El armado de la zapata no se dimensiona: la medición usa una cuantía estimada.</li><li>La altura total queda limitada a 12 m y cada tramo a entre 2,20 y 5,00 m. Con sismo, el muro atado por los forjados se calcula como muro rígido (Eurocódigo 8-5, apartado 7.3.2.1 y anejo E.9): incremento uniforme Δp = kh·γ·H más la inercia del propio muro, con kv en los dos sentidos; si hay talud se toma Mononobe-Okabe cuando da más. La situación persistente y la sísmica se comprueban por separado (CTE DB-SE-C, tabla 2.1).</li><li>Los resultados son orientativos y deben ser revisados y validados por un técnico competente, con el estudio geotécnico del emplazamiento, antes de su aplicación en proyecto.</li></ul>
     </article>
   </div>
   <article class="seo-card">
@@ -1107,6 +1119,7 @@ function setupEvents(){
     $('rowBetaAlfa').style.display = c ? '' : 'none';
   });
   $('inNF').addEventListener('change', () => $('rowNF').style.display = $('inNF').checked ? '' : 'none');
+  $('inSolera').addEventListener('change', () => $('rowSolera').style.display = $('inSolera').checked ? '' : 'none');   // FIX 2026-11-05
   $('inSismo').addEventListener('change', () => {
     $('rowSismo').style.display = $('inSismo').checked ? '' : 'none';
     if($('inSismo').checked) actualizarSismo();
@@ -1158,6 +1171,11 @@ function recolectar(){
     Bp = Math.max(0, Bp);
     if(isTacon){ h_t = gv('inHt'); b_t = gv('inBtac'); } else { h_t = 0; b_t = 0; }
   }
+  // FIX 2026-11-05: zapata arriostrada por la solera del sótano (recibe la reacción horizontal de la base)
+  const solera = !isLosa && $('inSolera').checked;
+  const e_sol = solera ? gv('inEsol')/1000 : 0;
+  const fck_sol = solera ? gv('inFckSol') : 0;
+  if(solera && !(e_sol > 0 && fck_sol > 0)){ setWarn('Solera: indique un espesor y una resistencia f_ck mayores que cero'); return null; }
   // Tipología cara
   const caras = parseInt(gvs('inCaras'));
   if(caras === 1 && !isExcen && !isLosa){
@@ -1225,7 +1243,7 @@ function recolectar(){
   setWarn(''); // limpiar warns puntuales
   return {
     niveles, h, H, e_tramo, e_muro, h_v, e_v, vueloSup, b, caras,
-    tipoCim, isLosa, isTacon, isExcen, Bz, h_z, Bt, Bp, h_t, b_t, sigma_adm,
+    tipoCim, isLosa, isTacon, isExcen, Bz, h_z, Bt, Bp, h_t, b_t, sigma_adm, solera, e_sol, fck_sol,
     alpha_cim, alpha_coron, alpha_int,
     modelo, gamma, phi, c, delta, beta, alfa,
     qs, NFactivo, z_NF, sismoActivo, kh, kv,
@@ -2004,6 +2022,7 @@ function calcZapata(I, S, E){
   const sis = !!I.sismoActivo;
   const f_sig = sis ? 1.5 : 1.0, FSd_min = sis ? 1.1 : 1.5, FSv_min = sis ? 1.2/0.9 : 2.0;
   const fv = sis ? 1 - I.kv : 1, kh_s = sis ? I.kh : 0;
+  const solera = !I.isLosa && !!I.solera;   // FIX 2026-11-05: zapata arriostrada por la solera
   const R_inf = S.reacciones[S.reacciones.length-1];
   const H_zap = Math.abs(R_inf.R);
   const M_zap = Math.abs(S.M_zapata_emp);
@@ -2030,7 +2049,7 @@ function calcZapata(I, S, E){
       F_friccion: 0, FS_desliz: 99, ok_desliz: true,
       M_estab: 0, M_vuelco: 0, FS_vuelco: 99, ok_vuelco: true,
       sis, sigma_lim: f_sig*I.sigma_adm, FSd_min, FSv_min, eta_desliz: 0, eta_vuelco: 0, fv, H_iner: 0, M_iner: 0, H_desl: H_zap,
-      kv: sis ? I.kv : 0
+      kv: sis ? I.kv : 0, solera: false, SOL: null, M_H: 0, M_H_cl: 0, sigma_camino: '', vuelco_na: false, solera_traccion: false
     };
   }
 
@@ -2045,6 +2064,15 @@ function calcZapata(I, S, E){
   // superior del talón (brazo h_z); su vuelco lo recoge el muro con el empuje E.9, que llega en M_zap.
   const H_iner = kh_s*(W_zap + W_tierras_talon + W_tacon);
   const M_iner = kh_s*(W_zap*I.h_z/2 + W_tierras_talon*I.h_z - W_tacon*I.h_t/2);
+  // FIX 2026-11-05: momento sobre la base de las fuerzas horizontales (hacia la puntera). Sin solera, H_zap·h_z más las
+  // inercias. Con la zapata arriostrada por la solera, esta recibe H_zap y las inercias en la cara superior de la zapata, a la
+  // misma altura que H_zap: queda solo lo que las inercias tienen por debajo de esa altura (negativo: estabiliza).
+  // (revisión 2026-11-05) la parte de las inercias por debajo de la solera no se cuenta como estabilizadora: M_H ≥ 0
+  const M_H_cl = H_zap*I.h_z + M_iner;
+  const M_H = solera ? Math.max(0, M_iner - H_iner*I.h_z) : M_H_cl;
+  // (revisión 2026-11-05) un puntal solo trabaja a compresión: si la reacción de la base tira del muro hacia el terreno, la
+  // solera no la recoge
+  const solera_traccion = solera && R_inf.R < -1e-9;
 
   const N_muro_ELS = I.Ngk + I.Nqk;
   const N_muro_ELU = 1.35*I.Ngk + 1.5*I.Nqk;
@@ -2077,11 +2105,19 @@ function calcZapata(I, S, E){
     }
     return {e_x: e, sigma_max: smax, sigma_min: smin, dentroNucleo: nucleo};
   }
-  const M_con = fv*((N_muro_ELS + W_muro)*e_horiz_muro + (W_tierras_talon + W_q_talon)*e_horiz_talon) - M_vigaC - M_zap - H_zap*I.h_z - M_iner;
-  const M_sin = fv*((I.Ngk + W_muro)*e_horiz_muro + W_tierras_talon*e_horiz_talon) - M_vigaC - M_zap - H_zap*I.h_z - M_iner;
-  const T_con = tensiones(N_total, M_con), T_sin = tensiones(N_estab, M_sin);
-  const T = (T_sin.sigma_max > T_con.sigma_max) ? T_sin : T_con; // se toma la situación más desfavorable
-  const caso_sigma = (T === T_sin) ? 'sin acciones variables verticales' : 'con acciones variables';
+  const tensEnv = MH => {
+    const Mc = fv*((N_muro_ELS + W_muro)*e_horiz_muro + (W_tierras_talon + W_q_talon)*e_horiz_talon) - M_vigaC - M_zap - MH;
+    const Ms = fv*((I.Ngk + W_muro)*e_horiz_muro + W_tierras_talon*e_horiz_talon) - M_vigaC - M_zap - MH;
+    const Tc = tensiones(N_total, Mc), Ts = tensiones(N_estab, Ms);
+    return (Ts.sigma_max > Tc.sigma_max) ? Object.assign(Ts, {caso: 'sin acciones variables verticales'}) : Object.assign(Tc, {caso: 'con acciones variables'});   // la más desfavorable
+  };
+  // FIX 2026-11-05 (revisión): con la solera, la tensión del terreno se toma con la envolvente de los dos caminos de la reacción
+  // horizontal: por la solera (M_H) y por rozamiento de la zapata (H_zap·h_z + inercias), porque el relleno suele cargar antes
+  // de hormigonar la solera y la retracción o las juntas pueden retrasar la entrada del puntal. Deslizamiento y vuelco sí se
+  // confían a la solera.
+  let T = tensEnv(M_H), sigma_camino = solera ? 'solera' : '';
+  if(solera){ const T2 = tensEnv(M_H_cl); if(T2.sigma_max > T.sigma_max){ T = T2; sigma_camino = 'rozamiento'; } }
+  const caso_sigma = T.caso + (solera ? (sigma_camino === 'solera' ? ', H por la solera' : ', H por rozamiento de la zapata: envolvente') : '');
   const e_x = T.e_x, sigma_max = T.sigma_max, sigma_min = T.sigma_min, dentroNucleo = T.dentroNucleo;
   const ratio_sigma = sigma_max / (f_sig*I.sigma_adm);
   const ok_sigma = ratio_sigma <= 1.0;
@@ -2098,14 +2134,31 @@ function calcZapata(I, S, E){
     F_friccion += F_pasivo;
   }
   const H_desl = H_zap + H_iner;
-  const FS_desliz = (H_desl>0) ? F_friccion/H_desl : 99;
-  const ok_desliz = FS_desliz >= FSd_min;
+  // FIX 2026-11-05: con la zapata arriostrada, la solera (puntal hormigonado contra el muro) recibe H_desl: se comprueba su
+  // compresión como hormigón en masa, f_cd,pl = 0,8·f_ck/γ_c (CE 2021 Anejo 19 §12.3.1), con el γ del empuje (1,5 en la
+  // situación persistente, 1,0 en la sísmica), sin contar el rozamiento de la zapata (queda como reserva).
+  let FS_desliz, ok_desliz, eta_desliz, SOL = null;
+  if(solera){
+    const g_sol = sis ? 1.0 : GAMMA_E;
+    const fcd_pl = 0.8*I.fck_sol/I.gc;            // MPa
+    const N_sol_Ed = g_sol*H_desl;                // kN/m
+    const N_sol_Rd = fcd_pl*I.e_sol*1000;         // kN/m: MPa · mm (por metro de muro)
+    eta_desliz = N_sol_Ed/N_sol_Rd;
+    FS_desliz = (N_sol_Ed>0) ? N_sol_Rd/N_sol_Ed : 99;
+    ok_desliz = eta_desliz <= 1.0;
+    SOL = {H_sol: H_desl, g_sol, N_sol_Ed, N_sol_Rd, fcd_pl, sigma_sol: N_sol_Ed/(I.e_sol*1000)};   // σ_c en MPa
+  } else {
+    FS_desliz = (H_desl>0) ? F_friccion/H_desl : 99;
+    ok_desliz = FS_desliz >= FSd_min;
+    eta_desliz = FSd_min/FS_desliz;
+  }
 
   // Vuelco respecto a la arista de la puntera (x = 0). Estabilizador: pesos permanentes por su brazo; desestabilizador:
   // M_zap + H_zap·h_z. Criterio CTE DB-SE-C tabla 2.1 (γ_E = 1.8 desestab. / 0.9 estab.) ⇒ FS ≥ 2.0.
   const M_estab = fv*((I.Ngk + W_muro)*x_eje_muro + W_zap*x_centro + W_tierras_talon*x_talon + W_tacon*x_centro);
-  const M_vuelco = M_zap + H_zap*I.h_z + M_iner;
-  const FS_vuelco = (M_vuelco>0) ? M_estab/M_vuelco : 99;
+  const M_vuelco = M_zap + M_H;   // FIX 2026-11-05: con solera, H no vuelca la zapata
+  const vuelco_na = !(M_vuelco > 0);   // FIX 2026-11-05: sin momento de vuelco (base articulada con solera) no procede
+  const FS_vuelco = vuelco_na ? 99 : M_estab/M_vuelco;
   const ok_vuelco = FS_vuelco >= FSv_min;
 
   return {
@@ -2114,8 +2167,8 @@ function calcZapata(I, S, E){
     e_x, dentroNucleo, sigma_max, sigma_min, sigma_adm: I.sigma_adm, ratio_sigma, ok_sigma, caso_sigma,
     F_friccion, F_pasivo, FS_desliz, ok_desliz,
     M_estab, M_vuelco, FS_vuelco, ok_vuelco,
-    sis, sigma_lim: f_sig*I.sigma_adm, FSd_min, FSv_min, eta_desliz: FSd_min/FS_desliz, eta_vuelco: FSv_min/FS_vuelco,
-    fv, H_iner, M_iner, H_desl, kv: sis ? I.kv : 0
+    sis, sigma_lim: f_sig*I.sigma_adm, FSd_min, FSv_min, eta_desliz, eta_vuelco: FSv_min/FS_vuelco,
+    fv, H_iner, M_iner, H_desl, kv: sis ? I.kv : 0, solera, SOL, M_H, M_H_cl, sigma_camino, vuelco_na, solera_traccion
   };
 }
 
@@ -2186,7 +2239,8 @@ function calcular(){
   for(const [Zx, suf] of sitZ){
     if(!Zx.isLosa){
       comps.push({n:'Tensión en el terreno'+suf+' (σ_max = '+f1(Zx.sigma_max)+' kPa, σ_adm = '+Zx.sigma_adm+' kPa'+(Zx.sis ? ' ×1,5' : '')+')', r:Zx.ratio_sigma});
-      comps.push({n:'Deslizamiento'+suf+' (FS = '+f2(Zx.FS_desliz)+', mínimo '+(Zx.sis ? '1.1' : '1.5')+')', r:Zx.eta_desliz});
+      if(Zx.solera) comps.push({n:'Solera que arriostra la zapata'+suf+' (N_Ed = '+f0(Zx.SOL.N_sol_Ed)+' kN/m, N_Rd = '+f0(Zx.SOL.N_sol_Rd)+' kN/m)', r:Zx.eta_desliz});   // FIX 2026-11-05
+      else comps.push({n:'Deslizamiento'+suf+' (FS = '+f2(Zx.FS_desliz)+', mínimo '+(Zx.sis ? '1.1' : '1.5')+')', r:Zx.eta_desliz});
       comps.push({n:'Vuelco'+suf+' (FS = '+f2(Zx.FS_vuelco)+', mínimo '+(Zx.sis ? '1.33' : '2.0')+')', r:Zx.eta_vuelco});
     } else {
       comps.push({n:'Tensión media en la losa'+suf+' (σ = '+f1(Zx.sigma_max)+' kPa, σ_adm = '+Zx.sigma_adm+' kPa'+(Zx.sis ? ' ×1,5' : '')+')', r:Zx.ratio_sigma});
@@ -2195,14 +2249,19 @@ function calcular(){
   const extra = [];
   if(!A.ok_rho_max) extra.push('Cuantía vertical máxima (ρ_v = '+f2(A.rho_total*100)+' % > 4 %)');
   if(!A.ok_sep_v || !A.ok_sep_h) extra.push('Separación máxima de barras (vertical ≤ mín(3e; 400) mm, horizontal ≤ 400 mm)');
+  if(Z.solera_traccion) extra.push('La reacción de la base tira del muro hacia el terreno: la solera, que solo trabaja a compresión, no la recoge (desactive «Zapata arriostrada por la solera»)');   // FIX 2026-11-05
   const fallos = comps.filter(c => !(c.r <= 1.0)).map(c => c.n + ' — η = ' + (isFinite(c.r) ? f2(c.r) : '∞')).concat(extra);
   const finitas = comps.filter(c => isFinite(c.r));
   const det = finitas.reduce((a,c) => c.r > a.r ? c : a, finitas[0]);
   const ratioMax = det ? det.r : Infinity;
   const gobierna = det ? det.n + ' — η = ' + f3(det.r) : '';
   const okGlobal = fallos.length === 0;
+  // FIX 2026-11-05: si falla el deslizamiento con la zapata sin arriostrar, se propone la solera
+  const sugerencias = [];
+  if(!I.isLosa && !I.solera && [Z].concat(Zm ? [Zm] : [], Zp ? [Zp] : []).some(z => !z.ok_desliz))
+    sugerencias.push('Deslizamiento: si la solera del sótano se hormigona contra el muro y es continua hasta el muro opuesto (o va anclada), active «Zapata arriostrada por la solera del sótano» en la sección 3. La solera recibe la reacción horizontal de la base y la zapata deja de deslizar y de volcar por ella.');
 
-  RES = {I, E, S, A, F, Z, Zm, Zp, ratioMax, okGlobal, fallos, gobierna};
+  RES = {I, E, S, A, F, Z, Zm, Zp, ratioMax, okGlobal, fallos, gobierna, sugerencias};
   $('btnPdf').disabled = false;
   $('btnCsv').disabled = false;
   $('btnSaveV1').disabled = false;
@@ -2230,6 +2289,7 @@ function renderResultados(R){
   html += '<div style="margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--text2)">Ratio máx η = <span class="'+ratioCls+'" style="font-weight:600">'+f3(R.ratioMax)+'</span> · '+I.niveles+' nivel'+(I.niveles>1?'es':'')+' · H = '+f2(I.H)+' m · '+(I.modelo==='reposo'?'K_0':'K_a')+' = '+f3(E.Ka)+(I.sismoActivo?' · sismo: Δp = '+f1(E.p_E9)+' kPa (EC8-5 E.9)'+(E.h0 > 0 ? ' · vuelo K_AE = '+f3(E.K_AE) : ''):'')+'</div>'
     +(R.fallos && R.fallos.length ? '<div style="margin-top:8px;font-size:12px;line-height:1.55"><span class="red" style="font-weight:600">No cumple ('+R.fallos.length+'):</span><br>'+R.fallos.map(x => '· '+x).join('<br>')+'</div>'
       : '<div style="margin-top:8px;font-size:12px"><span class="green" style="font-weight:600">Comprobación determinante:</span> '+(R.gobierna||'—')+'</div>')
+    +(R.sugerencias && R.sugerencias.length ? '<div style="margin-top:6px;font-size:12px;line-height:1.5;color:#d9a441">💡 '+R.sugerencias.join('<br>')+'</div>' : '')   // FIX 2026-11-05
     +'</div>';
   html += '<div>'+okBdg+'</div></div></div>';
 
@@ -2276,14 +2336,15 @@ function renderResultados(R){
   html += '<tr><td class="sk">N total vertical</td><td class="sv2">'+f1(Z.N_total)+' kN/m</td></tr>';
   if(!Z.isLosa) html += '<tr><td class="sk">N estabilizador (sin acciones variables)</td><td class="sv2">'+f1(Z.N_estab)+' kN/m</td></tr>';
   html += '<tr><td class="sk">σ máx terreno</td><td class="'+(Z.ok_sigma?'green':'red')+'">'+f1(Z.sigma_max)+' kPa (η='+f2(Z.ratio_sigma)+', σ_adm='+Z.sigma_adm+' kPa'+(Z.sis?' ×1,5, sismo':'')+(Z.caso_sigma?', '+Z.caso_sigma:'')+')</td></tr>';
-  html += '<tr><td class="sk">FS deslizamiento</td><td class="'+(Z.ok_desliz?'green':'red')+'">'+f2(Z.FS_desliz)+' (≥'+(Z.sis?'1.1, sismo':'1.5')+')</td></tr>';
-  html += '<tr><td class="sk">FS vuelco</td><td class="'+(Z.ok_vuelco?'green':'red')+'">'+f2(Z.FS_vuelco)+' (≥'+(Z.sis?'1.33, sismo':'2.0')+' · CTE DB-SE-C tabla 2.1)</td></tr>';
+  if(Z.solera) html += '<tr><td class="sk">Deslizamiento: solera</td><td class="'+(Z.ok_desliz?'green':'red')+'">H a la solera = '+f1(Z.SOL.H_sol)+' kN/m · N_Ed = '+f1(Z.SOL.N_sol_Ed)+' ≤ N_Rd = '+f0(Z.SOL.N_sol_Rd)+' kN/m (σ_c = '+f2(Z.SOL.sigma_sol)+' MPa, η='+f2(Z.eta_desliz)+')</td></tr>';   // FIX 2026-11-05
+  else html += '<tr><td class="sk">FS deslizamiento</td><td class="'+(Z.ok_desliz?'green':'red')+'">'+f2(Z.FS_desliz)+' (≥'+(Z.sis?'1.1, sismo':'1.5')+')</td></tr>';
+  html += '<tr><td class="sk">FS vuelco</td><td class="'+(Z.ok_vuelco?'green':'red')+'">'+(Z.vuelco_na ? 'no procede (sin momento de vuelco: la solera recoge H)' : f2(Z.FS_vuelco)+' (≥'+(Z.sis?'1.33, sismo':'2.0')+' · CTE DB-SE-C tabla 2.1)')+'</td></tr>';
   html += '<tr><td class="sk">Excentricidad e_x</td><td class="sv2">'+f3(Z.e_x)+' m ('+(Z.dentroNucleo?'dentro núcleo central':'fuera núcleo - distribución triangular')+')</td></tr>';
   if(R.Zm){   // FIX 2026-11-04: situación sísmica con el otro signo de k_v
     const P = R.Zm, kvT = 'Sismo con k_v = '+f3(P.kv)+': ';
     html += '<tr><td class="sk">'+kvT+'σ máx terreno</td><td class="'+(P.ok_sigma?'green':'red')+'">'+f1(P.sigma_max)+' kPa (η='+f2(P.ratio_sigma)+', σ_adm='+P.sigma_adm+' kPa ×1,5)</td></tr>';
     if(!P.isLosa){
-      html += '<tr><td class="sk">'+kvT+'FS deslizamiento</td><td class="'+(P.ok_desliz?'green':'red')+'">'+f2(P.FS_desliz)+' (≥1.1)</td></tr>';
+      html += '<tr><td class="sk">'+kvT+(P.solera?'solera':'FS deslizamiento')+'</td><td class="'+(P.ok_desliz?'green':'red')+'">'+(P.solera ? 'N_Ed = '+f1(P.SOL.N_sol_Ed)+' kN/m, η='+f2(P.eta_desliz) : f2(P.FS_desliz)+' (≥1.1)')+'</td></tr>';
       html += '<tr><td class="sk">'+kvT+'FS vuelco</td><td class="'+(P.ok_vuelco?'green':'red')+'">'+f2(P.FS_vuelco)+' (≥1.33)</td></tr>';
     }
   }
@@ -2291,7 +2352,7 @@ function renderResultados(R){
     const P = R.Zp;
     html += '<tr><td class="sk">Sin sismo: σ máx terreno</td><td class="'+(P.ok_sigma?'green':'red')+'">'+f1(P.sigma_max)+' kPa (η='+f2(P.ratio_sigma)+', σ_adm='+P.sigma_adm+' kPa'+(P.caso_sigma?', '+P.caso_sigma:'')+')</td></tr>';
     if(!P.isLosa){
-      html += '<tr><td class="sk">Sin sismo: FS deslizamiento</td><td class="'+(P.ok_desliz?'green':'red')+'">'+f2(P.FS_desliz)+' (≥1.5)</td></tr>';
+      html += '<tr><td class="sk">Sin sismo: '+(P.solera?'solera':'FS deslizamiento')+'</td><td class="'+(P.ok_desliz?'green':'red')+'">'+(P.solera ? 'N_Ed = '+f1(P.SOL.N_sol_Ed)+' kN/m, η='+f2(P.eta_desliz) : f2(P.FS_desliz)+' (≥1.5)')+'</td></tr>';
       html += '<tr><td class="sk">Sin sismo: FS vuelco</td><td class="'+(P.ok_vuelco?'green':'red')+'">'+f2(P.FS_vuelco)+' (≥2.0)</td></tr>';
     }
   }
@@ -2314,6 +2375,7 @@ function renderResultados(R){
   html += '<strong>EC2 (EN 1992-1-1)</strong> · §6.2 cortante · §7.3 fisuración · §9.6 muros<br>';
   html += '<strong>CTE DB-SE-C</strong> · cap. 4 cimentaciones directas · cap. 6 elementos de contención (6.2.4 reposo, 6.2.5 empujes, 6.3.3.3.5 muros de sótano) · tabla 2.1 coeficientes<br>';
   html += '<strong>NCSE-02 / EC8-5</strong> · sismo, si se activa: acción sísmica de la NCSE-02; muro de sótano rígido de EC8-5 (§7.3.2.1 y anejo E.9) con inercias y k_v; Mononobe-Okabe en el vuelo<br>';   // FIX 2026-11-04
+  if(I.solera) html += '<strong>CE 2021 Anejo 19 §12.3.1</strong> · solera que arriostra la zapata: compresión como hormigón en masa, f_cd,pl = 0,8·f_ck/γ_c<br>';   // FIX 2026-11-05
   html += '</div></div>';
 
   $('panelOut').innerHTML = html;
@@ -2401,14 +2463,17 @@ function devSteps(I, E, S, A, F, Z, Zp, Zm){
   if(!Z.isLosa) h += step('Z4b','N estabilizador (sin N_Qk ni sobrecarga sobre el talón; CTE DB-SE-C 2.3.2)', f1(Z.N_estab)+' kN/m');
   if(Z.sis && !Z.isLosa) h += step('Z4c','Sismo: inercias k_h·(W_zap + W_tierras talón + W_tacón) hacia la puntera; la de las tierras del talón, como cortante en su cara superior (brazo h_z), porque su vuelco lo recoge el muro atado; la del muro llega en H_zap · pesos y cargas ×(1 − k_v) = ×'+f3(Z.fv)+(Zm ? ' (y con el otro signo de k_v, más abajo)' : '')+(I.isTacon ? ' · pasivo del tacón con K_PE' : ''), f1(Z.H_iner)+' kN/m');   // FIX 2026-11-04
   h += step('Z5','Excentricidad e_x', f3(Z.e_x)+' m'+(Z.dentroNucleo?' (núcleo central)':' (fuera núcleo)'));
+  if(Z.solera) h += step('Z5b','Tensiones con la solera: envolvente de los dos caminos de la reacción horizontal, por la solera (M_H = '+f1(Z.M_H)+' kN·m/m) y por rozamiento de la zapata (H_zap·h_z + inercias = '+f1(Z.M_H_cl)+' kN·m/m); rige '+(Z.sigma_camino === 'solera' ? 'la solera' : 'el rozamiento'), '');   // FIX 2026-11-05
   h += step('Z6','σ_max = '+f1(Z.sigma_max)+' kPa ('+(Z.caso_sigma||'—')+') · σ_adm = '+Z.sigma_adm+' kPa'+(Z.sis ? ' ×1,5 (γ_R 2,0 en lugar de 3,0)' : ''), 'η='+f2(Z.ratio_sigma), Z.ok_sigma?'fin':'err');
-  h += step('Z7','FS deslizamiento = (tan(2φ/3)·N_estab + E_p,tacón)/'+(Z.sis ? '(H + inercias) ≥ 1.1' : 'H ≥ 1.5'), f2(Z.FS_desliz), Z.ok_desliz?'fin':'err');
-  h += step('Z8','FS vuelco = M_estab/(M_zap + H_zap·h_z'+(Z.sis ? ' + M_inercias) ≥ 1.2/0.9 = 1.33' : ') ≥ 2.0')+' (CTE DB-SE-C tabla 2.1)', f2(Z.FS_vuelco), Z.ok_vuelco?'fin':'err');
+  // FIX 2026-11-05: zapata arriostrada por la solera
+  if(Z.solera) h += step('Z7','Deslizamiento: la solera (e_s = '+f0(I.e_sol*1000)+' mm, f_ck = '+I.fck_sol+' MPa), hormigonada contra el muro, recibe H = '+f1(Z.SOL.H_sol)+' kN/m'+(Z.sis ? ' (reacción + inercias)' : '')+' · N_Ed = '+f2(Z.SOL.g_sol)+'·H = '+f1(Z.SOL.N_sol_Ed)+' kN/m ≤ N_Rd = f_cd,pl·e_s = '+f2(Z.SOL.fcd_pl)+'·'+f0(I.e_sol*1000)+' = '+f0(Z.SOL.N_sol_Rd)+' kN/m (f_cd,pl = 0,8·f_ck/γ_c, Anejo 19 §12.3.1) · '+(I.isTacon ? 'rozamiento y pasivo del tacón disponibles' : 'rozamiento disponible')+' '+f1(Z.F_friccion)+' kN/m, no contado', 'η='+f2(Z.eta_desliz), Z.ok_desliz?'fin':'err');
+  else h += step('Z7','FS deslizamiento = (tan(2φ/3)·N_estab + E_p,tacón)/'+(Z.sis ? '(H + inercias) ≥ 1.1' : 'H ≥ 1.5'), f2(Z.FS_desliz), Z.ok_desliz?'fin':'err');
+  h += step('Z8','FS vuelco = M_estab/('+(Z.solera ? 'M_zap'+(Z.sis ? ' + M_inercias − H_inercias·h_z' : '')+'; la solera recoge H en la cara superior de la zapata' : 'M_zap + H_zap·h_z'+(Z.sis ? ' + M_inercias' : ''))+') ≥ '+(Z.sis ? '1.2/0.9 = 1.33' : '2.0')+' (CTE DB-SE-C tabla 2.1)', Z.vuelco_na ? 'no procede' : f2(Z.FS_vuelco), Z.ok_vuelco?'fin':'err');
   if(Zm){   // FIX 2026-11-04: situación sísmica con el otro signo de k_v
     h += hdr('Cimentación con sismo y k_v = '+f3(Zm.kv)+' (componente vertical con el otro signo, EC8-5 §7.3.2.2)');
     h += step('Z6m','σ_max = '+f1(Zm.sigma_max)+' kPa · σ_adm = '+Zm.sigma_adm+' kPa ×1,5 · pesos ×'+f3(Zm.fv), 'η='+f2(Zm.ratio_sigma), Zm.ok_sigma?'fin':'err');
     if(!Zm.isLosa){
-      h += step('Z7m','FS deslizamiento ≥ 1.1', f2(Zm.FS_desliz), Zm.ok_desliz?'fin':'err');
+      h += step('Z7m', Zm.solera ? 'Solera: N_Ed = '+f1(Zm.SOL.N_sol_Ed)+' kN/m ≤ N_Rd = '+f0(Zm.SOL.N_sol_Rd)+' kN/m' : 'FS deslizamiento ≥ 1.1', Zm.solera ? 'η='+f2(Zm.eta_desliz) : f2(Zm.FS_desliz), Zm.ok_desliz?'fin':'err');
       h += step('Z8m','FS vuelco ≥ 1.2/0.9 = 1.33', f2(Zm.FS_vuelco), Zm.ok_vuelco?'fin':'err');
     }
   }
@@ -2416,7 +2481,7 @@ function devSteps(I, E, S, A, F, Z, Zp, Zm){
     h += hdr('Cimentación sin sismo (situación persistente)');
     h += step('Z6p','σ_max = '+f1(Zp.sigma_max)+' kPa ('+(Zp.caso_sigma||'—')+') · σ_adm = '+Zp.sigma_adm+' kPa', 'η='+f2(Zp.ratio_sigma), Zp.ok_sigma?'fin':'err');
     if(!Zp.isLosa){
-      h += step('Z7p','FS deslizamiento ≥ 1.5', f2(Zp.FS_desliz), Zp.ok_desliz?'fin':'err');
+      h += step('Z7p', Zp.solera ? 'Solera: N_Ed = '+f1(Zp.SOL.N_sol_Ed)+' kN/m ≤ N_Rd = '+f0(Zp.SOL.N_sol_Rd)+' kN/m' : 'FS deslizamiento ≥ 1.5', Zp.solera ? 'η='+f2(Zp.eta_desliz) : f2(Zp.FS_desliz), Zp.ok_desliz?'fin':'err');
       h += step('Z8p','FS vuelco ≥ 2.0', f2(Zp.FS_vuelco), Zp.ok_vuelco?'fin':'err');
     }
   }
@@ -2544,6 +2609,12 @@ function drawGeometria(I, E, S, W, H, forPDF){
   } else {
     s += '<rect x="'+xZapI+'" y="'+yBase+'" width="'+(xZapD-xZapI)+'" height="'+(yZap-yBase)+'" fill="'+fill_zap+'" stroke="'+stroke_muro+'" stroke-width="1.5"/>';
     s += '<text x="'+((xZapI+xZapD)/2)+'" y="'+(yZap+18)+'" font-family="Consolas,monospace" font-size="10" fill="'+stroke_main+'" text-anchor="middle">Zapata B='+f2(I.Bz)+'m × h='+f0(I.h_z*1000)+'mm</text>';
+    // FIX 2026-11-05: solera del sótano hormigonada contra el muro (lado de la puntera), si arriostra la zapata
+    if(I.solera){
+      const xMuI_base = xZapI + I.Bp*scaleX, es_px = Math.max(3, I.e_sol*scaleY), xS0 = Math.max(2, padL - 10);
+      s += '<rect x="'+xS0+'" y="'+(yBase - es_px)+'" width="'+(xMuI_base - xS0)+'" height="'+es_px+'" fill="'+fill_zap+'" stroke="'+stroke_muro+'" stroke-width="1"/>';
+      s += '<text x="'+((xS0 + xMuI_base)/2)+'" y="'+(yBase - es_px - 4)+'" font-family="Consolas,monospace" font-size="9" fill="'+stroke_main+'" text-anchor="middle">Solera '+f0(I.e_sol*1000)+' mm (arriostra)</text>';
+    }
     // Tacón antideslizamiento
     if(I.isTacon){
       const xTacI = xZapI + (xZapD - xZapI - I.b_t*scaleX)/2;
@@ -3051,16 +3122,27 @@ function generarPDF(){
   h += '<div class="pdesg-row"><div class="pdesg-k">σ_max</div><div class="pdesg-v '+(Z.ok_sigma?'ok':'ko')+'">'+f1(Z.sigma_max)+' kPa · σ_adm = '+Z.sigma_adm+' kPa'+(Z.sis ? ' ×1,5' : '')+' · η = '+f2(Z.ratio_sigma)+'</div></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">σ_min</div><div class="pdesg-v">'+f1(Z.sigma_min)+' kPa</div></div>';
   h += '</div>';
+  if(Z.solera){   // FIX 2026-11-05: zapata arriostrada por la solera
+    h += '<div class="pdesg">';
+    h += '<div class="pdesg-h">Deslizamiento: zapata arriostrada por la solera <span class="pdesg-st '+(Z.ok_desliz?'ok':'ko')+'">'+(Z.ok_desliz?'CUMPLE':'NO CUMPLE')+'</span></div>';
+    h += '<div class="pdesg-row"><div class="pdesg-k">H a la solera</div><div class="pdesg-v">'+f1(Z.SOL.H_sol)+' kN/m (reacción de la base'+(Z.sis?' + inercias':'')+'), en la cara superior de la zapata</div></div>';
+    h += '<div class="pdesg-row"><div class="pdesg-k">Compresión</div><div class="pdesg-v '+(Z.ok_desliz?'ok':'ko')+'">N_Ed = '+f2(Z.SOL.g_sol)+'·H = '+f1(Z.SOL.N_sol_Ed)+' kN/m ≤ N_Rd = f_cd,pl·e_s = '+f2(Z.SOL.fcd_pl)+' MPa · '+f0(I.e_sol*1000)+' mm = '+f0(Z.SOL.N_sol_Rd)+' kN/m · σ_c = '+f2(Z.SOL.sigma_sol)+' MPa · η = '+f2(Z.eta_desliz)+'</div></div>';
+    h += '<div class="pdesg-row"><div class="pdesg-k">Hipótesis</div><div class="pdesg-v">Solera de '+f0(I.e_sol*1000)+' mm y f_ck = '+I.fck_sol+' MPa, hormigonada contra el muro; f_cd,pl = 0,8·f_ck/γ_c (CE 2021 Anejo 19 §12.3.1). '+(I.isTacon ? 'Rozamiento y pasivo del tacón disponibles' : 'Rozamiento de la zapata disponible')+', no contado: '+f1(Z.F_friccion)+' kN/m. Tensión del terreno con la envolvente de los dos caminos de la reacción (solera y rozamiento).</div></div>';
+    h += '<div class="pdesg-row"><div class="pdesg-k">Condiciones</div><div class="pdesg-v">Actívelo solo si la solera: se hormigona directamente contra el muro (sin junta perimetral compresible, sin canaleta de drenaje en el encuentro ni lámina nodular por el intradós); apoya en el terreno en toda su superficie (no vale un forjado sanitario); es continua hasta el muro opuesto, sin juntas de dilatación, fosos ni rampas en la línea del empuje, o va anclada a zapatas interiores; y el sótano está cerrado por ambos lados (en un sótano abierto por un lado la solera no puede llevar el empuje al terreno por rozamiento). Si se rellena antes de hormigonar la solera, en esa fase la zapata debe resistir por rozamiento. Con muros opuestos de distinta altura, o con sismo, el desequilibrio entre los dos empujes lo resiste el cajón del sótano, que esta calculadora no comprueba.</div></div>';
+    h += '</div>';
+  } else {
   h += '<div class="pdesg">';
   h += '<div class="pdesg-h">Deslizamiento <span class="pdesg-st '+(Z.ok_desliz?'ok':'ko')+'">'+(Z.ok_desliz?'FS ≥ ':'FS < ')+(Z.sis?'1.1':'1.5')+'</span></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">F_fricción</div><div class="pdesg-v">tan(2φ/3)·N = '+f1(Z.F_friccion)+' kN/m</div></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">FS</div><div class="pdesg-v '+(Z.ok_desliz?'ok':'ko')+'">FS = (tan(2φ/3)·N_estab + E_p,tacón) / '+(Z.sis ? '(H + inercias)' : 'H')+' = '+f2(Z.FS_desliz)+'</div></div>';
   h += '</div>';
+  }
   h += '<div class="pdesg">';
   h += '<div class="pdesg-h">Vuelco <span class="pdesg-st '+(Z.ok_vuelco?'ok':'ko')+'">'+(Z.ok_vuelco?'FS ≥ ':'FS < ')+(Z.sis?'1.33':'2.0')+'</span></div>';
   h += '<div class="pdesg-row"><div class="pdesg-k">M_estab</div><div class="pdesg-v">N·(B/2−e) = '+f1(Z.M_estab)+' kN·m/m</div></div>';
-  h += '<div class="pdesg-row"><div class="pdesg-k">M_vuelco</div><div class="pdesg-v">'+f1(Z.M_vuelco)+' kN·m/m</div></div>';
-  h += '<div class="pdesg-row"><div class="pdesg-k">FS</div><div class="pdesg-v '+(Z.ok_vuelco?'ok':'ko')+'">FS = '+f2(Z.FS_vuelco)+'</div></div>';
+  h += '<div class="pdesg-row"><div class="pdesg-k">M_vuelco</div><div class="pdesg-v">'+f1(Z.M_vuelco)+' kN·m/m'+(Z.solera ? ' (H va a la solera en la cara superior de la zapata: no vuelca)' : '')+'</div></div>';
+  if(Z.solera) h += '<div class="pdesg-row"><div class="pdesg-k">Tensiones</div><div class="pdesg-v">Envolvente: H por la solera (M_H = '+f1(Z.M_H)+' kN·m/m) y H por rozamiento de la zapata ('+f1(Z.M_H_cl)+' kN·m/m); rige '+(Z.sigma_camino === 'solera' ? 'la solera' : 'el rozamiento')+'</div></div>';   // FIX 2026-11-05
+  h += '<div class="pdesg-row"><div class="pdesg-k">FS</div><div class="pdesg-v '+(Z.ok_vuelco?'ok':'ko')+'">FS = '+(Z.vuelco_na ? 'no procede (sin momento de vuelco: la solera recoge H)' : f2(Z.FS_vuelco))+'</div></div>';
   h += '</div>';
   if(RES.Zm){   // FIX 2026-11-04: situación sísmica con el otro signo de k_v
     const P = RES.Zm, okP = P.ok_sigma && P.ok_desliz && P.ok_vuelco;
@@ -3068,7 +3150,7 @@ function generarPDF(){
     h += '<div class="pdesg-h">Con sismo y k_v = '+f3(P.kv)+' <span class="pdesg-st '+(okP?'ok':'ko')+'">'+(okP?'CUMPLE':'NO CUMPLE')+'</span></div>';
     h += '<div class="pdesg-row"><div class="pdesg-k">σ_max</div><div class="pdesg-v '+(P.ok_sigma?'ok':'ko')+'">'+f1(P.sigma_max)+' kPa · σ_adm = '+P.sigma_adm+' kPa ×1,5 · η = '+f2(P.ratio_sigma)+'</div></div>';
     if(!P.isLosa){
-      h += '<div class="pdesg-row"><div class="pdesg-k">FS deslizamiento</div><div class="pdesg-v '+(P.ok_desliz?'ok':'ko')+'">'+f2(P.FS_desliz)+' (≥ 1.1)</div></div>';
+      h += '<div class="pdesg-row"><div class="pdesg-k">'+(P.solera?'Solera':'FS deslizamiento')+'</div><div class="pdesg-v '+(P.ok_desliz?'ok':'ko')+'">'+(P.solera ? 'N_Ed = '+f1(P.SOL.N_sol_Ed)+' kN/m ≤ N_Rd = '+f0(P.SOL.N_sol_Rd)+' kN/m (η = '+f2(P.eta_desliz)+')' : f2(P.FS_desliz)+' (≥ 1.1)')+'</div></div>';
       h += '<div class="pdesg-row"><div class="pdesg-k">FS vuelco</div><div class="pdesg-v '+(P.ok_vuelco?'ok':'ko')+'">'+f2(P.FS_vuelco)+' (≥ 1.33)</div></div>';
     }
     h += '</div>';
@@ -3079,7 +3161,7 @@ function generarPDF(){
     h += '<div class="pdesg-h">Sin sismo (situación persistente) <span class="pdesg-st '+(okP?'ok':'ko')+'">'+(okP?'CUMPLE':'NO CUMPLE')+'</span></div>';
     h += '<div class="pdesg-row"><div class="pdesg-k">σ_max</div><div class="pdesg-v '+(P.ok_sigma?'ok':'ko')+'">'+f1(P.sigma_max)+' kPa · σ_adm = '+P.sigma_adm+' kPa · η = '+f2(P.ratio_sigma)+'</div></div>';
     if(!P.isLosa){
-      h += '<div class="pdesg-row"><div class="pdesg-k">FS deslizamiento</div><div class="pdesg-v '+(P.ok_desliz?'ok':'ko')+'">'+f2(P.FS_desliz)+' (≥ 1.5)</div></div>';
+      h += '<div class="pdesg-row"><div class="pdesg-k">'+(P.solera?'Solera':'FS deslizamiento')+'</div><div class="pdesg-v '+(P.ok_desliz?'ok':'ko')+'">'+(P.solera ? 'N_Ed = '+f1(P.SOL.N_sol_Ed)+' kN/m ≤ N_Rd = '+f0(P.SOL.N_sol_Rd)+' kN/m (η = '+f2(P.eta_desliz)+')' : f2(P.FS_desliz)+' (≥ 1.5)')+'</div></div>';
       h += '<div class="pdesg-row"><div class="pdesg-k">FS vuelco</div><div class="pdesg-v '+(P.ok_vuelco?'ok':'ko')+'">'+f2(P.FS_vuelco)+' (≥ 2.0)</div></div>';
     }
     h += '</div>';
@@ -3108,6 +3190,7 @@ function generarPDF(){
   h += '<div class="pnorm"><span class="pnorm-r">EC2 §9.6</span><span class="pnorm-d">EN 1992-1-1 — disposiciones constructivas en muros</span></div>';
   h += '<div class="pnorm"><span class="pnorm-r">CTE DB-SE-C</span><span class="pnorm-d">cap. 4 cimentaciones directas · cap. 6 elementos de contención (6.2.4 reposo · 6.2.5 empujes · 6.3.3.3.5 muros de sótano) · tabla 2.1 coeficientes de seguridad</span></div>';
   h += '<div class="pnorm"><span class="pnorm-r">NCSE-02 / EC8-5</span><span class="pnorm-d">Sismo, si se activa: acción sísmica de la NCSE-02; muro de sótano rígido de EC8-5 (§7.3.2.1 y anejo E.9) con inercias y k_v; Mononobe-Okabe en el vuelo</span></div>';   // FIX 2026-11-04
+  if(I.solera) h += '<div class="pnorm"><span class="pnorm-r">CE 2021 Anejo 19 §12.3.1</span><span class="pnorm-d">Solera que arriostra la zapata: compresión como hormigón en masa, f_cd,pl = 0,8·f_ck/γ_c</span></div>';   // FIX 2026-11-05
   h += '</div>';
 
   // Disclaimer legal
@@ -3196,15 +3279,18 @@ function exportarCSV(){
   rows.push(['σ_min (kPa)', f1(Z.sigma_min)]);
   rows.push(['σ_adm (kPa)', Z.sigma_adm]);
   rows.push(['η tensión', f2(Z.ratio_sigma)]);
-  rows.push(['FS deslizamiento', f2(Z.FS_desliz)]);
-  rows.push(['FS vuelco', f2(Z.FS_vuelco)]);
+  if(Z.solera){   // FIX 2026-11-05
+    rows.push(['Zapata arriostrada por la solera', 'sí (e_s '+f0(I.e_sol*1000)+' mm, f_ck '+I.fck_sol+' MPa)']);
+    rows.push(['H a la solera (kN/m)', f1(Z.SOL.H_sol)]); rows.push(['Solera N_Ed (kN/m)', f1(Z.SOL.N_sol_Ed)]); rows.push(['Solera N_Rd (kN/m)', f0(Z.SOL.N_sol_Rd)]); rows.push(['η solera', f2(Z.eta_desliz)]);
+  } else rows.push(['FS deslizamiento', f2(Z.FS_desliz)]);
+  rows.push(['FS vuelco', Z.vuelco_na ? 'no procede' : f2(Z.FS_vuelco)]);
   if(RES.Zp){   // FIX 2026-11-04: la zapata de arriba es la situación sísmica; debajo, la persistente sin sismo
     rows.push(['Situación de la zapata (filas anteriores)', 'sísmica: σ_adm ×1,5 · FS ≥ 1,1 deslizamiento · FS ≥ 1,33 vuelco']);
     if(!Z.isLosa){ rows.push(['Sismo: inercias zapata y tierras del talón (kN/m)', f1(Z.H_iner)]); rows.push(['Sismo: factor de pesos (1 − k_v)', f3(Z.fv)]); }
-    if(RES.Zm){ const P = RES.Zm, t = 'Sismo con k_v = '+f3(P.kv)+': '; rows.push([t+'σ_max (kPa)', f1(P.sigma_max)]); rows.push([t+'FS deslizamiento', f2(P.FS_desliz)]); rows.push([t+'FS vuelco', f2(P.FS_vuelco)]); }
+    if(RES.Zm){ const P = RES.Zm, t = 'Sismo con k_v = '+f3(P.kv)+': '; rows.push([t+'σ_max (kPa)', f1(P.sigma_max)]); rows.push(P.solera ? [t+'η solera', f2(P.eta_desliz)] : [t+'FS deslizamiento', f2(P.FS_desliz)]); rows.push([t+'FS vuelco', f2(P.FS_vuelco)]); }
     rows.push(['Sin sismo: σ_max (kPa)', f1(RES.Zp.sigma_max)]);
     rows.push(['Sin sismo: η tensión', f2(RES.Zp.ratio_sigma)]);
-    rows.push(['Sin sismo: FS deslizamiento', f2(RES.Zp.FS_desliz)]);
+    rows.push(RES.Zp.solera ? ['Sin sismo: η solera', f2(RES.Zp.eta_desliz)] : ['Sin sismo: FS deslizamiento', f2(RES.Zp.FS_desliz)]);
     rows.push(['Sin sismo: FS vuelco', f2(RES.Zp.FS_vuelco)]);
   }
   rows.push([]);
@@ -3594,7 +3680,7 @@ function comprobacionesOpt(SIT, I){
                  dato: () => tR ? 'necesaria '+f2(tR.L_req_ref)+' m, dispuesta '+f2(tR.L_ref)+' m en '+nom(tR) : ''},
     fisur:      {ok: TF.every(t => t.ok), eta: tF.ratio, dato: () => 'w_k = '+f3(tF.w_k)+' mm (máximo '+I.wmax+' mm) en '+nom(tF)},
     sigma:      {ok: Zall.every(z => z.ok_sigma), eta: zS.ratio_sigma, dato: () => 'σ = '+f0(zS.sigma_max)+' kPa (admisible '+f0(zS.sigma_lim)+' kPa)'+sit(zS)},
-    desliz:     {ok: Zall.every(z => z.ok_desliz), eta: zD.eta_desliz, dato: () => 'FS = '+f2(zD.FS_desliz)+' (mínimo '+f2(zD.FSd_min)+')'+sit(zD)},
+    desliz:     {ok: Zall.every(z => z.ok_desliz), eta: zD.eta_desliz, dato: () => (zD.solera ? 'solera: N_Ed = '+f0(zD.SOL.N_sol_Ed)+' kN/m (N_Rd = '+f0(zD.SOL.N_sol_Rd)+' kN/m)' : 'FS = '+f2(zD.FS_desliz)+' (mínimo '+f2(zD.FSd_min)+')')+sit(zD)},
     vuelco:     {ok: Zall.every(z => z.ok_vuelco), eta: zV.eta_vuelco, dato: () => 'FS = '+f2(zV.FS_vuelco)+' (mínimo '+f2(zV.FSv_min)+')'+sit(zV)},
     armado:     {ok: A.ok_rho_max && A.ok_sep_v && A.ok_sep_h && A.ok_phi_min, eta: 0,
                  dato: () => [!A.ok_rho_max && 'cuantía vertical > 4 %', !(A.ok_sep_v && A.ok_sep_h) && 'separación de barras',
@@ -3708,7 +3794,7 @@ function clonarInputs(I){
     h_v:I.h_v, e_v:I.e_v, vueloSup:I.vueloSup, b:I.b, caras:I.caras,
     tipoCim:I.tipoCim, isLosa:I.isLosa, isTacon:I.isTacon, isExcen:I.isExcen,
     Bz:I.Bz, h_z:I.h_z, Bt:I.Bt, Bp:I.Bp, h_t:I.h_t, b_t:I.b_t,
-    sigma_adm:I.sigma_adm,
+    sigma_adm:I.sigma_adm, solera:I.solera, e_sol:I.e_sol, fck_sol:I.fck_sol,   // FIX 2026-11-05
     alpha_cim:I.alpha_cim, alpha_coron:I.alpha_coron, alpha_int:I.alpha_int,
     modelo:I.modelo, gamma:I.gamma, phi:I.phi, c:I.c,
     delta:I.delta, beta:I.beta, alfa:I.alfa,
@@ -3736,7 +3822,7 @@ const OPT_COMP = {
   refuerzo:   {n: 'Longitud del refuerzo de arranque', c: 'alarga el refuerzo de arranque (Sec. 11)'},
   fisur:      {n: 'Fisuración', c: 'aumenta el espesor por encima de 500 mm o revisa la abertura máxima w_max (Sec. 12)'},
   sigma:      {n: 'Tensión en el terreno', c: 'prueba una zapata más ancha que la mayor probada o revisa la tensión admisible del terreno (Sec. 3)'},
-  desliz:     {n: 'Deslizamiento', c: 'prueba una zapata más ancha que la mayor probada, con más talón o con tacón antideslizamiento (Sec. 3)'},
+  desliz:     {n: 'Deslizamiento', c: 'arriostra la zapata con la solera del sótano, o prueba una zapata más ancha que la mayor probada, con más talón o con tacón antideslizamiento (Sec. 3)'},
   vuelco:     {n: 'Vuelco', c: 'prueba una zapata más ancha que la mayor probada o con más talón (Sec. 3)'},
   armado:     {n: 'Disposición de la armadura', c: 'revisa diámetros y separaciones (Sec. 11)'},
   geometria:  {n: 'Geometría de la zapata', c: 'el muro no cabe en la zapata: aumenta B zapata (Sec. 3)'},
@@ -3895,6 +3981,9 @@ const CAMPOS_PROYECTO = [
   {id:'inHt', desc:'Altura tacón', unit:'m'},
   {id:'inBtac', desc:'Ancho tacón', unit:'m'},
   {id:'inHLosa', desc:'Espesor losa', unit:'mm'},
+  {id:'inSolera', desc:'Zapata arriostrada por la solera', unit:'bool'},   // FIX 2026-11-05
+  {id:'inEsol', desc:'Espesor solera', unit:'mm'},
+  {id:'inFckSol', desc:'f_ck solera', unit:'MPa'},
   {id:'inSigmaAdm', desc:'σ admisible terreno', unit:'kPa'},
   // Terreno
   {id:'inModelo', desc:'Modelo empuje (reposo/rankine/coulomb)', unit:'—'},
@@ -4032,6 +4121,7 @@ function cargarProyecto(file){
       const niveles = data.niveles || 1;
       setNiveles(niveles);
       // 2. Aplicar todos los campos disponibles
+      if($('inSolera')) $('inSolera').checked = false;   // FIX 2026-11-05: los proyectos anteriores no tienen la casilla
       let aplicados = 0, ignorados = [];
       for(const [id, item] of Object.entries(data.campos)){
         const el = document.getElementById(id);
@@ -4059,6 +4149,7 @@ function cargarProyecto(file){
       // 5. Visibilidad de filas condicionales
       $('rowNF').style.display = $('inNF').checked ? '' : 'none';
       $('rowSismo').style.display = $('inSismo').checked ? '' : 'none';
+      if($('rowSolera')) $('rowSolera').style.display = $('inSolera').checked ? '' : 'none';   // FIX 2026-11-05
       $('rowVueloSup').style.display = $('inVueloSup').checked ? '' : 'none';
       $('rowRamas').style.display = $('inRamas').checked ? '' : 'none';
       if($('inModelo')){

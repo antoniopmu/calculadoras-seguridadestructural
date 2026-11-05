@@ -340,7 +340,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-04 18:17) -->
+<!-- SEO generado por publish.py (2026-11-05 10:53) -->
 <meta name="description" content="Muro de sótano de 1 a 3 niveles: empuje al reposo, viga continua, armado ELU, fisuración ELS, zapata y sismo según CE 2021 (Anejo 19) y CTE DB-SE-C. PDF y CSV.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-sotano/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -3521,10 +3521,88 @@ function compararVariantes(){
 }
 
 /* ============================================================
-   OPTIMIZADOR AUTOMÁTICO (espesor + armadura vertical)
+   OPTIMIZADOR AUTOMÁTICO (espesor + armadura vertical y horizontal + ancho de zapata)
    Itera combinaciones razonables y devuelve la más económica
    que cumple TODAS las verificaciones ELU + ELS + estabilidad.
 ============================================================ */
+// FIX 2026-11-04: la armadura horizontal de cada tramo (y del vuelo) se elige en cada combinación. Antes se quedaba la del
+// formulario y, como la del ejemplo por defecto no llega al mínimo, ninguna combinación cumplía. Para cada Ø del formulario se
+// toma la mayor separación (de 100 a 300 mm cada 25 mm: el formulario admite de 75 a 300 y §9.6.3(2) hasta 400) que da el
+// mínimo del cálculo (As_h_min de calcArmadura: §9.6.3 y ≥ 20 % de la vertical) y se elige la más ligera. Si el tramo no
+// cumple flexión, cortante, fisuración o refuerzo de arranque, se prueba la siguiente con un Ø menor (más canto útil).
+const OPT_SEP_H = [300, 275, 250, 225, 200, 175, 150, 125, 100];
+function opcionesHorizontal(As_min, caras){
+  const ops = [];
+  for(const phi_h of (caras === 1 ? [10, 12] : [8, 10, 12])){        // los Ø del formulario (regenArmaduraTramos)
+    const As = s => (Math.PI*phi_h*phi_h/4) * (1000/s);                // como recolectarArmaduraTramo
+    const s_h = OPT_SEP_H.find(s => As_min/As(s) <= 1.0);              // la misma condición que ratio_h en calcArmadura
+    if(s_h) ops.push({phi_h, s_h, As_h: As(s_h), peso: As(s_h)*(1 + 0.04*phi_h/6)});   // peso por m, como calcMediciones
+  }
+  return ops.sort((a, b) => a.peso - b.peso);
+}
+// Elige la horizontal de cada tramo y del vuelo de la combinación I (la modifica) y devuelve sus situaciones calculadas
+function elegirHorizontal(I){
+  const deArm = (SIT, j) => I.vueloSup ? (j === 0 ? [SIT.A.vuelo, SIT.F.vuelo] : [SIT.A.tramos[j-1], SIT.F.tramosF[j-1]])
+                                       : [SIT.A.tramos[j], SIT.F.tramosF[j]];   // resultados de I.armadura_tramos[j]
+  let SIT = calcSituaciones(I);
+  if(!SIT) return null;
+  // el mínimo depende del espesor y de la vertical (con el refuerzo de arranque), no de la horizontal dispuesta
+  const ops = I.armadura_tramos.map((a, j) => { const t = deArm(SIT, j)[0]; return t ? opcionesHorizontal(t.As_h_min, I.caras) : []; });
+  const idx = ops.map(() => 0);
+  for(;;){
+    let cambia = false;
+    I.armadura_tramos.forEach((a, j) => {
+      const o = ops[j][idx[j]];
+      if(o && (a.phi_h !== o.phi_h || a.s_h !== o.s_h)){ a.phi_h = o.phi_h; a.s_h = o.s_h; a.As_h = o.As_h; cambia = true; }
+    });
+    if(cambia){ SIT = calcSituaciones(I); if(!SIT) return null; }
+    // tramo que no cumple por su canto útil: la siguiente disposición más ligera con un Ø horizontal menor
+    let otra = false;
+    I.armadura_tramos.forEach((a, j) => {
+      const [t, f] = deArm(SIT, j), o = ops[j][idx[j]];
+      if(!t || !o || (t.ok_As && t.ok_V && t.ok_Lref !== false && (!f || f.ok))) return;
+      const k = ops[j].findIndex((p, n) => n > idx[j] && p.phi_h < o.phi_h);
+      if(k >= 0){ idx[j] = k; otra = true; }
+    });
+    if(!otra) break;
+  }
+  ponHorizontal(I, I.armadura_tramos);
+  return SIT;
+}
+// Pone en I la horizontal H (una por tramo) y los campos de compatibilidad (los del último tramo)
+function ponHorizontal(I, H){
+  I.armadura_tramos.forEach((a, j) => { a.phi_h = H[j].phi_h; a.s_h = H[j].s_h; a.As_h = H[j].As_h; });
+  const u = I.armadura_tramos[I.armadura_tramos.length-1];
+  I.phi_h = u.phi_h; I.s_h = u.s_h; I.As_h = u.As_h;
+}
+// Las comprobaciones del «cumple» del cálculo principal, agrupadas, con su η y un dato para explicar por qué no cumplen
+function comprobacionesOpt(SIT, I){
+  const {A, F, Z, Zm, Zp} = SIT;
+  const TA = (A.vuelo ? [A.vuelo] : []).concat(A.tramos), TF = (F.vuelo ? [F.vuelo] : []).concat(F.tramosF);
+  const Zall = [Z].concat(Zm ? [Zm] : [], Zp ? [Zp] : []);
+  const nom = t => t.esVuelo ? 'el vuelo' : 'el tramo '+f1(t.iniZ)+'–'+f1(t.finZ)+' m';
+  const sit = z => z.sis ? ' con sismo'+(Zm ? ' (k_v = '+f3(z.kv)+')' : '') : (Zp ? ' sin sismo' : '');
+  const peor = (L, r) => L.reduce((a, x) => (r(x) > r(a) ? x : a), L[0]);
+  const tA = peor(TA, t => t.ratio_As), tV = peor(TA, t => t.ratio_V), tH = peor(TA, t => t.ratio_h), tF = peor(TF, t => t.ratio);
+  const TR = A.tramos.filter(t => t.As_ref > 0), tR = TR.length ? peor(TR, t => t.ratio_Lref) : null;
+  const zS = peor(Zall, z => z.ratio_sigma), zD = peor(Zall, z => z.eta_desliz), zV = peor(Zall, z => z.eta_vuelco);
+  const C = {
+    flex:       {ok: TA.every(t => t.ok_As), eta: tA.ratio_As, dato: () => 'en '+nom(tA)},
+    cortante:   {ok: TA.every(t => t.ok_V), eta: tV.ratio_V, dato: () => 'en '+nom(tV)},
+    horizontal: {ok: A.ok_h, eta: tH.ratio_h, dato: () => 'mínimo '+f0(tH.As_h_min)+' mm²/m por cara en '+nom(tH)},
+    refuerzo:   {ok: A.tramos.every(t => t.ok_Lref !== false), eta: tR ? tR.ratio_Lref : 0,
+                 dato: () => tR ? 'necesaria '+f2(tR.L_req_ref)+' m, dispuesta '+f2(tR.L_ref)+' m en '+nom(tR) : ''},
+    fisur:      {ok: TF.every(t => t.ok), eta: tF.ratio, dato: () => 'w_k = '+f3(tF.w_k)+' mm (máximo '+I.wmax+' mm) en '+nom(tF)},
+    sigma:      {ok: Zall.every(z => z.ok_sigma), eta: zS.ratio_sigma, dato: () => 'σ = '+f0(zS.sigma_max)+' kPa (admisible '+f0(zS.sigma_lim)+' kPa)'+sit(zS)},
+    desliz:     {ok: Zall.every(z => z.ok_desliz), eta: zD.eta_desliz, dato: () => 'FS = '+f2(zD.FS_desliz)+' (mínimo '+f2(zD.FSd_min)+')'+sit(zD)},
+    vuelco:     {ok: Zall.every(z => z.ok_vuelco), eta: zV.eta_vuelco, dato: () => 'FS = '+f2(zV.FS_vuelco)+' (mínimo '+f2(zV.FSv_min)+')'+sit(zV)},
+    armado:     {ok: A.ok_rho_max && A.ok_sep_v && A.ok_sep_h && A.ok_phi_min, eta: 0,
+                 dato: () => [!A.ok_rho_max && 'cuantía vertical > 4 %', !(A.ok_sep_v && A.ok_sep_h) && 'separación de barras',
+                              !A.ok_phi_min && 'Ø vertical < 12 mm a una cara'].filter(Boolean).join(', ')}
+  };
+  for(const k in C) if(!C[k].ok && !(C[k].eta > 1)) C[k].eta = Infinity;   // lo que no cumple cuenta con η > 1
+  return C;
+}
 function optimizar(){
   if(!RES){ setWarn('Calcula primero antes de optimizar'); return null; }
   const I0 = RES.I;
@@ -3535,84 +3613,93 @@ function optimizar(){
   const Bz_base = I0.Bz;
   const Bz_options = I0.isLosa ? [I0.Bz] : [Bz_base, Bz_base*1.2, Bz_base*1.5, Bz_base*2.0, Math.max(Bz_base, 3.0)];
   const Bz_unique = [...new Set(Bz_options.map(b => Math.round(b*100)/100))];
+  // FIX 2026-11-04: el talón conserva su parte del ancho libre B − e (antes B_t ∝ B: al cambiar el espesor, la zapata
+  // excéntrica ganaba puntera o quedaba con una geometría imposible)
+  const fracT = (I0.Bz - I0.e_muro > 0) ? I0.Bt/(I0.Bz - I0.e_muro) : 0.5;
   const minPhi = (I0.caras === 1) ? 12 : 10;
   const t0 = (typeof performance !== 'undefined') ? performance.now() : Date.now();
-  let mejor = null, intentos = 0, cumplidas = 0;
-  const fallidas = [];
+  let intentos = 0, masCerca = null;
+  const fallidas = [], cumplen = [];
+  const cerca = {};   // FIX 2026-11-04: por comprobación, la combinación que más se acerca a cumplirla (para explicar el fallo)
+  // FIX 2026-11-04: el análisis del muro no depende del ancho de la zapata y la zapata no depende de la armadura: el muro se
+  // calcula una vez por espesor y armadura, y la zapata una vez por espesor y ancho (la propuesta final se comprueba entera)
   for(const e_mm of espesores){
+   const zapE = new Map();   // situaciones ya calculadas para este espesor, por ancho de zapata
+   let horizPrev = null;     // horizontal elegida con la armadura anterior de este espesor (suele repetirse y ahorra cálculos)
    for(const phi of phis){
     if(phi < minPhi) continue;
     for(const sep of seps){
+     let muro = null;        // resultados del muro con su horizontal para esta armadura vertical
      for(const Bz of Bz_unique){
         intentos++;
         const I = clonarInputs(I0);
         for(let i=0; i<I.e_tramo.length; i++) I.e_tramo[i] = e_mm/1000;
         I.e_muro = e_mm/1000;
-        // Ajustar Bz manteniendo Bt proporcional
         if(!I.isLosa){
-          const frac = (I0.Bt / I0.Bz) || 0.5;
           I.Bz = Bz;
-          I.Bt = Bz * frac;
+          I.Bt = Math.max(0, Math.round(fracT*(Bz - I.e_muro)*100)/100);
           I.Bp = Bz - I.Bt - I.e_muro;
-          if(I.Bp < 0){ fallidas.push({e_mm,phi,sep,Bz,motivo:'B_z geometría'}); continue; }
+          if(I.Bp < -0.01){ fallidas.push({e_mm,phi,sep,Bz,fallan:['geometria']}); continue; }   // misma tolerancia que recolectar
+          I.Bp = Math.max(0, I.Bp);
         }
         const As_v_new = (Math.PI*phi*phi/4) * (1000/sep);
         for(const arm of I.armadura_tramos){
           arm.phi_v = phi; arm.s_v = sep; arm.As_v = As_v_new;
+          // FIX 2026-11-04: el refuerzo de arranque va a la separación de la vertical, como en recolectarArmaduraTramo
+          arm.As_ref = arm.phi_ref > 0 ? (Math.PI*arm.phi_ref*arm.phi_ref/4) * (1000/sep) : 0;
         }
         I.phi_v = phi; I.s_v = sep; I.As_v = As_v_new;
         try {
           // FIX 2026-11-04: las mismas situaciones que el cálculo principal (con sismo, también la persistente sin sismo)
-          const SIT = calcSituaciones(I);
-          if(!SIT){ fallidas.push({e_mm,phi,sep,motivo:'solver'}); continue; }
-          const {A, F, Z, Zm, Zp} = SIT;
-          const Zall = [Z].concat(Zm ? [Zm] : [], Zp ? [Zp] : []);
-          const okS = Zall.every(z => z.ok_sigma), okD = Zall.every(z => z.ok_desliz), okV = Zall.every(z => z.ok_vuelco);
-          const okGlobal = A.tramos.every(t=>t.ok_As && t.ok_V) && A.ok_h && A.ok_rho_max
-                        && F.tramosF.every(t=>t.ok) && okS && okD && okV
-                        && A.ok_phi_min && (!A.vuelo || (A.vuelo.ok_As && A.vuelo.ok_V)) && (!F.vuelo || F.vuelo.ok)
-                        && A.tramos.every(t=>t.ok_Lref !== false) && A.ok_sep_v && A.ok_sep_h;
-          if(!okGlobal){
-            let motivo = '';
-            if(!A.tramos.every(t=>t.ok_As)) motivo += 'flex ';
-            if(!A.tramos.every(t=>t.ok_V)) motivo += 'cortante ';
-            if(!F.tramosF.every(t=>t.ok)) motivo += 'fisur ';
-            if(!okS) motivo += 'σ_terr ';
-            if(!okD) motivo += 'desliz ';
-            if(!okV) motivo += 'vuelco ';
-            if(!A.ok_h) motivo += 'horizontal ';   // FIX 2026-11-02: también la armadura horizontal mínima (regla del 20 %)
-            if(!motivo) motivo = 'otras comprobaciones ';
-            fallidas.push({e_mm,phi,sep,Bz,motivo:motivo.trim()});
+          if(!muro){
+            if(horizPrev) ponHorizontal(I, horizPrev);
+            const S1 = elegirHorizontal(I);
+            if(!S1){ fallidas.push({e_mm,phi,sep,Bz,fallan:['solver']}); continue; }
+            muro = {A: S1.A, F: S1.F, H: I.armadura_tramos.map(a => ({phi_h: a.phi_h, s_h: a.s_h, As_h: a.As_h}))};
+            horizPrev = muro.H;
+            if(!zapE.has(Bz)) zapE.set(Bz, S1);
+          } else ponHorizontal(I, muro.H);
+          let zap = zapE.get(Bz);
+          if(!zap){
+            zap = calcSituaciones(I);
+            if(!zap){ fallidas.push({e_mm,phi,sep,Bz,fallan:['solver']}); continue; }
+            zapE.set(Bz, zap);
+          }
+          const C = comprobacionesOpt({A: muro.A, F: muro.F, Z: zap.Z, Zm: zap.Zm, Zp: zap.Zp}, I);
+          const fallan = Object.keys(C).filter(k => !C[k].ok);
+          const conf = {e_mm, phi, sep, Bz, Bt: I.Bt};
+          for(const k in C) if(!cerca[k] || C[k].eta < cerca[k].eta) cerca[k] = {eta: C[k].eta, dato: C[k].dato(), conf};
+          if(fallan.length){
+            const etaComb = Math.max(...fallan.map(k => C[k].eta));
+            if(!masCerca || etaComb < masCerca.eta) masCerca = {eta: etaComb, conf, fallan: fallan.map(k => ({k, eta: C[k].eta, dato: C[k].dato()}))};
+            fallidas.push({e_mm,phi,sep,Bz,fallan});
             continue;
           }
-          cumplidas++;
-          const M = calcMediciones(I, A);
-          if(!mejor || M.C_por_m < mejor.coste){
-            const ratios = [
-              ...A.tramos.map(t=>t.ratio_As),
-              ...A.tramos.map(t=>t.ratio_V),
-              ...F.tramosF.map(t=>t.ratio),
-              ...(A.vuelo ? [A.vuelo.ratio_As, A.vuelo.ratio_V] : []), ...(F.vuelo ? [F.vuelo.ratio] : []),
-              // FIX 2026-11-04: las mismas comprobaciones que la η global del cálculo principal (antes faltaban la armadura
-              // horizontal, el refuerzo de arranque, el deslizamiento, el vuelco y la situación sin sismo)
-              ...A.tramos.map(t=>t.ratio_h), ...A.tramos.filter(t=>t.As_ref > 0).map(t=>t.ratio_Lref), ...(A.vuelo ? [A.vuelo.ratio_h] : []),
-              ...Zall.flatMap(Zx => Zx.isLosa ? [Zx.ratio_sigma] : [Zx.ratio_sigma, Zx.eta_desliz, Zx.eta_vuelco])
-            ];
-            const etaMax = Math.max(...ratios.filter(r=>isFinite(r)));
-            mejor = {
-              e_mm, phi, sep, Bz, coste: M.C_por_m, kg_total: M.kg_total,
-              V_muro: M.V_muro, V_zap: M.V_zap, cuantia_muro: M.cuantia_muro,
-              etaMax
-            };
-          }
-        } catch(err){ fallidas.push({e_mm,phi,sep,Bz,motivo:'error:'+err.message}); }
+          cumplen.push({I, conf, coste: calcMediciones(I, muro.A).C_por_m});
+        } catch(err){ fallidas.push({e_mm,phi,sep,Bz,fallan:['error'],error:err.message}); }
      }
     }
    }
   }
+  // La más económica se comprueba otra vez con el cálculo completo de su combinación (si no cumpliera, la siguiente)
+  cumplen.sort((a, b) => a.coste - b.coste);
+  let mejor = null;
+  for(const c of cumplen){
+    const S = calcSituaciones(c.I), C = S && comprobacionesOpt(S, c.I);
+    if(!C || Object.values(C).some(x => !x.ok)) continue;
+    const M = calcMediciones(c.I, S.A);
+    mejor = Object.assign({}, c.conf, {
+      coste: M.C_por_m, kg_total: M.kg_total, V_muro: M.V_muro, V_zap: M.V_zap, cuantia_muro: M.cuantia_muro,
+      // FIX 2026-11-04: las mismas comprobaciones que la η global del cálculo principal
+      etaMax: Math.max(...Object.values(C).map(x => x.eta).filter(r => isFinite(r))),
+      arm: c.I.armadura_tramos.map(a => ({id: a.id, nombre: a.nombre, phi_v: a.phi_v, s_v: a.s_v, phi_h: a.phi_h, s_h: a.s_h}))
+    });
+    break;
+  }
   const t1 = (typeof performance !== 'undefined') ? performance.now() : Date.now();
   const dt = ((t1-t0)/1000).toFixed(2);
-  return { mejor, intentos, cumplidas, fallidas, dt };
+  return { mejor, intentos, cumplidas: cumplen.length, fallidas, cerca, masCerca, dt,
+           rango: {espesores, phis, seps, Bz: Bz_unique} };
 }
 
 function clonarInputs(I){
@@ -3641,6 +3728,21 @@ function clonarInputs(I){
   return c;
 }
 
+// FIX 2026-11-04: nombre de cada comprobación del optimizador y qué cambiar si no se cumple con ninguna combinación
+const OPT_COMP = {
+  flex:       {n: 'Flexión del muro', c: 'añade refuerzo de arranque (Sec. 11), aumenta el espesor por encima de 500 mm o revisa las cargas'},
+  cortante:   {n: 'Cortante del muro', c: 'activa las ramas de cortante (Sec. 11) o aumenta el espesor por encima de 500 mm'},
+  horizontal: {n: 'Armadura horizontal mínima', c: 'ni Ø12 a 100 mm llega al mínimo: revisa el refuerzo de arranque (Sec. 11)'},
+  refuerzo:   {n: 'Longitud del refuerzo de arranque', c: 'alarga el refuerzo de arranque (Sec. 11)'},
+  fisur:      {n: 'Fisuración', c: 'aumenta el espesor por encima de 500 mm o revisa la abertura máxima w_max (Sec. 12)'},
+  sigma:      {n: 'Tensión en el terreno', c: 'prueba una zapata más ancha que la mayor probada o revisa la tensión admisible del terreno (Sec. 3)'},
+  desliz:     {n: 'Deslizamiento', c: 'prueba una zapata más ancha que la mayor probada, con más talón o con tacón antideslizamiento (Sec. 3)'},
+  vuelco:     {n: 'Vuelco', c: 'prueba una zapata más ancha que la mayor probada o con más talón (Sec. 3)'},
+  armado:     {n: 'Disposición de la armadura', c: 'revisa diámetros y separaciones (Sec. 11)'},
+  geometria:  {n: 'Geometría de la zapata', c: 'el muro no cabe en la zapata: aumenta B zapata (Sec. 3)'},
+  solver:     {n: 'Cálculo de esfuerzos', c: 'revisa alturas, espesores y coeficientes de empotramiento'},
+  error:      {n: 'Error en el cálculo', c: 'revisa los datos'}
+};
 function renderOptimizadorResultado(opt){
   const Mref = RES.M || calcMediciones(RES.I, RES.A);
   const I0 = RES.I;
@@ -3648,17 +3750,45 @@ function renderOptimizadorResultado(opt){
   h += '<div style="font-family:var(--mono);font-size:11px;color:var(--text2);margin-bottom:.6rem">';
   h += 'Iteraciones: <strong>'+opt.intentos+'</strong> · cumplen: <strong style="color:var(--green)">'+opt.cumplidas+'</strong> · fallan: <strong style="color:var(--text3)">'+(opt.intentos-opt.cumplidas)+'</strong> · tiempo: <strong>'+opt.dt+'s</strong>';
   h += '</div>';
+  const confMuro = c => 'espesor '+c.e_mm+' mm, vertical Ø'+c.phi+' a '+c.sep+' mm';
+  const confZap = c => 'espesor '+c.e_mm+' mm'+(I0.isLosa ? '' : ', B zapata '+f2(c.Bz)+' m, talón '+f2(c.Bt)+' m');
+  const confK = (k, c) => ({sigma: 1, desliz: 1, vuelco: 1, geometria: 1})[k] ? confZap(c) : confMuro(c);   // lo que influye en cada una
+  const eta = x => 'η = '+(isFinite(x) ? f2(x) : '∞');
+  const consejo = k => (k === 'sigma' && I0.isLosa) ? 'revisa la tensión admisible del terreno (Sec. 3) o las cargas sobre el muro (Sec. 7)' : OPT_COMP[k].c;
   if(!opt.mejor){
-    h += '<div style="padding:14px;background:rgba(255,133,133,.12);border:1px solid var(--red);border-radius:6px;color:var(--red);font-family:var(--mono);font-size:12px">';
-    h += '<strong>No se encontró combinación viable.</strong><br>';
-    h += 'Revisa: aumentar B_zapata, σ_adm, reducir cargas o cambiar tipo cimentación.';
-    h += '<br>Motivos de fallo más frecuentes:';
-    const conteoMotivos = {};
-    for(const f of opt.fallidas){ conteoMotivos[f.motivo] = (conteoMotivos[f.motivo]||0)+1; }
-    const sorted = Object.entries(conteoMotivos).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    h += '<ul style="margin-top:6px;margin-left:18px">';
-    for(const [m,c] of sorted) h += '<li>'+m+': '+c+'</li>';
-    h += '</ul></div></div>';
+    // FIX 2026-11-04: se explica qué lo impide (antes solo códigos como «horizontal» o «desliz»)
+    const r = opt.rango;
+    h += '<div style="padding:14px;background:rgba(255,133,133,.12);border:1px solid var(--red);border-radius:6px;color:var(--red);font-family:var(--mono);font-size:12px;line-height:1.55">';
+    h += '<strong>No hay ninguna combinación que cumpla todas las comprobaciones.</strong>';
+    h += '<div style="color:var(--text2);margin-top:4px">Probado: espesor '+r.espesores[0]+'–'+r.espesores[r.espesores.length-1]+' mm · vertical Ø'+r.phis[0]+'–Ø'+r.phis[r.phis.length-1]
+      +' a '+Math.min(...r.seps)+'–'+Math.max(...r.seps)+' mm · horizontal ajustada al mínimo de cada tramo'
+      +(I0.isLosa ? '' : ' · B zapata '+f2(Math.min(...r.Bz))+'–'+f2(Math.max(...r.Bz))+' m')+'.</div>';
+    const bloquean = Object.keys(opt.cerca).filter(k => opt.cerca[k].eta > 1);
+    if(bloquean.length){
+      h += '<div style="margin-top:8px"><strong>Lo impide'+(bloquean.length > 1 ? 'n' : '')+' (no se cumple'+(bloquean.length > 1 ? 'n' : '')+' con ninguna combinación):</strong></div><ul style="margin:4px 0 0 18px">';
+      for(const k of bloquean){
+        const c = opt.cerca[k];
+        h += '<li><strong>'+OPT_COMP[k].n+'</strong>. En el mejor caso ('+confK(k, c.conf)+'): '+eta(c.eta)+(c.dato ? ', '+c.dato : '')+'.'
+          +'<br><span style="color:var(--text2)">→ '+consejo(k)+'.</span></li>';
+      }
+      h += '</ul>';
+    } else if(opt.masCerca){
+      const mc = opt.masCerca;
+      h += '<div style="margin-top:8px"><strong>Cada comprobación se cumple con alguna combinación, pero nunca todas a la vez.</strong> La que más se acerca ('
+        +confMuro(mc.conf)+(I0.isLosa ? '' : ', B zapata '+f2(mc.conf.Bz)+' m, talón '+f2(mc.conf.Bt)+' m')+') no cumple:</div><ul style="margin:4px 0 0 18px">';
+      for(const f of mc.fallan) h += '<li><strong>'+OPT_COMP[f.k].n+'</strong>: '+eta(f.eta)+(f.dato ? ', '+f.dato : '')+'.<br><span style="color:var(--text2)">→ '+consejo(f.k)+'.</span></li>';
+      h += '</ul>';
+    }
+    // combinaciones que no cumplen cada comprobación (incluye las que no llegan a calcularse: geometría, cálculo)
+    const n = {};
+    for(const f of opt.fallidas) for(const k of f.fallan) n[k] = (n[k] || 0) + 1;
+    const lista = Object.entries(n).sort((a, b) => b[1] - a[1]);
+    if(lista.length){
+      h += '<div style="color:var(--text2);margin-top:8px">Combinaciones que no cumplen cada comprobación (de '+opt.intentos+'): '
+        + lista.map(([k, c]) => OPT_COMP[k].n.toLowerCase()+' '+c).join(' · ')+'.</div>';
+      if(!bloquean.length && !opt.masCerca) for(const [k] of lista) h += '<div style="color:var(--text2)">→ '+OPT_COMP[k].n+': '+consejo(k)+'.</div>';
+    }
+    h += '</div></div>';
     return h;
   }
   const m = opt.mejor;
@@ -3668,8 +3798,14 @@ function renderOptimizadorResultado(opt){
   h += '<tr><td class="k">Espesor muro</td><td class="v">'+(I0.e_muro*1000).toFixed(0)+' mm</td><td class="v best">'+m.e_mm+' mm</td></tr>';
   h += '<tr><td class="k">Ø vertical</td><td class="v">Ø'+I0.phi_v+'</td><td class="v best">Ø'+m.phi+'</td></tr>';
   h += '<tr><td class="k">Sep. vertical</td><td class="v">'+I0.s_v+' mm</td><td class="v best">'+m.sep+' mm</td></tr>';
+  // FIX 2026-11-04: la armadura horizontal elegida en cada tramo y el talón, que también cambian
+  m.arm.forEach((a, j) => {
+    const a0 = I0.armadura_tramos[j];
+    h += '<tr><td class="k">Horizontal '+a.nombre.toLowerCase()+'</td><td class="v">Ø'+a0.phi_h+' a '+a0.s_h+' mm</td><td class="v best">Ø'+a.phi_h+' a '+a.s_h+' mm</td></tr>';
+  });
   if(!I0.isLosa){
     h += '<tr><td class="k">B zapata</td><td class="v">'+f2(I0.Bz)+' m</td><td class="v best">'+f2(m.Bz)+' m</td></tr>';
+    h += '<tr><td class="k">Talón B_t</td><td class="v">'+f2(I0.Bt)+' m</td><td class="v best">'+f2(m.Bt)+' m</td></tr>';
   }
   h += '<tr><td class="k">Acero total/m</td><td class="v">'+f0(Mref.kg_total)+' kg</td><td class="v best">'+f0(m.kg_total)+' kg</td></tr>';
   h += '<tr><td class="k">ρ muro</td><td class="v">'+f1(Mref.cuantia_muro)+' kg/m³</td><td class="v best">'+f1(m.cuantia_muro)+' kg/m³</td></tr>';
@@ -3677,7 +3813,11 @@ function renderOptimizadorResultado(opt){
   h += '<tr><td class="k">Coste/m muro</td><td class="v">'+f1(Mref.C_por_m)+' €/m</td><td class="v best">'+f1(m.coste)+' €/m</td></tr>';
   h += '</tbody></table>';
   h += '<div style="margin-top:12px;padding:10px 14px;background:rgba(94,234,144,.10);border:1px solid rgba(94,234,144,.30);border-radius:6px;font-family:var(--mono);font-size:12px">';
-  if(ahorro > 0.5){
+  if(!RES.okGlobal){
+    // FIX 2026-11-04: si la configuración actual no cumple, no se compara su coste como si fuera una alternativa válida
+    h += '<span style="color:var(--amber);font-weight:700">⚠ La configuración actual no cumple. Esta es la solución más económica de las que cumplen'
+      +(ahorro > 0.5 ? ' y además ahorra '+f1(ahorro)+' €/m' : (ahorro < -0.5 ? ': cuesta '+f1(-ahorro)+' €/m más' : ''))+'.</span>';
+  } else if(ahorro > 0.5){
     h += '<span style="color:var(--green);font-weight:700">✓ Ahorro estimado: <strong>'+f1(ahorro)+' €/m</strong> ('+pctAhorro.toFixed(1)+'%)</span>';
     if(Mref.mlObra > 0){
       h += '<br><span style="color:var(--text2)">Para '+f0(Mref.mlObra)+' m de obra: ahorro total <strong style="color:var(--amber)">'+f0(ahorro * Mref.mlObra)+' €</strong></span>';
@@ -3687,22 +3827,43 @@ function renderOptimizadorResultado(opt){
   } else {
     h += '<span style="color:var(--green);font-weight:700">✓ La configuración actual ya está cerca del óptimo (Δ &lt; 0.5 €/m).</span>';
   }
-  h += '<br><br><span style="color:var(--text2)">Para aplicar el óptimo: ajusta manualmente el espesor (Sec. 2) y armadura por tramo (Sec. 11) a los valores sugeridos.</span>';
+  h += '<br><br><button class="btn btn-opt" id="btnAplicarOpt" type="button" style="flex:none;padding:8px 14px">✔ Aplicar esta solución</button>';
+  h += '<br><span style="color:var(--text2)">El botón pasa estos valores al espesor (Sec. 2), a la zapata (Sec. 3) y a la armadura de cada tramo (Sec. 11) y vuelve a calcular.</span>';
   h += '</div></div>';
   return h;
 }
 
+let OPT = null;   // último resultado del optimizador (lo usa «Aplicar esta solución»)
 function ejecutarOptimizar(){
   setWarn('Optimizando... (1-3 segundos)');
   setTimeout(() => {
+    // FIX 2026-11-04: se recalcula antes con los datos del formulario, para que la solución que se propone y la que se aplica
+    // partan de los mismos datos
+    const prev = RES;
+    calcular();
+    if(RES === prev) return;   // datos no válidos: calcular() ya muestra el aviso
     const opt = optimizar();
     if(!opt){ setWarn('Error en optimizador'); return; }
+    OPT = opt;
     setWarn('');
     const existing = document.getElementById('optimizadorWow');
     if(existing) existing.remove();
     $('panelOut').insertAdjacentHTML('beforeend', renderOptimizadorResultado(opt));
+    if($('btnAplicarOpt')) $('btnAplicarOpt').addEventListener('click', aplicarOptimo);
     document.getElementById('optimizadorWow').scrollIntoView({behavior:'smooth', block:'start'});
   }, 50);
+}
+
+// FIX 2026-11-04: lleva la solución del optimizador al formulario y recalcula
+function aplicarOptimo(){
+  const m = OPT && OPT.mejor;
+  if(!m || !RES) return;
+  const pon = (id, v) => { if($(id)) $(id).value = String(v); };
+  for(let i=1; i<=RES.I.niveles; i++) pon('inE'+i, m.e_mm);
+  if(!RES.I.isLosa){ pon('inBz', m.Bz); pon('inBt', m.Bt); }
+  for(const a of m.arm){ pon('inDv_'+a.id, a.phi_v); pon('inSv_'+a.id, a.s_v); pon('inDh_'+a.id, a.phi_h); pon('inSh_'+a.id, a.s_h); }
+  calcular();
+  $('panelOut').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 /* ============================================================

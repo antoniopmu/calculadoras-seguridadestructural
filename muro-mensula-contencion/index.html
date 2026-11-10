@@ -399,7 +399,7 @@ footer a:hover{color:var(--amber);}
 .btn-calc:hover,.seo-btn:hover{background:#2456c2;filter:none;}
 </style>
 
-<!-- SEO generado por publish.py (2026-11-05 11:36) -->
+<!-- SEO generado por publish.py (2026-11-10 15:19) -->
 <meta name="description" content="Calcula muros de contención en ménsula: vuelco, deslizamiento, hundimiento, armado de fuste y zapata y coste por metro según CE 2021 y CTE DB-SE-C. Con PDF.">
 <link rel="canonical" href="https://calculadoras.seguridadestructural.com/muro-mensula-contencion/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -2062,7 +2062,7 @@ function optimizarEconomico(){
   const stepB = 0.10;
   const BpMax = (tipo==='sin_puntera') ? 0.0 : 2.0;
   const BpMin = (tipo==='sin_puntera' || tipo==='talon') ? 0.0 : 0.10;
-  const BtMax = (tipo==='puntera') ? 0.5 : 4.0;
+  const BtMax = (tipo==='puntera') ? 0.5 : 6.0;   // FIX 2026-11-10: hasta 6 m de talón, para muros altos
   const BtMin = (tipo==='puntera') ? 0.0 : 0.20;
 
   setTimeout(()=>{
